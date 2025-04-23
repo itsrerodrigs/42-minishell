@@ -1,39 +1,40 @@
-#include "../include/minishell.h"
+#include "../inc/minishell.h"
+
+static void free_tokens(char **tokens)
+{
+    unsigned int i = 0;
+    while (tokens && tokens[i])
+    {
+        free(tokens[i]);
+        i++;
+    }
+    free(tokens);
+}
 
 
 int main(int argc, char **argv)
 {
 	char			*line;
 	char 			**args;
-	unsigned int 	i;
 
 	(void)argc;
     (void)argv;
 
+	signal(SIGINT, sigint_handler); //para Ctrl+C
 	printbanner();
-
-	line = ft_read_line();
-	while (line != NULL)
+	
+	line = read_line(); //lê o input
+	while (line != NULL) //começa o REPL loop
 	{
-		//get tokens
-		args = ft_split_line(line);
-		i = 0;
-		while (args && args[i])
+		args = split_line(line); //aqui é onde acontece a tokenização
+		if (args)
 		{
-			//p("%s\n", args[i]); //escreve de volta no prompt
-			ft_exec(args);
-			i++;
+			ft_exec(args); //esa função vai lidar com a execução dos comandos
+            free_tokens(args); //free tokens
+			//p("%s\n", args[i]); //escreve de volta no prompt, deixei pra debugar
 		}
-		i = 0;
-		while (args && args[i])
-        {
-            free(args[i]); 
-            i++;
-        }
 		free(line);
-		free(args);
-		line = ft_read_line();
-		
+		line = read_line();		
 	}
 	return (EXIT_SUCCESS);
 }

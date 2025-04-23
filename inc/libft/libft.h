@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 10:03:13 by marielidias       #+#    #+#             */
-/*   Updated: 2025/04/03 18:16:30 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/04/23 14:53:39 by marieli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ int					ft_putnbr_hex(unsigned long n, int uppercase);
 int					ft_putchar(char c);
 long				ft_atol(const char *nptr);
 int					ft_putptr(unsigned long ptr);
-int					ft_putchar(char c);
 int					ft_putstr(char *str);
+int					ft_isspace(int c);
 
 #endif

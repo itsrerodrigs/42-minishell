@@ -8,6 +8,9 @@
 #include <string.h>
 #include <sysexits.h>
 #include <ctype.h> //trocar por libft depois
+#include <signal.h>
+#include <errno.h>
+#include "libft/libft.h"
 
 #define Y		"\033[1;33m"
 #define G		"\033[1;32m"
@@ -27,11 +30,11 @@ typedef struct s_bultin
 }       t_builtin;
 
 
-
-
 //-----input handling---------
-char	**ft_split_line(char *line);
-char 	*ft_read_line(void);
+void    display_prompt(void);
+char	**split_line(char *line);
+char 	*read_line(void);
+void    sigint_handler(int signum);
 
 
 //------Exec--------

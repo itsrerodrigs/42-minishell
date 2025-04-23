@@ -1,6 +1,10 @@
-#include "../include/minishell.h""
+#include "../inc/minishell.h"
 
-char	**ft_split_line(char *line)
+/*split_line: tokenization do input
+
+*/
+
+char	**split_line(char *line)
 {
 	unsigned int 	position;
 	size_t			bufsize;

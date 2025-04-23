@@ -1,6 +1,8 @@
-#include "../include/minishell.h""
+#include "../inc/minishell.h"
 
-
+/*
+ft_exec deve executar os comandos ou builtins
+*/
 t_builtin g_builtin[] = 
 {
 //	{.builtin_name="echo", .foo=shell_echo},

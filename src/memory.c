@@ -1,4 +1,4 @@
-#include "../include/minishell.h""
+#include "../inc/minishell.h"
 
 void *ft_malloc(size_t size)
 {
@@ -20,7 +20,7 @@ void    *ft_getcwd(char *buf, size_t size)
 {
     if (NULL == getcwd(buf, size))
     {
-		perror (RED "getcwd FAILED" RST);
+		perror (RED "Getcwd FAILED" RST);
 		buf[0] = '\0';
 	}
     return(buf);

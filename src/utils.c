@@ -1,4 +1,4 @@
-#include "../include/minishell.h""
+#include "../inc/minishell.h"
 
 
 pid_t   ft_wait(int *status)
@@ -44,7 +44,6 @@ pid_t   ft_fork(void)
     }
     return(pid);
 }
-
 
 
 void	*ft_realloc(void *ptr, size_t size)
