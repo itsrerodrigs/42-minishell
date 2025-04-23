@@ -33,7 +33,7 @@ typedef struct s_bultin
 //-----input handling---------
 void    display_prompt(void);
 char	**split_line(char *line);
-char 	*read_line(void);
+char 	*read_input(void);
 void    sigint_handler(int signum);
 
 

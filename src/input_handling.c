@@ -1,7 +1,7 @@
 #include "../inc/minishell.h"
 
 /*
-read_line:
+read_input:
 		-display a command prompt: Encouraging the user to type a command.
 		-read input from stdin: Collecting the user's input via the getline function.
 		     -check if it is in interactive mode with isatty, the display the minishel prompt if needed
@@ -46,7 +46,7 @@ static char *validate_input_length(char *buf)
     return buf;
 }
 
-char *read_line(void)
+char *read_input(void)
 {
     char    *buf;
     size_t  bufsize;
@@ -57,13 +57,7 @@ char *read_line(void)
     display_prompt();
 
     if (getline(&buf, &bufsize, stdin) == -1) //read the input
-    {   
-        // if (errno == EINTR)
-        // {
-        //     free(buf);       // Free the buffer
-        //     buf = NULL;      // Reset buffer
-        //     return buf;      // Return NULL to let the main loop recover
-        // }
+    {
         if (feof(stdin))
             p(RED "[EOF]: Exiting minishell.\n" RST);
         else

@@ -23,7 +23,7 @@ int main(int argc, char **argv)
 	signal(SIGINT, sigint_handler); //para Ctrl+C
 	printbanner();
 	
-	line = read_line(); //lê o input
+	line = read_input(); //lê o input
 	while (line != NULL) //começa o REPL loop
 	{
 		args = split_line(line); //aqui é onde acontece a tokenização
@@ -34,7 +34,7 @@ int main(int argc, char **argv)
 			//p("%s\n", args[i]); //escreve de volta no prompt, deixei pra debugar
 		}
 		free(line);
-		line = read_line();		
+		line = read_input();		
 	}
 	return (EXIT_SUCCESS);
 }
