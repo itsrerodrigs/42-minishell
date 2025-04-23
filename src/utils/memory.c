@@ -15,6 +15,18 @@ void *ft_malloc(size_t size)
     return(ptr);
 }
 
+void	*ft_realloc(void *ptr, size_t size)
+{
+	void *new_ptr;
+
+	new_ptr =  realloc(ptr, size);
+	if (!new_ptr && size != 0)
+	{
+		perror(RED "Realloc failed\n" RST);
+		exit(EXIT_FAILURE);
+	}
+	return(new_ptr);
+}
 
 void    *ft_getcwd(char *buf, size_t size)
 {

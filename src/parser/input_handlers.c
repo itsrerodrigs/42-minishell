@@ -19,16 +19,16 @@ void display_prompt(void)
     }
 }
 
-static char *trim_whitespace(char *str)
+char *trim_whitespace(char *str)
 {
     char *end;
 
-    while (ft_isspace((unsigned char)*str))
+    while (isspace((unsigned char)*str))
         str++;
     if (*str == '\0')
         return (str);
-    end = str + ft_strlen(str) - 1;
-    while (end > str && ft_isspace((unsigned char)*end))
+    end = str + strlen(str) - 1;
+    while (end > str && isspace((unsigned char)*end))
         end--;
     *(end + 1) = '\0';
 
@@ -58,6 +58,11 @@ char *read_input(void)
 
     if (getline(&buf, &bufsize, stdin) == -1) //read the input
     {
+        if (errno == EINTR) // Handle signal interruption
+        {
+            free(buf);
+            return(NULL);
+        }
         if (feof(stdin))
             p(RED "[EOF]: Exiting minishell.\n" RST);
         else

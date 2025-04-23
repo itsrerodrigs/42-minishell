@@ -46,20 +46,6 @@ pid_t   ft_fork(void)
 }
 
 
-void	*ft_realloc(void *ptr, size_t size)
-{
-	void *new_ptr;
-
-	new_ptr =  realloc(ptr, size);
-	if (!new_ptr && size != 0)
-	{
-		perror(RED "Realloc failed\n" RST);
-		exit(EXIT_FAILURE);
-	}
-	return(new_ptr);
-}
-
-
 void printbanner(void)
 {
     p(C "Initializing Minishell.. \n" RST);

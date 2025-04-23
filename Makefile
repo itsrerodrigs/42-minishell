@@ -9,48 +9,47 @@ INCLUDES    = -Iinc -Iinc/libft
 # Library Paths
 LIBFT       = inc/libft/libft.a
 
-# Source and Object Directories
+# Directories
 SRC_DIR     = src
 OBJ_DIR     = obj
 
-# Source Files
-SRCS        =	$(addprefix $(SRC_DIR)/, builtin.c execution.c input_handling.c main.c memory.c tokenization.c signals_utils.c  utils.c )
-			  
-			  
-# Object Files
-OBJS        = $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
+# Source and Object Files
+SRCS        = $(shell find $(SRC_DIR) -name "*.c")
+OBJS        = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
 
-# Default Target
+# Create object directories (mirroring the src structure)
+DIRS        = $(sort $(dir $(OBJS)))
+
+# Default target
 all: $(NAME)
 
-# Rule to build the final executable
+# Link the final executable
 $(NAME): $(OBJS) $(LIBFT)
 	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME)
 
-# Rule to compile source files into object files
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
+# Compile .c files into .o files; ensure directory exists (order-only dependency)
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(DIRS)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-# Rule to create the object directory
-$(OBJ_DIR):
-	mkdir -p $(OBJ_DIR)
+# Create necessary object directories
+$(DIRS):
+	mkdir -p $@
 
-# Rule to build the libft library
+# Build the libft library
 $(LIBFT):
-	@$(MAKE) -C inc/libft
+	$(MAKE) -C inc/libft
 
-# Clean up object files
+# Clean object files
 clean:
 	rm -rf $(OBJ_DIR)
-	@$(MAKE) -C inc/libft clean
+	$(MAKE) -C inc/libft clean
 
-# Clean up everything (objects and executable)
+# Remove objects and executable
 fclean: clean
 	rm -f $(NAME)
-	@make -C inc/libft fclean
+	$(MAKE) -C inc/libft fclean
 
-# Rebuild the project
+# Rebuild everything
 re: fclean all
 
-# Phony targets to avoid conflicts with files of the same name
 .PHONY: all clean fclean re

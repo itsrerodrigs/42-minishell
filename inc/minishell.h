@@ -32,9 +32,22 @@ typedef struct s_bultin
 
 //-----input handling---------
 void    display_prompt(void);
-char	**split_line(char *line);
 char 	*read_input(void);
 void    sigint_handler(int signum);
+char    *trim_whitespace(char *str);
+
+//-------Tokens------
+char    *ft_strtok(char *str, const char *delim, char **saveptr);
+char	**get_tokens(char *line);
+char    *process_token(char *token, char **saveptr);
+int     add_token(char ***tokens, unsigned int *position, size_t *bufsize, char *token);
+void    free_tokens(char **tokens);
+char    *handle_single_quotes(char **saveptr);
+char    *merge_single_quotes(char *token, char **saveptr);
+char    *handle_double_quotes(char **saveptr);
+char    *merge_double_quotes(char *token, char **saveptr);
+char    *handle_operators(char *token);
+
 
 
 //------Exec--------
