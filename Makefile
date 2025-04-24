@@ -23,8 +23,8 @@ DIRS        = $(sort $(dir $(OBJS)))
 # Default target
 all: $(NAME)
 
-minishell: $(SRC_FILES)
-	$(CC) $(CFLAGS) $(SRC_FILES) -o minishell -L$(LIBFT_PATH) -lft
+# minishell: $(SRC_FILES)
+# 	$(CC) $(CFLAGS) $(SRC_FILES) -o minishell -L$(LIBFT_PATH) -lft
 
 tests: $(TEST_FILES) $(SRC_FILES)
 	$(CC) $(CFLAGS) $(TEST_FILES) $(SRC_FILES) -o tests
