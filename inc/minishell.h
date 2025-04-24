@@ -40,8 +40,11 @@ char    *trim_whitespace(char *str);
 char    *ft_strtok(char *str, const char *delim, char **saveptr);
 char	**get_tokens(char *line);
 char    *process_token(char *token, char **saveptr);
+unsigned int	extract_tokens(char *line, char **tokens, size_t bufsize,
+        char **saveptr);
 int     add_token(char ***tokens, unsigned int *position, size_t *bufsize, char *token);
 void    free_tokens(char **tokens);
+char    **initialize_token_array(size_t *bufsize);
 
 //-----quotes---------
 char    *remove_quotes(char *merged, char quote);

@@ -57,7 +57,7 @@ char    *merge_quotes(char *token, char quote)
         return (NULL);
     }
     ft_strlcpy(merged, token, dest_size);    
-
+    free(merged);
     return (remove_quotes(merged, quote));
 }
 
@@ -68,7 +68,7 @@ char *handle_single_quotes(char **saveptr)
     start = ++(*saveptr); // Skip the opening single quote
     if (*start == '\0' || ft_strchr(start, '\'') == NULL)
     {
-        return merge_quotes(start - 1, '\''); // Pass opening quote
+        return (merge_quotes(start - 1, '\'')); // Pass opening quote
     }
 
     while (**saveptr && **saveptr != '\'')

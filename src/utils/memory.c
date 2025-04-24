@@ -37,3 +37,15 @@ void    *ft_getcwd(char *buf, size_t size)
 	}
     return(buf);
 }
+
+char    **initialize_token_array(size_t *bufsize)
+{
+    char    **tokens;
+
+    *bufsize = 64;
+    tokens = ft_malloc(*bufsize * sizeof(*tokens));
+    if (!tokens)
+        return (NULL);
+
+    return (tokens);
+}

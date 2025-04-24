@@ -3,11 +3,10 @@
 void free_tokens(char **tokens)
 {
     unsigned int i = 0;
-    while (tokens && tokens[i])
-    {
-        free(tokens[i]);
-        i++;
-    }
+    if (!tokens)
+        return;
+    while (tokens[i])
+        free(tokens[i++]);
     free(tokens);
 }
 
