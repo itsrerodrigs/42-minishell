@@ -1,7 +1,7 @@
 #include "../inc/minishell.h"
 
 /*
-ft_exec deve executar os comandos ou builtins
+remove the global variables as soon as possible
 */
 t_builtin g_builtin[] = 
 {
@@ -32,7 +32,6 @@ void	ft_exec(char **args)
 		}
 		++i;
 	}
-//	ft_launch(args);
 }
 
 void ft_launch(char **args)

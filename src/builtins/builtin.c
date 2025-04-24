@@ -24,6 +24,7 @@ int ft_env(char **args)
     extern char **environ;
     int i;
 
+    i = 0;
     (void)args;
     if (!environ)
         return(1);

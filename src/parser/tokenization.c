@@ -1,30 +1,24 @@
 #include "../inc/minishell.h"
 
-char *process_token(char *token, char **saveptr)
+char    *process_token(char *token, char **saveptr)
 {
+    char    *result;
+
     if (*token == '\'')
     {
-        if (token[strlen(token)-1] != '\'')
-            return merge_single_quotes(token, saveptr);
-        else
-        {
-            token[strlen(token)-1] = '\0';
-            return strdup(token+1);
-        }
+        result = handle_single_quotes(saveptr);
+        return (result);
     }
     if (*token == '"')
     {
-        if (token[strlen(token)-1] != '"')
-            return merge_double_quotes(token, saveptr);
-        else
-        {
-            token[strlen(token)-1] = '\0';
-            return strdup(token+1);
-        }
+        result = handle_double_quotes(saveptr);
+        return (result);
     }
     if (strchr("|><", *token))
-        return token;
-    return token;
+    {
+        return (token);
+    }
+    return (token);
 }
 
 char *ft_strtok(char *str, const char *delim, char **saveptr)

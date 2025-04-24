@@ -42,12 +42,13 @@ char	**get_tokens(char *line);
 char    *process_token(char *token, char **saveptr);
 int     add_token(char ***tokens, unsigned int *position, size_t *bufsize, char *token);
 void    free_tokens(char **tokens);
-char    *handle_single_quotes(char **saveptr);
-char    *merge_single_quotes(char *token, char **saveptr);
-char    *handle_double_quotes(char **saveptr);
-char    *merge_double_quotes(char *token, char **saveptr);
-char    *handle_operators(char *token);
 
+//-----quotes---------
+char    *remove_quotes(char *merged, char quote);
+char    *append_until_quote(char *merged, char quote, char **saveptr);
+char    *merge_quotes(char *token, char quote);
+char    *handle_single_quotes(char **saveptr);
+char    *handle_double_quotes(char **saveptr);
 
 
 //------Exec--------
