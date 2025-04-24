@@ -1,3 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   memory.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/24 18:28:35 by mmariano          #+#    #+#             */
+/*   Updated: 2025/04/24 18:28:36 by mmariano         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+
+
 #include "../inc/minishell.h"
 
 void *ft_malloc(size_t size)
@@ -25,6 +39,7 @@ void	*ft_realloc(void *ptr, size_t size)
 		perror(RED "Realloc failed\n" RST);
 		exit(EXIT_FAILURE);
 	}
+    free(new_ptr);
 	return(new_ptr);
 }
 

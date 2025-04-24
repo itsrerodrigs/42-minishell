@@ -1,13 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   input_handlers.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/24 18:28:18 by mmariano          #+#    #+#             */
+/*   Updated: 2025/04/24 18:28:19 by mmariano         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/minishell.h"
 
-/*
-read_input:
-		-display a command prompt: Encouraging the user to type a command.
-		-read input from stdin: Collecting the user's input via the getline function.
-		     -check if it is in interactive mode with isatty, the display the minishel prompt if needed
-			 -In non-interactive mode (pipes or scripts), no prompt is displayed
-		-returning a String: The function processes user input as a single string for further handling.
-*/
 void display_prompt(void)
 {
     char cwd[BUFSIZ];
@@ -71,6 +75,7 @@ char *read_input(void)
     }
     buf = trim_whitespace(buf);
     buf = validate_input_length(buf);
+    free(buf);
     return (buf);
 }
 

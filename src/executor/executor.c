@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   executor.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/24 18:29:41 by mmariano          #+#    #+#             */
+/*   Updated: 2025/04/24 18:29:42 by mmariano         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/minishell.h"
 
 /*
@@ -25,7 +37,7 @@ void	ft_exec(char **args)
 	curr = g_builtin[i].builtin_name;
 	while(curr)
 	{
-		if (!strcmp(curr, args[0])) //trocar pelo da libft
+		if (!ft_strcmp(curr, args[0])) //trocar pelo da libft
 		{
 			status = g_builtin[i].foo(args);
 			return;

@@ -1,3 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tokenization.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/24 18:29:00 by mmariano          #+#    #+#             */
+/*   Updated: 2025/04/24 18:29:01 by mmariano         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+
+
 #include "../inc/minishell.h"
 
 char    **get_tokens(char *line)
@@ -111,6 +125,7 @@ int	add_token(char ***tokens, unsigned int *position, size_t *bufsize,
 		if (!(*tokens))
 			return (-1);
 	}
+	free_tokens(token);
 	return (0);
 }
 
