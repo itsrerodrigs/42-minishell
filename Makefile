@@ -23,6 +23,13 @@ DIRS        = $(sort $(dir $(OBJS)))
 # Default target
 all: $(NAME)
 
+minishell: $(SRC_FILES)
+	$(CC) $(CFLAGS) $(SRC_FILES) -o minishell -L$(LIBFT_PATH) -lft
+
+tests: $(TEST_FILES) $(SRC_FILES)
+	$(CC) $(CFLAGS) $(TEST_FILES) $(SRC_FILES) -o tests
+	./tests
+
 # Link the final executable
 $(NAME): $(OBJS) $(LIBFT)
 	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME)
@@ -46,10 +53,10 @@ clean:
 
 # Remove objects and executable
 fclean: clean
-	rm -f $(NAME)
+	rm -f $(NAME) minishell tests
 	$(MAKE) -C inc/libft fclean
 
 # Rebuild everything
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re tests

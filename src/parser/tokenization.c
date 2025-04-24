@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 18:29:00 by mmariano          #+#    #+#             */
-/*   Updated: 2025/04/24 18:29:01 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/04/24 18:44:51 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ int	add_token(char ***tokens, unsigned int *position, size_t *bufsize,
 		if (!(*tokens))
 			return (-1);
 	}
-	free_tokens(token);
+	free_tokens(&token);
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 18:29:41 by mmariano          #+#    #+#             */
-/*   Updated: 2025/04/24 18:29:42 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/04/24 18:48:06 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,23 +28,28 @@ int status = 0;
 //my comand is a builtin? -> call it directly
 //if not, call execvp: fork+execvp+wait
 
-void	ft_exec(char **args)
+void    ft_exec(char **args)
 {
-	int				i;
-	const char 		*curr;
+    int     i;
+    int     status;
+    const char *curr;
 
-	i = 0;
-	curr = g_builtin[i].builtin_name;
-	while(curr)
-	{
-		if (!ft_strcmp(curr, args[0])) //trocar pelo da libft
-		{
-			status = g_builtin[i].foo(args);
-			return;
-		}
-		++i;
-	}
+    if (args == NULL || args[0] == NULL)
+        return;
+
+    i = 0;
+    while ((curr = g_builtin[i].builtin_name) != NULL)
+    {
+        if (!ft_strncmp(curr, args[0], ft_strlen(curr)))
+        {
+            status = g_builtin[i].foo(args);
+            return;
+        }
+        ++i;
+    }
+    p(RED "Command not found: %s\n" RST, args[0]); // Debug or error message
 }
+
 
 void ft_launch(char **args)
 {
