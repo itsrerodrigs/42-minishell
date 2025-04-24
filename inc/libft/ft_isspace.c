@@ -1,24 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signals_utils.c                                    :+:      :+:    :+:   */
+/*   ft_isspace.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/24 18:28:53 by mmariano          #+#    #+#             */
-/*   Updated: 2025/04/24 18:28:54 by mmariano         ###   ########.fr       */
+/*   Created: 2025/04/23 14:32:51 by marieli           #+#    #+#             */
+/*   Updated: 2025/04/23 14:33:19 by marieli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
 
-
-#include "../../inc/minishell.h"
-
-void sigint_handler(int signum)
+int		ft_isspace(int c)
 {
-    (void)signum;
-    write(STDOUT_FILENO, "\n", 1);
-    write(STDOUT_FILENO, "\nSIGINT received.\n", 18); //debug
-    display_prompt();
-    fflush(stdout);
+	c = (unsigned char)c;
+	if (c == '\t' || c == '\n' || c == '\v' || c == '\f' || c == '\r'
+		|| c == ' ')
+		return (1);
+	return (0);
 }

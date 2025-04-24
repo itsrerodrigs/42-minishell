@@ -1,24 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signals_utils.c                                    :+:      :+:    :+:   */
+/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/24 18:28:53 by mmariano          #+#    #+#             */
-/*   Updated: 2025/04/24 18:28:54 by mmariano         ###   ########.fr       */
+/*   Created: 2024/11/01 12:19:45 by marielidias       #+#    #+#             */
+/*   Updated: 2025/04/03 18:16:22 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
 
-
-#include "../../inc/minishell.h"
-
-void sigint_handler(int signum)
+void	ft_putstr_fd(char *s, int fd)
 {
-    (void)signum;
-    write(STDOUT_FILENO, "\n", 1);
-    write(STDOUT_FILENO, "\nSIGINT received.\n", 18); //debug
-    display_prompt();
-    fflush(stdout);
+	if (!s || fd < 0)
+		return ;
+	if (*s != '\0')
+	{
+		write(fd, s, 1);
+		ft_putstr_fd(s + 1, fd);
+	}
 }

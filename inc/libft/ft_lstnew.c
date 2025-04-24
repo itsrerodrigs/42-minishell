@@ -1,24 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signals_utils.c                                    :+:      :+:    :+:   */
+/*   ft_lstnew.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/24 18:28:53 by mmariano          #+#    #+#             */
-/*   Updated: 2025/04/24 18:28:54 by mmariano         ###   ########.fr       */
+/*   Created: 2025/02/03 15:16:07 by marieli           #+#    #+#             */
+/*   Updated: 2025/03/20 17:54:51 by marieli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
 
-
-#include "../../inc/minishell.h"
-
-void sigint_handler(int signum)
+t_list	*ft_lstnew(void *data)
 {
-    (void)signum;
-    write(STDOUT_FILENO, "\n", 1);
-    write(STDOUT_FILENO, "\nSIGINT received.\n", 18); //debug
-    display_prompt();
-    fflush(stdout);
+	t_list	*new_node;
+
+	new_node = malloc(sizeof(t_list));
+	if (!new_node)
+		return (NULL);
+	new_node->data = data;
+	new_node->next = NULL;
+	return (new_node);
 }

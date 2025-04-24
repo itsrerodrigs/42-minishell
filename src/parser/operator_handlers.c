@@ -1,24 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signals_utils.c                                    :+:      :+:    :+:   */
+/*   operator_handlers.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/24 18:28:53 by mmariano          #+#    #+#             */
-/*   Updated: 2025/04/24 18:28:54 by mmariano         ###   ########.fr       */
+/*   Created: 2025/04/24 18:29:31 by mmariano          #+#    #+#             */
+/*   Updated: 2025/04/24 18:29:32 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../inc/minishell.h"
+
+/*
+implement actions for each token later
+*/
 
 
-#include "../../inc/minishell.h"
 
-void sigint_handler(int signum)
+
+char *handle_operators(char *token)
 {
-    (void)signum;
-    write(STDOUT_FILENO, "\n", 1);
-    write(STDOUT_FILENO, "\nSIGINT received.\n", 18); //debug
-    display_prompt();
-    fflush(stdout);
+    return (token); // for |, >, < 
 }

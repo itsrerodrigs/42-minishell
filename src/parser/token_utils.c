@@ -1,24 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signals_utils.c                                    :+:      :+:    :+:   */
+/*   token_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/24 18:28:53 by mmariano          #+#    #+#             */
-/*   Updated: 2025/04/24 18:28:54 by mmariano         ###   ########.fr       */
+/*   Created: 2025/04/24 18:29:12 by mmariano          #+#    #+#             */
+/*   Updated: 2025/04/24 18:29:15 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../inc/minishell.h"
 
-
-#include "../../inc/minishell.h"
-
-void sigint_handler(int signum)
+void free_tokens(char **tokens)
 {
-    (void)signum;
-    write(STDOUT_FILENO, "\n", 1);
-    write(STDOUT_FILENO, "\nSIGINT received.\n", 18); //debug
-    display_prompt();
-    fflush(stdout);
+    unsigned int i = 0;
+    if (!tokens)
+        return;
+    while (tokens[i])
+        free(tokens[i++]);
+    free(tokens);
 }
+
