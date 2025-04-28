@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 18:28:35 by mmariano          #+#    #+#             */
-/*   Updated: 2025/04/24 18:28:36 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/04/28 19:39:14 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,17 @@ void	*ft_realloc(void *ptr, size_t size)
 {
 	void *new_ptr;
 
+    if (size == 0)
+    {
+        free(ptr);
+        return (NULL);
+    }
 	new_ptr =  realloc(ptr, size);
 	if (!new_ptr && size != 0)
 	{
 		perror(RED "Realloc failed\n" RST);
 		exit(EXIT_FAILURE);
 	}
-    free(new_ptr);
 	return(new_ptr);
 }
 
@@ -60,7 +64,21 @@ char    **initialize_token_array(size_t *bufsize)
     *bufsize = 64;
     tokens = ft_malloc(*bufsize * sizeof(*tokens));
     if (!tokens)
+    {
+        p(RED "Error in initialize_token_array" RST);
         return (NULL);
-
+    }
     return (tokens);
+}
+
+void free_tokens(char **tokens)
+{
+    unsigned int i;
+    
+    i = 0;
+    if (!tokens)
+        return;
+    while (tokens[i])
+        free(tokens[i++]);
+    free(tokens);
 }

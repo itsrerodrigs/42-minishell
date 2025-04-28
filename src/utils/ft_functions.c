@@ -6,10 +6,9 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 18:28:43 by mmariano          #+#    #+#             */
-/*   Updated: 2025/04/24 18:28:44 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/04/28 17:23:54 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 
 #include "../inc/minishell.h"

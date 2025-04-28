@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 18:28:18 by mmariano          #+#    #+#             */
-/*   Updated: 2025/04/24 18:28:19 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/04/28 16:39:04 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ static char *validate_input_length(char *buf)
     if (ft_strlen(buf) > 1024)
     {
         p(RED "Error: Input exceeds length limit (1024 chars).\n" RST);
-        free(buf);
         return (NULL);
     }
     return buf;
@@ -52,30 +51,27 @@ static char *validate_input_length(char *buf)
 
 char *read_input(void)
 {
-    char    *buf;
-    size_t  bufsize;
+    char *buf;
 
-    buf = (NULL);
-    bufsize = 0;
-    
     display_prompt();
 
-    if (getline(&buf, &bufsize, stdin) == -1) //read the input
+    buf = readline(""); 
+    if (!buf)
     {
-        if (errno == EINTR) // Handle signal interruption
-        {
-            free(buf);
-            return(NULL);
-        }
-        if (feof(stdin))
-            p(RED "[EOF]: Exiting minishell.\n" RST);
-        else
-            p(RED "Error: failed to read input.\n" RST);
+        printf(RED "[EOF]: Exiting minishell.\n" RST);
         return (NULL);
+    }
+    if (*buf)
+        add_history(buf);
+    if (ft_strncmp(buf, "exit", 4) == 0 && ft_strlen(buf) == 4)
+    {
+        char *args[] = {buf, NULL};
+        ft_exit(args);
     }
     buf = trim_whitespace(buf);
     buf = validate_input_length(buf);
-    free(buf);
     return (buf);
 }
+
+
 
