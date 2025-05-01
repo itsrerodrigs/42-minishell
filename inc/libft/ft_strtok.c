@@ -3,37 +3,64 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strtok.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:18:59 by marieli           #+#    #+#             */
-/*   Updated: 2025/04/23 17:20:27 by marieli          ###   ########.fr       */
+/*   Updated: 2025/04/28 20:04:15 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char *ft_strtok(char *str, const char *delim, char **saveptr)
+static void	skip_delim(char **saveptr, const char *delim)
 {
-    char *start;
+	while (**saveptr && strchr(delim, **saveptr))
+		(*saveptr)++;
+}
 
-    if (str != NULL)
-        *saveptr = str;
-    if (*saveptr == NULL)
-        return (NULL);
-        
-    while (**saveptr && ft_strchr(delim, **saveptr))
-        (*saveptr)++;
-    if (**saveptr == '\0')
-        return (NULL);
+static int	handle_quotes(char **saveptr, char *quote_char)
+{
+	if (**saveptr == *quote_char)
+	{
+		*quote_char = '\0';
+		return (0);
+	}
+	return (1);
+}
 
-    start = *saveptr;
-    while (**saveptr && !ft_strchr(delim, **saveptr))
-        (*saveptr)++;
-    if (**saveptr)
-    {
-        **saveptr = '\0';
-        (*saveptr)++;
-    }
+static int	check_for_quotes(char **saveptr, char *quote_char)
+{
+	if (**saveptr == '\'' || **saveptr == '"')
+	{
+		*quote_char = **saveptr;
+		return (1);
+	}
+	return (0);
+}
 
-    return (start);
+char	*ft_strtok(char *str, const char *delim, char **saveptr)
+{
+	char	*start;
+	char	quote_char = '\0';
+
+	if (!saveptr || !delim || (str && !*saveptr))
+		return (NULL);
+	if (str)
+		*saveptr = str;
+	skip_delim(saveptr, delim);
+	if (**saveptr == '\0')
+		return (NULL);
+	start = *saveptr;
+	while (**saveptr)
+	{
+		if ((quote_char && !handle_quotes(saveptr, &quote_char)) ||
+			(!quote_char && (check_for_quotes(saveptr, &quote_char) ||
+			strchr(delim, **saveptr))))
+			break;
+		(*saveptr)++;
+	}
+	if (**saveptr)
+		**saveptr = '\0';
+	printf("Token extracted: \"%s\"\n", start);
+	return (start);
 }

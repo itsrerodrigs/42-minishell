@@ -1,7 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   executor.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/24 18:29:41 by mmariano          #+#    #+#             */
+/*   Updated: 2025/04/24 18:48:06 by mmariano         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/minishell.h"
 
 /*
-ft_exec deve executar os comandos ou builtins
+remove the global variables as soon as possible
 */
 
 t_builtin g_builtin[] = 
@@ -17,24 +29,28 @@ int status = 0;
 //my comand is a builtin? -> call it directly
 //if not, call execvp: fork+execvp+wait
 
-void	ft_exec(char **args)
+void    ft_exec(char **args)
 {
-	int				i;
-	const char 		*curr;
+    int     i;
+    int     status;
+    const char *curr;
 
-	i = 0;
-	curr = g_builtin[i].builtin_name;
-	while(curr)
-	{
-		if (!strcmp(curr, args[0])) //trocar pelo da libft
-		{
-			status = g_builtin[i].foo(args);
-			return;
-		}
-		++i;
-	}
-//	ft_launch(args);
+    if (args == NULL || args[0] == NULL)
+        return;
+
+    i = 0;
+    while ((curr = g_builtin[i].builtin_name) != NULL)
+    {
+        if (!ft_strncmp(curr, args[0], ft_strlen(curr)))
+        {
+            status = g_builtin[i].foo(args);
+            return;
+        }
+        ++i;
+    }
+    p(RED "Command not found: %s\n" RST, args[0]); // Debug or error message
 }
+
 
 void ft_launch(char **args)
 {

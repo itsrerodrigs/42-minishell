@@ -1,33 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strdup.c                                        :+:      :+:    :+:   */
+/*   operator_handlers.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/29 18:23:20 by marielidias       #+#    #+#             */
-/*   Updated: 2025/04/28 19:03:11 by mmariano         ###   ########.fr       */
+/*   Created: 2025/04/24 18:29:31 by mmariano          #+#    #+#             */
+/*   Updated: 2025/04/28 16:19:13 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../inc/minishell.h"
 
-char	*ft_strdup(const char *src)
-{
-	char	*dest;
-	int		index;
-	int		len;
+/*
+implement actions for each token later
+*/
 
-	len = (ft_strlen(src) + 1);
-	dest = (char *)malloc(len);
-	if (dest == NULL)
-		return (NULL);
-	index = 0;
-	while (src[index] != '\0')
-	{
-		dest[index] = src[index];
-		index++;
-	}
-	dest[index] = '\0';
-	return (dest);
-}
+
