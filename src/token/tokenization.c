@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenization.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 18:29:00 by mmariano          #+#    #+#             */
-/*   Updated: 2025/04/28 20:00:52 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/05/01 16:45:32 by marieli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,11 @@ char    **get_tokens(char *line)
     if (!line || !*line)
         return (NULL);
 
-    tokens = initialize_token_array(&bufsize);//cria um array vazio
+    tokens = initialize_token_array(&bufsize); /* cria um array vazio */
     if (!tokens)
         return (NULL);
 
-    position = extract_tokens(line, &tokens, &bufsize, &saveptr);//popula o array com os tokens
+    position = extract_tokens(line, &tokens, &bufsize, &saveptr); /* popula o array com os tokens */
     if (position == 0)
     {
         free_tokens(tokens);
@@ -81,15 +81,16 @@ unsigned int extract_tokens(char *line, char ***tokens, size_t *bufsize, char **
         return (0);
     }
 
-    // Print the input line to check if it's being passed correctly
+    /* DEBUG: Print the input line to check if it's being passed correctly */ 
     printf("Input line: \"%s\"\n", line);
-
     token = ft_strtok(line, DELIM, saveptr);
+
     if (token)
-        printf("First token: \"%s\"\n", token);  // Check first token
+        printf("First token: \"%s\"\n", token);
 
     while (token)
     {
+        printf("Extracted token[%d]: \"%s\"\n", count, token);
         if (count >= *bufsize - 1 && !realloc_tokens(tokens, bufsize))
         {
             printf("Error: Memory allocation failed while resizing tokens\n");
@@ -103,7 +104,7 @@ unsigned int extract_tokens(char *line, char ***tokens, size_t *bufsize, char **
 
         token = ft_strtok(NULL, DELIM, saveptr);
         if (token)
-            printf("Next token: \"%s\"\n", token);  // Check subsequent tokens
+            printf("Next token: \"%s\"\n", token);
     }
 
     (*tokens)[count] = NULL;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 18:29:41 by mmariano          #+#    #+#             */
-/*   Updated: 2025/04/24 18:48:06 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/05/01 15:12:59 by marieli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int status = 0;
 void    ft_exec(char **args)
 {
     int     i;
-    int     status;
+    //int     status;
     const char *curr;
 
     if (args == NULL || args[0] == NULL)

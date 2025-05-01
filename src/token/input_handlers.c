@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   input_handlers.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 18:28:18 by mmariano          #+#    #+#             */
-/*   Updated: 2025/04/28 16:39:04 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/05/01 17:26:59 by marieli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ void display_prompt(void)
 
     if (isatty(fileno(stdin))) 
     {
-        ft_getcwd(cwd, sizeof(cwd)); //get the working dir
-        p("%s%s minishell> %s", G, cwd, RST); //show prompt
+        ft_getcwd(cwd, sizeof(cwd)); /* get the working dir */
+        p("%s%s minishell> %s", G, cwd, RST); /* show prompt */
     }
 }
 
@@ -27,33 +27,23 @@ char *trim_whitespace(char *str)
 {
     char *end;
 
-    while (isspace((unsigned char)*str))
+    while (ft_isspace((unsigned char)*str))
         str++;
     if (*str == '\0')
         return (str);
-    end = str + strlen(str) - 1;
-    while (end > str && isspace((unsigned char)*end))
+    end = str + ft_strlen(str) - 1;
+    while (end > str && ft_isspace((unsigned char)*end))
         end--;
     *(end + 1) = '\0';
 
     return (str);
 }
 
-static char *validate_input_length(char *buf)
-{
-    if (ft_strlen(buf) > 1024)
-    {
-        p(RED "Error: Input exceeds length limit (1024 chars).\n" RST);
-        return (NULL);
-    }
-    return buf;
-}
-
 char *read_input(void)
 {
     char *buf;
 
-    display_prompt();
+    // display_prompt();
 
     buf = readline(""); 
     if (!buf)
@@ -63,15 +53,12 @@ char *read_input(void)
     }
     if (*buf)
         add_history(buf);
+    /* trocar pelo builtin handler depois */
     if (ft_strncmp(buf, "exit", 4) == 0 && ft_strlen(buf) == 4)
     {
         char *args[] = {buf, NULL};
         ft_exit(args);
     }
     buf = trim_whitespace(buf);
-    buf = validate_input_length(buf);
     return (buf);
 }
-
-
-
