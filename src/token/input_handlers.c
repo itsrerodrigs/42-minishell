@@ -6,11 +6,16 @@
 /*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 18:28:18 by mmariano          #+#    #+#             */
-/*   Updated: 2025/05/01 17:26:59 by marieli          ###   ########.fr       */
+/*   Updated: 2025/05/01 19:08:14 by marieli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
+
+void printbanner(void)
+{
+    p(C "Initializing Minishell.. \n" RST);
+}
 
 void display_prompt(void)
 {
@@ -43,12 +48,13 @@ char *read_input(void)
 {
     char *buf;
 
+    /* comentei aqui pra testar os tokens */
     // display_prompt();
 
     buf = readline(""); 
     if (!buf)
     {
-        printf(RED "[EOF]: Exiting minishell.\n" RST);
+        p(RED "[EOF]: Exiting minishell.\n" RST);
         return (NULL);
     }
     if (*buf)

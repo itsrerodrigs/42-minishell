@@ -6,107 +6,120 @@
 /*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 18:29:00 by mmariano          #+#    #+#             */
-/*   Updated: 2025/05/01 16:45:32 by marieli          ###   ########.fr       */
+/*   Updated: 2025/05/01 19:38:52 by marieli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-char    **get_tokens(char *line)
+char	**get_tokens(char *line)
 {
-    char            **tokens;
-    char            *saveptr;
-    size_t          bufsize;
-    unsigned int    position;
+	char			**tokens;
+	char			*saveptr;
+	size_t			bufsize;
+	unsigned int	position;
 
-    if (!line || !*line)
-        return (NULL);
-
-    tokens = initialize_token_array(&bufsize); /* cria um array vazio */
-    if (!tokens)
-        return (NULL);
-
-    position = extract_tokens(line, &tokens, &bufsize, &saveptr); /* popula o array com os tokens */
-    if (position == 0)
-    {
-        free_tokens(tokens);
-        return (NULL);
-    }
-    tokens[position] = NULL;
-    return (tokens);
+	if (!line || !*line)
+	{
+		printf("Debug: get_tokens() received NULL or empty line\n");
+		return (NULL);
+	}
+		
+	tokens = initialize_token_array(&bufsize); /* cria um array vazio */
+	if (!tokens)
+	{
+		printf("Debug: initialize_token_array() returned NULL\n");
+		return (NULL);
+	}
+		
+	position = extract_tokens(line, &tokens, &bufsize, &saveptr);
+		/* popula o array com os tokens */
+	if (position == 0)
+	{
+		printf("Debug: No tokens extracted, freeing memory\n");
+		free_tokens(tokens);
+		return (NULL);
+	}
+	tokens[position] = NULL;
+	return (tokens);
 }
 
-char *process_token(char *token, char **saveptr)
+static int	add_token(char ***tokens, unsigned int count, char *token)
 {
-    if (*token == '\'' || *token == '"')
-        return (handle_quotes(saveptr, *token));
-    if (strchr("|><", *token))
-        return (token); /*mudar depois pra lidar com operators*/
-    return (token);
+	char	*processed_token;
+
+	if (!token || *token == '\0')
+		return (0);
+	processed_token = ft_strdup(token);
+	if (!processed_token)
+		return (0);
+	(*tokens)[count] = processed_token;
+	return (1);
 }
 
-static int add_token(char ***tokens, unsigned int count, char *token)
+int	realloc_tokens(char ***tokens, size_t *bufsize)
 {
-    char *processed_token;
+	size_t	new_size;
+	char	**new_tokens;
 
-    processed_token = ft_strdup(token);
-    if (!processed_token)
+	new_size = *bufsize * 2;
+	new_tokens = ft_realloc(*tokens, new_size * sizeof(char *));
+	if (!new_tokens)
+		return (0);
+	*tokens = new_tokens;
+	*bufsize = new_size;
+	return (1);
+}
+
+unsigned int	extract_tokens(char *line, char ***tokens, size_t *bufsize,
+		char **saveptr)
+{
+	char			*token;
+	unsigned int	count;
+
+	*saveptr = line;
+	count = 0;
+	if (!line || !tokens || !*tokens || !bufsize || !saveptr || *bufsize == 0)
+	{
+		printf("Debug: extract_tokens() received invalid input\n");
+		return (0);
+	}
+		
+	token = ft_strtok(line, DELIM, saveptr);
+	if (!token)
     {
-        free_tokens(*tokens);
+        printf("Debug: ft_strtok() returned NULL\n");
         return (0);
     }
-    (*tokens)[count] = processed_token;
-    return (1);
+	while (token)
+	{
+		printf("Debug: Extracted token -> %s\n", token);
+				
+		if (count >= *bufsize - 1 && !realloc_tokens(tokens, bufsize))
+		{
+			printf("Debug: realloc_tokens() failed\n");
+			return (0);
+		}
+			
+		if (*token != '\0')
+		{
+			if (!add_token(tokens, count++, token))
+			{
+				printf("Debug: add_token() failed\n");
+				return (0);
+			}				
+		}
+		token = ft_strtok(NULL, DELIM, saveptr);
+	}
+	(*tokens)[count] = NULL;
+	return (count);
 }
 
-int realloc_tokens(char ***tokens, size_t *bufsize)
-{
-    size_t new_size = *bufsize * 2;
-    char **new_tokens = ft_realloc(*tokens, new_size * sizeof(char *));
-    if (!new_tokens)
-        return (0);
-    *tokens = new_tokens;
-    *bufsize = new_size;
-    return (1);
-}
-
-unsigned int extract_tokens(char *line, char ***tokens, size_t *bufsize, char **saveptr)
-{
-    char *token;
-    unsigned int count = 0;
-
-    if (!line || !tokens || !*tokens || !bufsize || !saveptr || *bufsize == 0)
-    {
-        printf("Error: Invalid input or buffer size\n");
-        return (0);
-    }
-
-    /* DEBUG: Print the input line to check if it's being passed correctly */ 
-    printf("Input line: \"%s\"\n", line);
-    token = ft_strtok(line, DELIM, saveptr);
-
-    if (token)
-        printf("First token: \"%s\"\n", token);
-
-    while (token)
-    {
-        printf("Extracted token[%d]: \"%s\"\n", count, token);
-        if (count >= *bufsize - 1 && !realloc_tokens(tokens, bufsize))
-        {
-            printf("Error: Memory allocation failed while resizing tokens\n");
-            return (0);
-        }
-        if (!add_token(tokens, count++, token))
-        {
-            printf("Error: Failed to add token\n");
-            return (0);
-        }
-
-        token = ft_strtok(NULL, DELIM, saveptr);
-        if (token)
-            printf("Next token: \"%s\"\n", token);
-    }
-
-    (*tokens)[count] = NULL;
-    return (count);
-}
+// char	*process_token(char *token, char **saveptr)
+// {
+// 	if (*token == '\'' || *token == '"')
+// 		return (handle_quotes(saveptr, *token));
+// 	if (strchr("|><", *token))
+// 		return (token); /*mudar depois pra lidar com operators*/
+// 	return (token);
+// }

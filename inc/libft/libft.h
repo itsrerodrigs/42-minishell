@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 10:03:13 by marielidias       #+#    #+#             */
-/*   Updated: 2025/04/28 19:56:43 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/05/01 18:51:20 by marieli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,6 @@ long				ft_atol(const char *nptr);
 int					ft_putptr(unsigned long ptr);
 int					ft_putstr(char *str);
 int					ft_isspace(int c);
-char				*ft_strtok(char *str, const char *delim, char **saveptr);
+// char				*ft_strtok(char *str, const char *delim, char **saveptr);
 
 #endif

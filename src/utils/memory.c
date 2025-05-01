@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   memory.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 18:28:35 by mmariano          #+#    #+#             */
-/*   Updated: 2025/04/28 19:39:14 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/05/01 19:30:21 by marieli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,10 +75,16 @@ void free_tokens(char **tokens)
 {
     unsigned int i;
     
+    if (!tokens) 
+    return;
+
     i = 0;
-    if (!tokens)
-        return;
     while (tokens[i])
-        free(tokens[i++]);
+    {
+        free(tokens[i]);
+        tokens[i] = NULL;
+        i++;
+    }
     free(tokens);
+    tokens = NULL;
 }
