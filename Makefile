@@ -27,7 +27,7 @@ all: $(NAME)
 $(NAME): $(OBJS) $(LIBFT)
 	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME)
 
-# Compile .c files into .o files; ensure directory exists (order-only dependency)
+# Compile .c files into .o files
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(DIRS)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
