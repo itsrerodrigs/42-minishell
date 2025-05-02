@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 18:28:28 by mmariano          #+#    #+#             */
-/*   Updated: 2025/05/02 14:48:39 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/05/02 14:58:59 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,39 +41,39 @@ int	main(int argc, char **argv)
 /*-----------------------------------------------------------------------------*/
 /* main para testar tokenizaçao */
 
-// int main(void)
-// {
-//     char    *line;
-//     char    **args;
-//     int     i;
+/* int main(void)
+{
+    char    *line;
+    char    **args;
+    int     i;
 
-//     printf("Waiting for input...\n");
-//     line = read_input();
-//     if (!line)
-//     {
-//         printf("read_input() returned NULL\n");
-//         return (1);
-//     }
+    printf("Waiting for input...\n");
+    line = read_input();
+    if (!line)
+    {
+        printf("read_input() returned NULL\n");
+        return (1);
+    }
 
-//     while (line != NULL)
-//     {
-//         printf("Line received: %s\n", line);
-//         args = get_tokens(line);
-//         if (!args)
-//         {
-//             printf("get_tokens() returned NULL\n");
-//             break;
-//         }
+    while (line != NULL)
+    {
+        printf("Line received: %s\n", line);
+        args = get_tokens(line);
+        if (!args)
+        {
+            printf("get_tokens() returned NULL\n");
+            break;
+        }
 
-//         i = 0;
-//         while (args[i] != NULL)
-//         {
-//             printf("Arg[%d]: %s\n", i, args[i]);
-//             i++;
-//         }
-//         if (args)
-//             free_tokens(args);
-//         line = read_input();
-// 	}
-//     return (EXIT_SUCCESS);
-// }
+        i = 0;
+        while (args[i] != NULL)
+        {
+            printf("Arg[%d]: %s\n", i, args[i]);
+            i++;
+        }
+        if (args)
+            free_tokens(args);
+        line = read_input();
+	}
+    return (EXIT_SUCCESS);
+} */
