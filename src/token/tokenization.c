@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenization.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 18:29:00 by mmariano          #+#    #+#             */
-/*   Updated: 2025/05/01 19:38:52 by marieli          ###   ########.fr       */
+/*   Updated: 2025/05/02 14:45:57 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,23 +20,16 @@ char	**get_tokens(char *line)
 	unsigned int	position;
 
 	if (!line || !*line)
-	{
-		printf("Debug: get_tokens() received NULL or empty line\n");
 		return (NULL);
-	}
 		
 	tokens = initialize_token_array(&bufsize); /* cria um array vazio */
 	if (!tokens)
-	{
-		printf("Debug: initialize_token_array() returned NULL\n");
 		return (NULL);
-	}
 		
 	position = extract_tokens(line, &tokens, &bufsize, &saveptr);
-		/* popula o array com os tokens */
+	/* popula o array com os tokens */
 	if (position == 0)
 	{
-		printf("Debug: No tokens extracted, freeing memory\n");
 		free_tokens(tokens);
 		return (NULL);
 	}
@@ -80,34 +73,20 @@ unsigned int	extract_tokens(char *line, char ***tokens, size_t *bufsize,
 	*saveptr = line;
 	count = 0;
 	if (!line || !tokens || !*tokens || !bufsize || !saveptr || *bufsize == 0)
-	{
-		printf("Debug: extract_tokens() received invalid input\n");
 		return (0);
-	}
 		
 	token = ft_strtok(line, DELIM, saveptr);
 	if (!token)
-    {
-        printf("Debug: ft_strtok() returned NULL\n");
         return (0);
-    }
 	while (token)
-	{
-		printf("Debug: Extracted token -> %s\n", token);
-				
+	{				
 		if (count >= *bufsize - 1 && !realloc_tokens(tokens, bufsize))
-		{
-			printf("Debug: realloc_tokens() failed\n");
 			return (0);
-		}
 			
 		if (*token != '\0')
 		{
 			if (!add_token(tokens, count++, token))
-			{
-				printf("Debug: add_token() failed\n");
-				return (0);
-			}				
+				return (0);			
 		}
 		token = ft_strtok(NULL, DELIM, saveptr);
 	}

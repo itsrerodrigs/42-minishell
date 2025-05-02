@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   quote_handlers.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 18:29:24 by mmariano          #+#    #+#             */
-/*   Updated: 2025/05/01 19:33:12 by marieli          ###   ########.fr       */
+/*   Updated: 2025/05/02 14:46:52 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,12 @@ char *handle_quotes(char **saveptr, char quote_char)
 
     if (*end == '\0')
     {
-        printf("Debug: Unmatched quote detected\n");
-        return NULL;
+        printf("Error: Unmatched quote!\n");
+        return (NULL);
     }
 
     *end = '\0';
     *saveptr = end + 1;
-    printf("Debug: Extracted quoted string -> %s\n", start);
-    return start;
+    return (start);
 }
 

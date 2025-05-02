@@ -14,15 +14,13 @@ char    *trim_whitespace(char *str);
 //-------Tokens------
 char    *ft_strtok(char *str, const char *delim, char **saveptr);
 char	**get_tokens(char *line);
-char    *process_token(char *token, char **saveptr);
+//char    *process_token(char *token, char **saveptr);
 unsigned int	extract_tokens(char *line, char ***tokens, size_t *bufsize, char **saveptr);
-//char	**extract_tokens(char *input);
 void    free_tokens(char **tokens);
 char    **initialize_token_array(size_t *bufsize);
 
 //-----quotes---------
 char *handle_quotes(char **saveptr, char quote);
-char *append_until_quote(char *merged, char quote, char **saveptr);
 
 
 //------Exec--------

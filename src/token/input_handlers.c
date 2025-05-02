@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   input_handlers.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 18:28:18 by mmariano          #+#    #+#             */
-/*   Updated: 2025/05/01 19:08:14 by marieli          ###   ########.fr       */
+/*   Updated: 2025/05/02 14:47:52 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,7 @@ char *read_input(void)
 {
     char *buf;
 
-    /* comentei aqui pra testar os tokens */
-    // display_prompt();
+    display_prompt();
 
     buf = readline(""); 
     if (!buf)
