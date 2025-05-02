@@ -6,7 +6,7 @@
 #    By: marieli <marieli@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/29 18:39:36 by marielidias       #+#    #+#              #
-#    Updated: 2025/04/23 17:19:21 by marieli          ###   ########.fr        #
+#    Updated: 2025/05/01 18:51:25 by marieli          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,7 @@ SRCS = ft_atoi.c     ft_atol.c      ft_bzero.c      ft_calloc.c   \
        ft_strjoin.c   ft_strlcat.c    ft_strlcpy.c    ft_strlen.c \
        ft_strmapi.c   ft_strnstr.c    ft_strncmp.c    ft_strrchr.c \
        ft_strtrim.c   ft_substr.c     ft_tolower.c    ft_toupper.c \
-       get_next_line.c ft_strtok.c
+       get_next_line.c
 
 OBJS = $(SRCS:.c=.o)
 

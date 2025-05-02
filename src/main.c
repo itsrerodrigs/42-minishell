@@ -6,38 +6,74 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 18:28:28 by mmariano          #+#    #+#             */
-/*   Updated: 2025/04/24 18:28:29 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/05/02 14:58:59 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
-
 #include "../inc/minishell.h"
 
-int main(int argc, char **argv)
+/* ---------------------------main do minishell!----------------------*/ 
+
+int	main(int argc, char **argv)
 {
-	char			*line;
-	char 			**args;
+	char	*line;
+	char	**args;
 
 	(void)argc;
-    (void)argv;
-
-	signal(SIGINT, sigint_handler); //para Ctrl+C
+	(void)argv;
+	signal(SIGINT, sigint_handler);
 	printbanner();
-	
-	line = read_input(); //lê o input
-	while (line != NULL) //começa o REPL loop
+	line = read_input();
+	while (line != NULL)
 	{
-		p(G "Looping through REPL...\n" RST); // Debug message
-		args = get_tokens(line); //aqui é onde acontece a tokenização
+		args = get_tokens(line);
 		if (args)
 		{
-			ft_exec(args); //esa função vai lidar com a execução dos comandos
-            free_tokens(args); //free tokens
-			//p("%s\n", args[i]); //escreve de volta no prompt, deixei pra debugar
+			ft_exec(args);
+			free_tokens(args);
 		}
 		free(line);
-		line = read_input();		
+		line = read_input();
 	}
 	return (EXIT_SUCCESS);
 }
+
+/*-----------------------------------------------------------------------------*/
+/* main para testar tokenizaçao */
+
+/* int main(void)
+{
+    char    *line;
+    char    **args;
+    int     i;
+
+    printf("Waiting for input...\n");
+    line = read_input();
+    if (!line)
+    {
+        printf("read_input() returned NULL\n");
+        return (1);
+    }
+
+    while (line != NULL)
+    {
+        printf("Line received: %s\n", line);
+        args = get_tokens(line);
+        if (!args)
+        {
+            printf("get_tokens() returned NULL\n");
+            break;
+        }
+
+        i = 0;
+        while (args[i] != NULL)
+        {
+            printf("Arg[%d]: %s\n", i, args[i]);
+            i++;
+        }
+        if (args)
+            free_tokens(args);
+        line = read_input();
+	}
+    return (EXIT_SUCCESS);
+} */

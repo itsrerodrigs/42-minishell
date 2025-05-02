@@ -4,6 +4,7 @@ NAME        = minishell
 # Compiler and Flags
 CC          = cc
 CFLAGS      = -Wall -Wextra -Werror -g
+LDFLAGS     = -lreadline
 INCLUDES    = -Iinc -Iinc/libft
 
 # Library Paths
@@ -13,34 +14,23 @@ LIBFT       = inc/libft/libft.a
 SRC_DIR     = src
 OBJ_DIR     = obj
 
-# Source and Object Files
-SRCS        = $(shell find $(SRC_DIR) -name "*.c")
+# Source Files - no final trocar pelos nomes dos arquivos
+SRCS 		= $(shell find $(SRC_DIR) -name "*.c")
+# Object Files (generated using patsubst)
 OBJS        = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
-
-# Create object directories (mirroring the src structure)
-DIRS        = $(sort $(dir $(OBJS)))
 
 # Default target
 all: $(NAME)
 
-# minishell: $(SRC_FILES)
-# 	$(CC) $(CFLAGS) $(SRC_FILES) -o minishell -L$(LIBFT_PATH) -lft
-
-tests: $(TEST_FILES) $(SRC_FILES)
-	$(CC) $(CFLAGS) $(TEST_FILES) $(SRC_FILES) -o tests
-	./tests
-
 # Link the final executable
 $(NAME): $(OBJS) $(LIBFT)
-	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME) $(LDFLAGS)
 
-# Compile .c files into .o files; ensure directory exists (order-only dependency)
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(DIRS)
+# Compile .c files into .o files; ensure directory exists
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	mkdir -p $(@D) # Create the directory for the target file
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-# Create necessary object directories
-$(DIRS):
-	mkdir -p $@
 
 # Build the libft library
 $(LIBFT):
@@ -53,10 +43,10 @@ clean:
 
 # Remove objects and executable
 fclean: clean
-	rm -f $(NAME) minishell tests
+	rm -f $(NAME)
 	$(MAKE) -C inc/libft fclean
 
 # Rebuild everything
 re: fclean all
 
-.PHONY: all clean fclean re tests
+.PHONY: all clean fclean re

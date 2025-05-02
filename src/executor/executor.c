@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 18:29:41 by mmariano          #+#    #+#             */
-/*   Updated: 2025/04/24 18:48:06 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/05/02 14:56:16 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 /*
 remove the global variables as soon as possible
 */
+
 t_builtin g_builtin[] = 
 {
 //	{.builtin_name="echo", .foo=shell_echo},
@@ -31,7 +32,7 @@ int status = 0;
 void    ft_exec(char **args)
 {
     int     i;
-    int     status;
+    //int     status;
     const char *curr;
 
     if (args == NULL || args[0] == NULL)
@@ -51,11 +52,11 @@ void    ft_exec(char **args)
 }
 
 
-void ft_launch(char **args)
-{
-	if (ft_fork() == CELL_Jr)
-		ft_execvp(args[0], args);
-	else
-		ft_wait(&status);
+// void ft_launch(char **args)
+// {
+// 	if (ft_fork() == CELL_Jr)
+// 		ft_execvp(args[0], args);
+// 	else
+// 		ft_wait(&status);
 
-}
+// }
