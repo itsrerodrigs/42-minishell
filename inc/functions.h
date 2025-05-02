@@ -6,7 +6,8 @@
 #include <unistd.h> // For pid_t
 
 //-----input handling---------
-void    display_prompt(void);
+char	*display_prompt(void);
+// void    display_prompt(void);
 char 	*read_input(void);
 void    sigint_handler(int signum);
 char    *trim_whitespace(char *str);
