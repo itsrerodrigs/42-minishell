@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 18:28:18 by mmariano          #+#    #+#             */
-/*   Updated: 2025/05/02 16:15:51 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/05/02 16:18:59 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,19 +44,6 @@ char *display_prompt(void)
 
     return (strdup("minishell> ")); 
 }
-
-
-// void display_prompt(void)
-// {
-//     char    cwd[BUFSIZ];
-//     char    *prompt;
-
-//     if (isatty(fileno(stdin))) 
-//     {
-//         ft_getcwd(cwd, sizeof(cwd)); /* get the working dir */
-//         p("%s%s minishell> %s", G, cwd, RST); /* show prompt */
-//     }
-// }
 
 char *trim_whitespace(char *str)
 {
