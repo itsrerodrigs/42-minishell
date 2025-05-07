@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   memory.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 18:28:35 by mmariano          #+#    #+#             */
-/*   Updated: 2025/05/01 19:30:21 by marieli          ###   ########.fr       */
+/*   Updated: 2025/05/07 16:48:17 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ void    *ft_getcwd(char *buf, size_t size)
 char    **initialize_token_array(size_t *bufsize)
 {
     char    **tokens;
+    size_t  i;
 
     *bufsize = 64;
     tokens = ft_malloc(*bufsize * sizeof(*tokens));
@@ -67,6 +68,12 @@ char    **initialize_token_array(size_t *bufsize)
     {
         p(RED "Error in initialize_token_array" RST);
         return (NULL);
+    }
+    i = 0;
+    while (i < *bufsize)
+    {
+        tokens[i] = NULL;
+        i++;
     }
     return (tokens);
 }

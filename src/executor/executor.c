@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 18:29:41 by mmariano          #+#    #+#             */
-/*   Updated: 2025/05/02 14:56:16 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/05/07 16:36:55 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void    ft_exec(char **args)
         }
         ++i;
     }
-    p(RED "Command not found: %s\n" RST, args[0]); // Debug or error message
+    p(RED "Command not found: %s\n" RST, args[0]); // Debug error message
 }
 
 
