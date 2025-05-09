@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 18:28:28 by mmariano          #+#    #+#             */
-/*   Updated: 2025/05/09 16:14:00 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/05/09 16:23:03 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ static t_token *process_input(void)
         tokens = get_tokens(input);
         if (tokens)
         {
-            // ft_exec(tokens);
+            //ft_exec(tokens);
             free_tokens(tokens);
         }
 

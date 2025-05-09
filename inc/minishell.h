@@ -74,6 +74,8 @@ int         realloc_tokens(t_token ***tokens_ptr, size_t *bufsize);
 t_token     **get_tokens(t_token *input);
 char    	*ft_strtok(char *str, const char *delim, char **saveptr);
 
+/*execução dos comandos*/
+void ft_exec(t_shell *shell);
 
 /*builtins*/
 int ft_exit(char **args);
