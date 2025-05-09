@@ -1,74 +1,56 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   input_handlers.c                                   :+:      :+:    :+:   */
+/*   input.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/24 18:28:18 by mmariano          #+#    #+#             */
-/*   Updated: 2025/05/02 16:18:59 by mmariano         ###   ########.fr       */
+/*   Created: 2025/05/09 13:29:22 by mmariano          #+#    #+#             */
+/*   Updated: 2025/05/09 13:31:22 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-void printbanner(void)
-{
-    p(C "Initializing Minishell.. \n" RST);
-}
+#include "../inc/minishell.h"
 
+/*
+ ** @brief: Constructs and returns the prompt string.
+ ** @return: dynamically allocated prompt string 
+ */
 char *display_prompt(void)
 {
-    char    cwd[BUFSIZ];
-    char    *prompt;
-    size_t  prompt_size;
+    char cwd[BUFSIZ];
+    char *prompt;
+    size_t prompt_size;
 
-    if (isatty(fileno(stdin))) 
+    if (isatty(fileno(stdin)))
     {
-        ft_getcwd(cwd, sizeof(cwd));
-
-        prompt_size = ft_strlen(G) + ft_strlen(cwd) + ft_strlen(" minishell> ") + ft_strlen(RST) + 1;
+        getcwd(cwd, sizeof(cwd));
+        prompt_size = ft_strlen(G) + ft_strlen(cwd) + ft_strlen(" minishell> ") +
+                      ft_strlen(RST) + 1;
         prompt = ft_malloc(prompt_size);
-        if (!prompt) 
+        if (!prompt)
             return (NULL);
-
         prompt[0] = '\0';
-
         ft_strlcat(prompt, G, prompt_size);
         ft_strlcat(prompt, cwd, prompt_size);
         ft_strlcat(prompt, " minishell> ", prompt_size);
         ft_strlcat(prompt, RST, prompt_size);
-
         return (prompt);
     }
-
-    return (strdup("minishell> ")); 
+    return (strdup("minishell> "));
 }
 
-char *trim_whitespace(char *str)
+/*
+ ** @brief: Reads user input using the prompt and returns a token.
+ ** @return: pointer to a token containing the user input
+ */
+t_token *read_input(void)
 {
-    char *end;
+    char *buf;
+    char *prompt;
 
-    while (ft_isspace((unsigned char)*str))
-        str++;
-    if (*str == '\0')
-        return (str);
-    end = str + ft_strlen(str) - 1;
-    while (end > str && ft_isspace((unsigned char)*end))
-        end--;
-    *(end + 1) = '\0';
-
-    return (str);
-}
-
-char *read_input(void)
-{
-    char    *buf;
-    char    *prompt;
-
-    //display_prompt();
-    //buf = readline("");
-    
     prompt = display_prompt();
     buf = readline(prompt);
     free(prompt);
@@ -79,12 +61,10 @@ char *read_input(void)
     }
     if (*buf)
         add_history(buf);
-    /* trocar pelo builtin handler depois */
     if (ft_strncmp(buf, "exit", 4) == 0 && ft_strlen(buf) == 4)
     {
-        char *args[] = {buf, NULL};
-        ft_exit(args);
+        free(buf);
+        ft_exit(NULL);
     }
-    buf = trim_whitespace(buf);
-    return (buf);
+    return (create_token(buf));
 }
