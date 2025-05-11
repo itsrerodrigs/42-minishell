@@ -1,31 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit.c                                             :+:      :+:    :+:   */
+/*   quote_handlers.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/28 16:34:22 by mmariano          #+#    #+#             */
-/*   Updated: 2025/04/28 16:34:40 by mmariano         ###   ########.fr       */
+/*   Created: 2025/04/24 18:29:24 by mmariano          #+#    #+#             */
+/*   Updated: 2025/05/02 14:46:52 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-int ft_exit(char **args)
-{
-    int exit_code;
-    
-    exit_code = EXIT_SUCCESS;
 
-    if (args[1]) 
+char *handle_quotes(char **saveptr, char quote_char)
+{
+    char *start, *end;
+
+    if (!saveptr || !*saveptr || **saveptr != quote_char)
+        return NULL;
+
+    start = ++(*saveptr);
+    end = start;
+
+    while (*end && *end != quote_char)
+        end++;
+
+    if (*end == '\0')
     {
-        exit_code = ft_atoi(args[1]);
-        if (exit_code < 0)
-            exit_code = EXIT_FAILURE;
+        printf("Error: Unmatched quote!\n");
+        return (NULL);
     }
-    p(RED "Shutting down...\n" RST);
-    fflush(stdout);
-    usleep(421337);
-    exit(exit_code);
+
+    *end = '\0';
+    *saveptr = end + 1;
+    return (start);
 }
+
