@@ -3,17 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   operator_handlers.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 18:29:31 by mmariano          #+#    #+#             */
-/*   Updated: 2025/04/28 16:19:13 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/05/12 21:08:06 by marieli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-/*
-implement actions for each token later
-*/
 
 
