@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -39,3 +40,62 @@ int ft_exit(char **args)
         free(args[0]);
     exit(exit_code);
 }
+=======
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exit.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/28 16:34:22 by mmariano          #+#    #+#             */
+/*   Updated: 2025/05/02 17:21:30 by renrodri         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../inc/minishell.h"
+
+int ft_exit(char **args)
+{
+    int exit_code;
+    
+    exit_code = EXIT_SUCCESS;
+
+    if (args[1]) 
+    {
+        exit_code = ft_atoi(args[1]);
+        if (exit_code < 0)
+            exit_code = EXIT_FAILURE;
+    }
+    p(RED "Shutting down...\n" RST);
+    fflush(stdout);
+    usleep(421337);
+    exit(exit_code);
+}
+
+int     builtin_exit(t_shell *shell, char **args)
+{
+    int exit_code;
+
+    (void)shell;
+    if (args[1])
+    {
+        if (!ft_isdigit_str(args[1]))
+        {
+            ft_putendl_fd("exit: numeric argument required", STDERR_FILENO);
+            exit(255);
+        }
+        if (args[2])
+        {
+            ft_putendl_fd("exit: too many arguments", STDERR_FILENO);
+            return (1);
+        }
+        exit_code = ft_atoi(args[1]);
+    }
+    else
+        exit_code = 0;
+    
+    ft_putendl_fd("exit", STDOUT_FILENO);
+    exit(exit_code);
+}
+>>>>>>> builtins-test
