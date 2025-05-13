@@ -6,45 +6,120 @@
 /*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 18:28:28 by mmariano          #+#    #+#             */
-/*   Updated: 2025/05/12 21:56:37 by marieli          ###   ########.fr       */
+/*   Updated: 2025/05/12 22:05:23 by marieli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-/* ---------------------------main do minishell!----------------------*/ 
-
-int	main(int argc, char **argv)
+/*
+ ** @brief: Sets up signal handling for SIGINT.
+ */
+static void setup_signal_handling(void)
 {
-	char	*line;
-	char	**args;
+    struct sigaction sa;
 
-	(void)argc;
-	(void)argv;
-	signal(SIGINT, sigint_handler);
-	printbanner();
-	line = read_input();
-	while (line != NULL)
+    sa.sa_handler = sigint_handler;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = SA_RESTART;
+	if (sigaction(SIGINT, &sa, NULL) == -1)
 	{
-		args = get_tokens(line);
-		if (args)
-		{
-			ft_exec(args);
-			free_tokens(args);
-		}
-		free(line);
-		line = read_input();
+		perror("sigaction failed");
+		exit(EXIT_FAILURE);
 	}
-	return (EXIT_SUCCESS);
 }
 
-/*-----------------------------------------------------------------------------*/
-/* main para testar tokenizaçao */
+/*
+ ** @brief: Cleans up allocated memory for input.
+ ** @param input: Pointer to the input token.
+ */
+void cleanup_input(t_token *input)
+{
+    if (!input)
+        return;
+
+    if (input->value)
+        free(input->value);
+    free(input);
+}
+
+/*
+ ** @brief: Reads and processes user input.
+ ** @return: Pointer to the next input token.
+ */
+static t_token *process_input(void)
+{
+    t_token *input = read_input();
+    t_token **tokens;
+
+    while (input != NULL)
+    {
+        if (!input->value)
+        {
+            free(input);
+            input = read_input();
+            continue;
+        }
+
+        tokens = get_tokens(input);
+        if (tokens)
+        {
+            //ft_exec(tokens);
+            free_tokens(tokens);
+        }
+
+        cleanup_input(input);
+        input = read_input();
+    }
+    return (input);
+}
+
+int main(void)
+{
+	t_token *input;
+	
+    setup_signal_handling();
+    p(C "Initializing Minishell.. \n" RST);
+	while(1)
+	{
+		input = process_input();
+		if (!input) 
+			break;
+	}		
+    return (EXIT_SUCCESS);
+}
+
+/* ************************************************************************** */
+/* main para testa os tokens*/
 
 /* int main(void)
 {
-    char    *line;
-    char    **args;
-    int     i;
+    t_token *input;
+    t_token **tokens;
+    
+    while (1)
+    {
+        input = read_input();
+        if (!input)
+            break;
+        tokens = get_tokens(input);
+        if (tokens)
+        {
+            int i = 0;
+            while (tokens[i])
+            {
+                printf("%s\n", tokens[i]->value);
+                i++;
+            }
+            free_tokens(tokens);
+        }
+        else
+        {
+            printf("no tokens found");
+        }
+        cleanup_input(input); 
+    }
+    return (EXIT_SUCCESS);
+}
 
  */
