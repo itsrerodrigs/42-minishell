@@ -3,14 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   input.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 13:29:22 by mmariano          #+#    #+#             */
-/*   Updated: 2025/05/09 13:31:22 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/05/12 21:14:02 by marieli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include "../inc/minishell.h"
 
 #include "../inc/minishell.h"
 
