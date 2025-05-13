@@ -94,10 +94,5 @@ void sigint_handler(int signum);
 void        *ft_malloc(size_t size);
 void	    *ft_realloc(void *ptr, size_t size);
 
-typedef struct s_shell {
-    t_cmd *current_cmd; 
-    char **envp; /* cópia do ambiente do sistema que manipula export e unset */
-    int exit_status; /* ultimo estatus de saída do shell */
-} t_shell;
 
 #endif
