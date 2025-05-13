@@ -1,32 +1,16 @@
-<<<<<<< HEAD:src/parser/operator_handlers.c
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   operator_handlers.c                                :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/24 18:29:31 by mmariano          #+#    #+#             */
-/*   Updated: 2025/05/12 20:21:17 by marieli          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include "../inc/minishell.h"
-
-
-
-=======
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   ft_strcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 16:35:12 by renrodri          #+#    #+#             */
-/*   Updated: 2025/05/02 16:55:49 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/05/12 22:13:14 by marieli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "libft.h"
 
 int ft_strcmp(const char *s1, const char *s2)
 {
@@ -37,4 +21,3 @@ int ft_strcmp(const char *s1, const char *s2)
     }
     return ((unsigned char)(*s1) - (unsigned char)(*s2));
 }
->>>>>>> dev-mari:inc/libft/ft_strcmp.c
