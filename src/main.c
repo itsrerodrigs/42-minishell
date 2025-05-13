@@ -6,7 +6,7 @@
 /*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 18:28:28 by mmariano          #+#    #+#             */
-/*   Updated: 2025/05/12 20:49:49 by marieli          ###   ########.fr       */
+/*   Updated: 2025/05/12 21:56:37 by marieli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,33 +47,4 @@ int	main(int argc, char **argv)
     char    **args;
     int     i;
 
-    printf("Waiting for input...\n");
-    line = read_input();
-    if (!line)
-    {
-        printf("read_input() returned NULL\n");
-        return (1);
-    }
-
-    while (line != NULL)
-    {
-        printf("Line received: %s\n", line);
-        args = get_tokens(line);
-        if (!args)
-        {
-            printf("get_tokens() returned NULL\n");
-            break;
-        }
-
-        i = 0;
-        while (args[i] != NULL)
-        {
-            printf("Arg[%d]: %s\n", i, args[i]);
-            i++;
-        }
-        if (args)
-            free_tokens(args);
-        line = read_input();
-	}
-    return (EXIT_SUCCESS);
-} */
+ */
