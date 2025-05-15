@@ -6,7 +6,7 @@
 /*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 18:29:41 by mmariano          #+#    #+#             */
-/*   Updated: 2025/05/12 21:57:59 by marieli          ###   ########.fr       */
+/*   Updated: 2025/05/14 22:42:04 by marieli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,3 +39,4 @@ void ft_exec(t_shell *shell)
     /* TODO: Implement external command handling (fork + execve) */
     p(RED "Command not found: %s\n" RST, args[0]);
 }
+

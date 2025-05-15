@@ -6,11 +6,13 @@
 /*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 13:06:46 by mmariano          #+#    #+#             */
-/*   Updated: 2025/05/12 22:11:36 by marieli          ###   ########.fr       */
+/*   Updated: 2025/05/14 22:46:38 by marieli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
+#include "../inc/tokens.h"
+#include "../inc/parsing.h"
 
 /*
  ** @brief: Resizes the expanded string buffer based on the inserted value.
@@ -47,11 +49,15 @@ static char *need_expansion(const char *input, size_t *index_ptr, char *expanded
     (*index_ptr)++;
     value = extract_variable(input, index_ptr);
     if (!value)
-        value = "";
+        value = ft_strdup("");
     expanded = resize_expanded(expanded, new_size, value);
     if (!expanded)
+    {
+        free(value);
         return (NULL);
+    }
     ft_strlcat(expanded, value, *new_size + 1);
+    free(value);
     return (expanded);
 }
 
@@ -65,9 +71,15 @@ static char *need_expansion(const char *input, size_t *index_ptr, char *expanded
  */
 static char *regular_char(const char *input, size_t *index_ptr, char *expanded, size_t *new_size)
 {
-    expanded = ft_realloc(expanded, *new_size + 2);
-    if (!expanded)
+    char *temp;
+    
+    temp = ft_realloc(expanded, *new_size + 2);
+    if (!temp)
+    {
+        free(expanded);
         return (NULL);
+    }
+    expanded = temp;
     expanded[*new_size] = input[*index_ptr];
     expanded[*new_size + 1] = '\0';
     (*new_size)++;
@@ -82,13 +94,12 @@ static char *regular_char(const char *input, size_t *index_ptr, char *expanded, 
  */
 char *expand_variables(const char *input)
 {
-    char *expanded;
-    size_t new_size;
-    size_t index_ptr;
+    char    *expanded;
+    size_t  new_size;
+    size_t  index_ptr;
 
     if (!input)
         return (NULL);
-
     new_size = 0;
     index_ptr = 0;
     expanded = malloc(ft_strlen(input) + 1);
@@ -102,7 +113,10 @@ char *expand_variables(const char *input)
         else
             expanded = regular_char(input, &index_ptr, expanded, &new_size);
         if (!expanded)
-            return (NULL);
+        {
+            free(expanded);
+            return (NULL);  
+        }
     }
     return (expanded);
 }

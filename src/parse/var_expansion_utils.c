@@ -6,11 +6,13 @@
 /*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 10:28:25 by mmariano          #+#    #+#             */
-/*   Updated: 2025/05/12 22:11:54 by marieli          ###   ########.fr       */
+/*   Updated: 2025/05/14 22:46:38 by marieli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h" 
+#include "../inc/minishell.h"
+#include "../inc/tokens.h"
+#include "../inc/parsing.h"
 
 /*
 ** @brief: extract the variable name from the input string(skips $, {, etc)

@@ -1,16 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tokenization.c                                     :+:      :+:    :+:   */
+/*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 18:29:00 by mmariano          #+#    #+#             */
-/*   Updated: 2025/05/12 22:11:12 by marieli          ###   ########.fr       */
+/*   Updated: 2025/05/14 22:46:38 by marieli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
+#include "../inc/tokens.h"
+#include "../inc/parsing.h"
 
 /*
 ** @brief: skips the whitespace characters in the input string
@@ -46,6 +48,7 @@ static char *handle_token_quotes(char **saveptr)
     return (NULL);
 }
 
+
 /*
  ** @brief: Extracts the next token from the input string.
  ** @param saveptr: Pointer to the tokenizer state.
@@ -65,10 +68,9 @@ static char *extract_next_token(char **saveptr, const char *delim)
 
     if (**saveptr)
     {
-        **saveptr = '\0';  // Null-terminate token
+        **saveptr = '\0';
         (*saveptr)++;
     }
-
     return (start);
 }
 /*
@@ -84,20 +86,16 @@ char *ft_strtok(char *str, const char *delim, char **saveptr)
 
     if (!saveptr || !delim)
         return (NULL);
-
     if (str)
         *saveptr = str;
-
-    skip_delim(saveptr, delim);  // Skip leading delimiters
-
+    skip_delim(saveptr, delim); 
     if (**saveptr == '\0')
         return (NULL);
-
-    /* Handle quoted strings */
-    token = handle_token_quotes(saveptr);
-    if (token)
-        return token;
-
-    /* Extract regular token */
-    return extract_next_token(saveptr, delim);
+    if (**saveptr == '\'' || **saveptr == '"')
+    {
+        token = handle_token_quotes(saveptr);
+        if (token)
+            return (token);
+    }
+    return (extract_next_token(saveptr, delim));
 }
