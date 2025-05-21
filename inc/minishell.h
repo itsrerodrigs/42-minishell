@@ -45,6 +45,7 @@ typedef struct s_token
 {
     char *value;
     t_token_type type;
+    struct s_token *next;
     // int redir_fd;
     // int syntax_error; 
 } t_token;

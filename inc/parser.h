@@ -39,4 +39,26 @@ typedef struct s_command
     int is_pipe;             /*1 if connected via pipe, 0 if separated by semicolon */
 } t_command;
 
+/*
+* @brief parses a linked list of tokens into a linked list of commands
+* @param tokens pointer to the first token in the token list
+* @return pointer to the head of the linked list of parsed commands
+*/
+t_command *new_command(t_command *current);
+t_command *parse_tokens(t_token *tokens);
+int	parse_redir(t_command *cmd, t_token **token_ptr);
+
+
+/*
+* @brief initializes and allocate memory for a new command structure
+* @return pointer to the newly allocated command or NULL on failure
+*/
+t_command *init_command(void);
+int         add_arg(t_command *cmd, char *arg);
+int         add_redir(t_command *cmd, t_token_type type, char *filename);
+int			handle_cmd_or_arg(t_command *cmd, t_token *token);
+int			handle_redir(t_command *cmd, t_token *token);
+
+void print_commands(t_command *cmd);
+
 #endif

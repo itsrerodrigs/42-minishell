@@ -15,7 +15,7 @@
 #include <string.h>
 #include "minishell.h"
 #include "builtins.h"
-
+/*
 // Função para simular execução de comandos
 void execute_builtin(t_shell *shell, char *input) {
     char *args[10]; // Um array simples para armazenar os argumentos do comando
@@ -77,4 +77,141 @@ int main(int argc, char *argv[], char *envp[])
     }
 
     return 0;
+}*/
+
+#include <stdio.h>
+#include <stdlib.h>
+#include "minishell.h"
+#include "parser.h"
+/*
+ * Cria tokens simples para testar o parser.
+ * A ideia aqui é simular: ls -l | grep txt > output.txt
+ */
+t_token *create_test_tokens(void)
+{
+    t_token *head = malloc(sizeof(t_token));
+    t_token *current = head;
+
+    if (!head)
+        return NULL;
+
+    // ls
+    current->type = TOKEN_VALUE;
+    current->value = "ls";
+    current->next = malloc(sizeof(t_token));
+    current = current->next;
+
+    // -l
+    current->type = TOKEN_VALUE;
+    current->value = "-l";
+    current->next = malloc(sizeof(t_token));
+    current = current->next;
+
+    // pipe |
+    current->type = TOKEN_PIPE;
+    current->value = "|";
+    current->next = malloc(sizeof(t_token));
+    current = current->next;
+
+    // grep
+    current->type = TOKEN_VALUE;
+    current->value = "grep";
+    current->next = malloc(sizeof(t_token));
+    current = current->next;
+
+    // txt
+    current->type = TOKEN_VALUE;
+    current->value = "txt";
+    current->next = malloc(sizeof(t_token));
+    current = current->next;
+
+    // redirect output >
+    current->type = TOKEN_REDIR_OUT;
+    current->value = ">";
+    current->next = malloc(sizeof(t_token));
+    current = current->next;
+
+    // output.txt
+    current->type = TOKEN_VALUE;
+    current->value = "output.txt";
+    current->next = malloc(sizeof(t_token));
+    current = current->next;
+
+    // EOF
+    current->type = TOKEN_EOF;
+    current->value = NULL;
+    current->next = NULL;
+
+    return head;
 }
+
+void free_tokens(t_token **tokens)
+{
+    t_token *tmp;
+    while (*tokens)
+    {
+        tmp = (*tokens)->next;
+        free((*tokens)->value);
+        free(*tokens);
+        *tokens = tmp;
+    }
+    *tokens = NULL;
+}
+
+void print_commands(t_command *cmd)
+{
+    int i;
+    while (cmd)
+    {
+        printf("Command: %s\n", cmd->cmd ? cmd->cmd : "(null)");
+        printf("Args:");
+        if (cmd->args)
+        {
+            i = 0;
+            while (cmd->args[i])
+            {
+                printf(" %s", cmd->args[i]);
+                i++;
+            }
+        }
+        printf("\n");
+        if (cmd->redirs)
+        {
+            t_redirect *redir = cmd->redirs;
+            while (redir)
+            {
+                printf("Redirect: type %d, file %s\n", redir->type, redir->filename);
+                redir = redir->next;
+            }
+        }
+        printf("Is pipe: %d\n\n", cmd->is_pipe);
+        cmd = cmd->next;
+    }
+}
+
+int main(void)
+{
+    t_token *tokens = create_test_tokens();
+    if (!tokens)
+    {
+        printf("Failed to create tokens.\n");
+        return (1);
+    }
+
+    t_command *cmds = parse_tokens(tokens);
+    if (!cmds)
+    {
+        printf("Parsing failed.\n");
+        free_tokens(&tokens);
+        return (1);
+    }
+
+    print_commands(cmds);
+
+    free_tokens(&tokens);
+    // Aqui você deveria liberar a lista de comandos e redirecionamentos também
+    // para evitar leaks, mas vamos deixar isso para uma próxima etapa.
+
+    return (0);
+}
+
