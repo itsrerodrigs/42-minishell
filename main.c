@@ -9,12 +9,6 @@
 /*   Updated: 2025/05/13 20:33:32 by renrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "minishell.h"
-#include "builtins.h"
 /*
 // Função para simular execução de comandos
 void execute_builtin(t_shell *shell, char *input) {
@@ -81,12 +75,24 @@ int main(int argc, char *argv[], char *envp[])
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "minishell.h"
 #include "parser.h"
-/*
- * Cria tokens simples para testar o parser.
- * A ideia aqui é simular: ls -l | grep txt > output.txt
- */
+
+void free_tokens_partial(t_token *head)
+{
+    t_token *tmp;
+
+    while (head)
+    {
+        tmp = head->next;
+        if (head->value)
+            free(head->value);
+        free(head);
+        head = tmp;
+    }
+}
+
 t_token *create_test_tokens(void)
 {
     t_token *head = malloc(sizeof(t_token));
@@ -95,49 +101,118 @@ t_token *create_test_tokens(void)
     if (!head)
         return NULL;
 
-    // ls
     current->type = TOKEN_VALUE;
-    current->value = "ls";
+    current->value = ft_strdup("ls");
+    if (!current->value)
+    {
+        free(current);
+        return NULL;
+    }
+
     current->next = malloc(sizeof(t_token));
+    if (!current->next)
+    {
+        free_tokens_partial(head);
+        return NULL;
+    }
     current = current->next;
 
-    // -l
     current->type = TOKEN_VALUE;
-    current->value = "-l";
+    current->value = ft_strdup("-l");
+    if (!current->value)
+    {
+        free_tokens_partial(head);
+        return NULL;
+    }
+
     current->next = malloc(sizeof(t_token));
+    if (!current->next)
+    {
+        free_tokens_partial(head);
+        return NULL;
+    }
     current = current->next;
 
-    // pipe |
     current->type = TOKEN_PIPE;
-    current->value = "|";
+    current->value = ft_strdup("|");
+    if (!current->value)
+    {
+        free_tokens_partial(head);
+        return NULL;
+    }
+
     current->next = malloc(sizeof(t_token));
+    if (!current->next)
+    {
+        free_tokens_partial(head);
+        return NULL;
+    }
     current = current->next;
 
-    // grep
     current->type = TOKEN_VALUE;
-    current->value = "grep";
+    current->value = ft_strdup("grep");
+    if (!current->value)
+    {
+        free_tokens_partial(head);
+        return NULL;
+    }
+
     current->next = malloc(sizeof(t_token));
+    if (!current->next)
+    {
+        free_tokens_partial(head);
+        return NULL;
+    }
     current = current->next;
 
-    // txt
     current->type = TOKEN_VALUE;
-    current->value = "txt";
+    current->value = ft_strdup("txt");
+    if (!current->value)
+    {
+        free_tokens_partial(head);
+        return NULL;
+    }
+
     current->next = malloc(sizeof(t_token));
+    if (!current->next)
+    {
+        free_tokens_partial(head);
+        return NULL;
+    }
     current = current->next;
 
-    // redirect output >
     current->type = TOKEN_REDIR_OUT;
-    current->value = ">";
+    current->value = ft_strdup(">");
+    if (!current->value)
+    {
+        free_tokens_partial(head);
+        return NULL;
+    }
+
     current->next = malloc(sizeof(t_token));
+    if (!current->next)
+    {
+        free_tokens_partial(head);
+        return NULL;
+    }
     current = current->next;
 
-    // output.txt
     current->type = TOKEN_VALUE;
-    current->value = "output.txt";
+    current->value = ft_strdup("output.txt");
+    if (!current->value)
+    {
+        free_tokens_partial(head);
+        return NULL;
+    }
+
     current->next = malloc(sizeof(t_token));
+    if (!current->next)
+    {
+        free_tokens_partial(head);
+        return NULL;
+    }
     current = current->next;
 
-    // EOF
     current->type = TOKEN_EOF;
     current->value = NULL;
     current->next = NULL;
@@ -145,73 +220,129 @@ t_token *create_test_tokens(void)
     return head;
 }
 
+/* Função para liberar tokens */
 void free_tokens(t_token **tokens)
 {
-    t_token *tmp;
-    while (*tokens)
+    t_token *current;
+    t_token *next;
+
+    if (!tokens || !*tokens)
+        return;
+    current = *tokens;
+    while (current)
     {
-        tmp = (*tokens)->next;
-        free((*tokens)->value);
-        free(*tokens);
-        *tokens = tmp;
+        next = current->next;
+
+        // Libera a string duplicada no token
+        if (current->value)
+            free(current->value);
+
+        // Libera o próprio token
+        free(current);
+
+        current = next;
     }
     *tokens = NULL;
 }
 
+/* Função para imprimir a lista de comandos */
 void print_commands(t_command *cmd)
 {
     int i;
+    t_redirect *redir;
+
     while (cmd)
     {
         printf("Command: %s\n", cmd->cmd ? cmd->cmd : "(null)");
-        printf("Args:");
+
         if (cmd->args)
         {
-            i = 0;
-            while (cmd->args[i])
-            {
+            printf("Arguments:");
+            for (i = 0; cmd->args[i]; i++)
                 printf(" %s", cmd->args[i]);
-                i++;
-            }
+            printf("\n");
         }
-        printf("\n");
-        if (cmd->redirs)
+        else
         {
-            t_redirect *redir = cmd->redirs;
-            while (redir)
-            {
-                printf("Redirect: type %d, file %s\n", redir->type, redir->filename);
-                redir = redir->next;
-            }
+            printf("Arguments: (none)\n");
         }
-        printf("Is pipe: %d\n\n", cmd->is_pipe);
+
+        redir = cmd->redirs;
+        while (redir)
+        {
+            printf("Redirection: ");
+            if (redir->type == TOKEN_REDIR_OUT)
+                printf("Output > ");
+            else if (redir->type == TOKEN_REDIR_IN)
+                printf("Input < ");
+            else if (redir->type == TOKEN_APPEND)
+                printf("Append >> ");
+            else if (redir->type == TOKEN_HEREDOC)
+                printf("Heredoc << ");
+            else
+                printf("Unknown ");
+
+            printf("%s\n", redir->filename);
+            redir = redir->next;
+        }
+
+        if (cmd->is_pipe)
+            printf("Pipe to next command\n");
+
+        printf("----\n");
         cmd = cmd->next;
     }
+}
+
+/* Função para liberar comandos e tudo que eles possuem */
+void free_commands(t_command **cmd_list)
+{
+    t_command *current;
+    t_command *next;
+
+    if (!cmd_list || !*cmd_list)
+        return;
+
+    current = *cmd_list;
+    while (current)
+    {
+        next = current->next;
+
+        // NÃO libera current->cmd (aponta para token->value)
+        // NÃO libera os args[i] (apontam para token->value)
+        if (current->args)
+            free(current->args);
+
+        // Libera a lista de redirections, mas NÃO os filenames (apontam para token->value)
+        while (current->redirs)
+        {
+            t_redirect *tmp = current->redirs;
+            current->redirs = tmp->next;
+            free(tmp);
+        }
+
+        free(current);
+        current = next;
+    }
+    *cmd_list = NULL;
 }
 
 int main(void)
 {
     t_token *tokens = create_test_tokens();
-    if (!tokens)
-    {
-        printf("Failed to create tokens.\n");
-        return (1);
-    }
+    t_command *cmd_list = parse_tokens(tokens);
 
-    t_command *cmds = parse_tokens(tokens);
-    if (!cmds)
+    if (!cmd_list)
     {
-        printf("Parsing failed.\n");
+        printf("Parsing failed\n");
         free_tokens(&tokens);
-        return (1);
+        return 1;
     }
 
-    print_commands(cmds);
+    print_commands(cmd_list);
 
+    free_commands(&cmd_list);
     free_tokens(&tokens);
-    // Aqui você deveria liberar a lista de comandos e redirecionamentos também
-    // para evitar leaks, mas vamos deixar isso para uma próxima etapa.
 
-    return (0);
+    return 0;
 }
-

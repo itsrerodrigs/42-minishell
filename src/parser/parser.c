@@ -28,11 +28,17 @@ t_command *new_command(t_command *current)
 * @brief parses a list of tokens into a linked list of commands
 */
 
-int  parse_redir(t_command *cmd, t_token **token_ptr)
+int parse_redir(t_command *cmd, t_token **token_ptr)
 {
-    if (!handle_redir(cmd, *token_ptr))
+    t_token *token = *token_ptr;
+
+    if (!handle_redir(cmd, token))
         return (0);
-    *token_ptr += 2;
+
+    if (!token->next)  // Verifica se o próximo token existe
+        return (0);
+
+    *token_ptr = token->next->next; // Avança dois nós: redir + filename
     return (1);
 }
 
@@ -53,7 +59,7 @@ t_command *parse_tokens(t_token *tokens)
         return (NULL);
     current = cmd_list;
 
-    while (tokens && tokens->type != TOKEN_EOF)
+    while (tokens != NULL && tokens->type != TOKEN_EOF)
     {
         if (tokens->type == TOKEN_VALUE
         || tokens->type == TOKEN_SINGLE_QUOTED
@@ -84,7 +90,7 @@ t_command *parse_tokens(t_token *tokens)
             if (!current)
                 return (NULL);
         }
-        tokens++;
+        tokens = tokens->next;
     }
     return (cmd_list);
 }
