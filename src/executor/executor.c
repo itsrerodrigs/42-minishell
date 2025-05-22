@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 18:29:41 by mmariano          #+#    #+#             */
-/*   Updated: 2025/05/09 14:49:38 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/05/14 22:42:04 by marieli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,3 +39,4 @@ void ft_exec(t_shell *shell)
     /* TODO: Implement external command handling (fork + execve) */
     p(RED "Command not found: %s\n" RST, args[0]);
 }
+

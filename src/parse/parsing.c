@@ -1,33 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strdup.c                                        :+:      :+:    :+:   */
+/*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/29 18:23:20 by marielidias       #+#    #+#             */
-/*   Updated: 2025/05/12 22:12:55 by marieli          ###   ########.fr       */
+/*   Created: 2025/05/14 20:06:34 by marieli           #+#    #+#             */
+/*   Updated: 2025/05/14 22:46:38 by marieli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../inc/minishell.h"
+#include "../inc/tokens.h"
+#include "../inc/parsing.h"
 
-char	*ft_strdup(const char *src)
+t_cmd *parse_tokens(t_token **tokens)
 {
-	char	*dest;
-	int		index;
-	int		len;
-
-	len = (ft_strlen(src) + 1);
-	dest = (char *)malloc(len);
-	if (dest == NULL)
-		return (NULL);
-	index = 0;
-	while (src[index] != '\0')
-	{
-		dest[index] = src[index];
-		index++;
-	}
-	dest[index] = '\0';
-	return (dest);
+    (void)tokens;
+    //TODO: Implement the parsing logic here
+    return(NULL);
 }

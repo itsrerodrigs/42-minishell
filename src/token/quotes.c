@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   quotes.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 13:15:45 by mmariano          #+#    #+#             */
-/*   Updated: 2025/05/09 13:42:48 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/05/14 22:46:38 by marieli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
+#include "../inc/tokens.h"
+#include "../inc/parsing.h"
 
 /*
 **	@brief: extracts a quotes substring from the input
@@ -18,8 +20,7 @@
 ** 			quote_char - type of quote
 ** @return: pointer to extracted quoted string
 */
-
-static char *extract_quoted(char **saveptr, char quote_char)
+char *extract_quoted(char **saveptr, char quote_char)
 {
 	char *start;
 	char *end;
@@ -48,13 +49,13 @@ static char *extract_quoted(char **saveptr, char quote_char)
 	return(start);
 }
 
+
 /*
 ** @brief:  call extract quotes and applies variable expansion for double quotes
 ** @param: saveptr - pointer to tokenizer state, 
 **		quote_char - quoting character
 ** @return: new token constructed from the quoted input
 */
-
 t_token *handle_quotes(char **saveptr, char quote_char)
 {
 	char *start;
@@ -73,7 +74,7 @@ t_token *handle_quotes(char **saveptr, char quote_char)
 			p("Error: Memory allocation failed during variable expansion.\n");
 			return (NULL);
 		}
-		return (create_token(expanded));
+		return (create_token(expanded, TOKEN_WORD));
 	}
-	return(create_token(start));
+	return(create_token(start,TOKEN_WORD));
 }

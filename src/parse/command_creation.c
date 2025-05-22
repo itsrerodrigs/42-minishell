@@ -1,33 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strdup.c                                        :+:      :+:    :+:   */
+/*   command_creation.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/29 18:23:20 by marielidias       #+#    #+#             */
-/*   Updated: 2025/05/12 22:12:55 by marieli          ###   ########.fr       */
+/*   Created: 2025/05/14 20:02:43 by marieli           #+#    #+#             */
+/*   Updated: 2025/05/14 22:46:38 by marieli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../inc/minishell.h"
+#include "../inc/tokens.h"
+#include "../inc/parsing.h"
 
-char	*ft_strdup(const char *src)
+t_cmd *create_command(void)
 {
-	char	*dest;
-	int		index;
-	int		len;
-
-	len = (ft_strlen(src) + 1);
-	dest = (char *)malloc(len);
-	if (dest == NULL)
-		return (NULL);
-	index = 0;
-	while (src[index] != '\0')
-	{
-		dest[index] = src[index];
-		index++;
-	}
-	dest[index] = '\0';
-	return (dest);
+    t_cmd *cmd;
+    
+    cmd = malloc(sizeof(t_cmd));
+    if (!cmd) {
+        perror("malloc failed");
+        exit(EXIT_FAILURE);
+    }
+    cmd->args = NULL;
+    cmd->argc = 0;
+    cmd->next = NULL;
+    return (cmd);
 }
