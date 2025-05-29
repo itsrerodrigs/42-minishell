@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 12:19:45 by marielidias       #+#    #+#             */
-/*   Updated: 2025/05/22 17:16:49 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/04/03 18:16:22 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
