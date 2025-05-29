@@ -64,3 +64,56 @@
 }
 
  */
+
+ #include "minishell.h"
+#include "tokens.h"
+#include "parser.h"
+#include <readline/readline.h>
+#include <readline/history.h>
+
+int	main(int argc, char **argv, char **envp)
+{
+	t_shell shell;
+	char *input;
+	t_token *tokens;
+	t_command *commands;
+
+	(void)argc;
+	(void)argv;
+
+	shell.envp = envp;
+	shell.exit_status = 0;
+	shell.current_cmd = NULL;
+
+	while (1)
+	{
+		input = readline("minishell> ");
+		if (!input)
+			break;
+
+		if (*input)
+			add_history(input);
+
+		// Tokenização
+		tokens = get_tokens(input);
+		if (!tokens)
+		{
+			free(input);
+			continue;
+		}
+
+		// Parsing
+		commands = parse_tokens(tokens);
+		shell.current_cmd = commands;
+
+		// Teste: imprime a estrutura gerada
+		print_commands(commands);
+		ft_exec(&shell);
+
+		// Limpeza
+		free_tokens(tokens);
+		free_commands(commands);
+		free(input);
+	}
+	return (0);
+}

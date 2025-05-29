@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
+#include "builtins.h"
 
 /*
  * @brief Executes the current command from the shell state.
@@ -24,6 +25,8 @@
 void ft_exec(t_shell *shell)
 {
     char **args;
+    pid_t pid;
+    int status;
 
     if (!shell || !shell->current_cmd)
         return;
@@ -33,10 +36,31 @@ void ft_exec(t_shell *shell)
         return;
 
     /* Check if the command is a built-in.*/
-/*     if (exec_builtin(shell))
-        return; */
+    if (exec_builtin(shell))
+        return;
+
+    /*father*/
+    pid = fork();
+    if (pid < 0)
+    {
+        perror("minishell: fork");
+        shell->exit_status = 1;
+        return;
+    }
+    else if (pid == 0)
+    {
+        execve(args[0], args, shell->envp);
+        perror("minishell");
+        exit(127);
+    }
+    else
+    {
+        waitpid(pid, &status, 0);
+        if (WIFEXITED(status))
+            shell->exit_status = WEXITSTATUS(status);
+    }
 
     /* TODO: Implement external command handling (fork + execve) */
-    p(RED "Command not found: %s\n" RST, args[0]);
+    //p(RED "Command not found: %s\n" RST, args[0]);
 }
 

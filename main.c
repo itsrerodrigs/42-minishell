@@ -341,12 +341,12 @@ int main(void)
 
     print_commands(cmd_list);
 
-    free_commands(&cmd_list);
+    free_commands(cmd_list);
     free_tokens(&tokens);
 
     return 0;
 }*/
-
+/*
 #include "minishell.h"
 
 int	main(int argc, char **argv, char **envp)
@@ -393,8 +393,8 @@ int	main(int argc, char **argv, char **envp)
 
 		// Libera tudo
 		free_tokens(&tokens);
-		// free_commands(commands); // criar essa função depois
+		free_commands(&commands); // criar essa função depois
 		free(input);
 	}
 	return (0);
-}
+}*/

@@ -12,7 +12,6 @@
 
 #include "minishell.h"
 #include "parser.h"
-#include "test.h"
 
 void free_redirs(t_redirect *redir)
 {
@@ -28,10 +27,9 @@ void free_redirs(t_redirect *redir)
     }
 }
 
-void free_commands_list(t_command *cmd)
+void free_commands(t_command *cmd)
 {
     t_command *tmp;
-    int i;
 
     while (cmd)
     {
@@ -40,8 +38,6 @@ void free_commands_list(t_command *cmd)
             free(cmd->cmd);
         if (cmd->args)
         {
-            for (i = 0; cmd->args[i]; i++)
-                free(cmd->args[i]);
             free(cmd->args);
         }
         if (cmd->redirs)
@@ -51,7 +47,7 @@ void free_commands_list(t_command *cmd)
     }
 }
 
-void free_tokens(t_token *tokens)
+void free_parser_tokens(t_token *tokens)
 {
     t_token *cur;
     t_token *next;
@@ -62,8 +58,8 @@ void free_tokens(t_token *tokens)
     while (cur)
     {
         next = cur->next;
-        if (cur->value)
-            free(cur->value);
+        //if (cur->value)
+           // free(cur->value);
         free(cur);
         cur = next;
     }

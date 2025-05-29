@@ -12,7 +12,7 @@
 
 #include "../inc/minishell.h"
 #include "../inc/tokens.h"
-#include "../inc/parsing.h"
+#include "../inc/parser.h"
 
 /*
  ** @brief: Frees all tokens in the linked list.
@@ -26,7 +26,7 @@ void free_tokens(t_token *head)
     {
         tmp = head;
         head = head->next;
-        free(tmp->value);
+       // free(tmp->value);
         free(tmp);
     }
 }
@@ -36,7 +36,7 @@ void free_tokens(t_token *head)
  ** @param: type - Type of token (command, pipe, redirection, etc.).
  ** @return: Pointer to newly allocated `t_token` structure.
  */
-t_token *create_token(char *buf, t_id type)
+t_token *create_token(char *buf, t_token_type type)
 {
     t_token *new_token;
 
@@ -89,7 +89,7 @@ t_token *extract_tokens(char **saveptr)
  ** @param: token_str - String representing a token.
  ** @return: Token type as `t_id` (e.g., TOKEN_PIPE, TOKEN_WORD, etc.).
  */
-t_id get_token_type(char *token_str)
+t_token_type get_token_type(char *token_str)
 {
     if (!token_str) 
         return (TOKEN_WORD);

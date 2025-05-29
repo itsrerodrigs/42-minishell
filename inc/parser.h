@@ -68,5 +68,7 @@ int			handle_cmd_or_arg(t_command *cmd, t_token *token);
 int			handle_redir(t_command *cmd, t_token *token);
 
 void print_commands(t_command *cmd);
+void free_commands(t_command *cmd);
+void free_redirs(t_redirect *redir);
 
 #endif

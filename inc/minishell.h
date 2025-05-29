@@ -8,6 +8,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <string.h>
+#include <sys/wait.h> // waitpid, fork e exceve
 #include "libft/libft.h"
 #include "builtins.h"
 #include "tokens.h"
@@ -58,7 +59,7 @@ typedef struct s_shell { EXCLUIR ESSE BLOCO
 /*------------------------Prototypes------------------------------------*/
 /*input*/
 char        *display_prompt(void);
-t_token     *read_input(void);
+char     *read_input(void);
 
 /*token*/
 //void	    free_tokens(t_token **tokens);
@@ -85,5 +86,6 @@ void sigint_handler(int signum);
 void        *ft_malloc(size_t size);
 void	    *ft_realloc(void *ptr, size_t size);
 
+void ft_exit(t_shell *shell);
 
 #endif

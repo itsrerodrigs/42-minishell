@@ -98,10 +98,13 @@ int     add_redir(t_command *cmd, t_redir_type type, char *filename)
 int     handle_cmd_or_arg(t_command *cmd, t_token *token)
 {
     if (!cmd->cmd)
+    {
         cmd->cmd = token->value;
+        return (add_arg(cmd, token->value));
+    }
     else
         return (add_arg(cmd, token->value));
-    return (1);
+    //return (1);
 }
 
 /*

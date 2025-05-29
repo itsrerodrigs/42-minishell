@@ -13,6 +13,7 @@
 #include "../inc/minishell.h"
 #include "../inc/tokens.h"
 #include "../inc/parsing.h"
+#include "debug.h"
 
 /*
  ** @brief: Constructs and returns the prompt string.
@@ -64,7 +65,7 @@ char *read_input(void)
     if (ft_strncmp(buf, "exit", 4) == 0 && ft_strlen(buf) == 4)
     {
         free(buf);
-        ft_exit(NULL);
+        exit(0);
     }
     return (buf);
 }

@@ -51,4 +51,3 @@ void	*ft_realloc(void *ptr, size_t size)
 		perror(RED "ft_realloc: reallocation failed" RST);
 	return(new_ptr);
 }
-
