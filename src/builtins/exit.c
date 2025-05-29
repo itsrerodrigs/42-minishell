@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 16:34:22 by mmariano          #+#    #+#             */
-/*   Updated: 2025/05/09 13:32:44 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/05/22 17:08:23 by renrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
-
 
 /*
  * @brief: Built-in exit command for minishell. It converts the supplied argument
@@ -20,11 +19,12 @@
  * @return: this function does not return as it calls exit() after cleanup.
  * @note: The function also performs a short delay before exiting.
  */
-int ft_exit(char **args)
+int builtin_exit(t_shell *shell, char **args)
 {
     int exit_code;
     
     exit_code = EXIT_SUCCESS;
+    (void)shell;
 
     if (args && args[1]) 
     {

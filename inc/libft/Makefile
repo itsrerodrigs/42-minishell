@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: marieli <marieli@student.42.fr>            +#+  +:+       +#+         #
+#    By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/29 18:39:36 by marielidias       #+#    #+#              #
-#    Updated: 2025/05/01 18:51:25 by marieli          ###   ########.fr        #
+#    Updated: 2025/05/22 17:20:07 by renrodri         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
