@@ -14,15 +14,23 @@
 # define PARSER_H
 
 #include "minishell.h"
+#include "tokens.h"
 
 // assuming that t_token and t_token_type was defined in minishell.h
+/**/
+typedef enum e_redir_type {
+    REDIR_IN, // <
+    REDIR_OUT, // >
+    REDIR_APPEND, // >>
+    REDIR_HEREDOC // <<
+} t_redir_type;
 
 /*
 * @brief represents a redirection tied to a command
 */
 typedef struct s_redirect
 {
-    t_token_type type;  /*type REDIR_IN, REDIR_OUT...*/
+    t_redir_type type;  /*type REDIR_IN, REDIR_OUT...*/
     char *filename; /*target filename or limiter for redirection*/
     struct s_redirect *next; /*pointer to the next redirection in the list*/
 } t_redirect;
@@ -55,7 +63,7 @@ int	parse_redir(t_command *cmd, t_token **token_ptr);
 */
 t_command *init_command(void);
 int         add_arg(t_command *cmd, char *arg);
-int         add_redir(t_command *cmd, t_token_type type, char *filename);
+int         add_redir(t_command *cmd, t_redir_type type, char *filename);
 int			handle_cmd_or_arg(t_command *cmd, t_token *token);
 int			handle_redir(t_command *cmd, t_token *token);
 

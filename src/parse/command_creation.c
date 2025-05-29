@@ -9,6 +9,8 @@
 /*   Updated: 2025/05/14 22:46:38 by marieli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+/*
+REMOVER ESTE ARQUIVO TBM
 
 #include "../inc/minishell.h"
 #include "../inc/tokens.h"
@@ -27,4 +29,4 @@ t_cmd *create_command(void)
     cmd->argc = 0;
     cmd->next = NULL;
     return (cmd);
-}
+}*/

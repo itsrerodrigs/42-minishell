@@ -5,7 +5,7 @@
 t_token *create_tokens_env(void)
 {
 	t_token *head = malloc(sizeof(t_token));
-	head->type = TOKEN_VALUE;
+	head->type = TOKEN_WORD;
 	head->value = ft_strdup("env");
 	head->next = malloc(sizeof(t_token));
 	head->next->type = TOKEN_EOF;
@@ -25,5 +25,5 @@ void test_builtin_env(void)
 		printf("env: PASS\n");
 
 	free_commands(&cmds);
-	free_tokens(&tokens);
+	free_tokens(tokens);
 }

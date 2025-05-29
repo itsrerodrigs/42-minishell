@@ -10,8 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
 #include "minishell.h"
+#include "tokens.h"
+#include "parser.h"
 #include <stdlib.h>
 
 /*
@@ -61,7 +62,7 @@ t_command *parse_tokens(t_token *tokens)
 
     while (tokens != NULL && tokens->type != TOKEN_EOF)
     {
-        if (tokens->type == TOKEN_VALUE
+        if (tokens->type == TOKEN_WORD
         || tokens->type == TOKEN_SINGLE_QUOTED
         || tokens->type == TOKEN_DOUBLE_QUOTED)
         {

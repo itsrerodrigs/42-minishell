@@ -1,13 +1,12 @@
-<<<<<<< HEAD
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   ft_lstadd_back.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
+/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 15:15:23 by marieli           #+#    #+#             */
-/*   Updated: 2025/03/20 17:54:51 by marieli          ###   ########.fr       */
+/*   Updated: 2025/05/22 17:13:58 by renrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,31 +24,3 @@ void	ft_lstadd_back(t_list **lst, t_list *new)
 		last_node->next = new;
 	}
 }
-=======
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_lstadd_back.c                                   :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/03 15:15:23 by marieli           #+#    #+#             */
-/*   Updated: 2025/03/20 17:54:51 by marieli          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include "libft.h"
-
-void	ft_lstadd_back(t_list **lst, t_list *new)
-{
-	t_list	*last_node;
-
-	if (*lst == NULL)
-		*lst = new;
-	else
-	{
-		last_node = ft_lstlast(*lst);
-		last_node->next = new;
-	}
-}
->>>>>>> dev_parsing

@@ -44,7 +44,6 @@ static builtin_func find_builtin(char *cmd)
     return NULL;
 }
 
-
 int     exec_builtin(t_shell *shell)
 {
     char    *cmd;

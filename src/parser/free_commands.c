@@ -51,14 +51,14 @@ void free_commands_list(t_command *cmd)
     }
 }
 
-void free_tokens(t_token **tokens)
+void free_tokens(t_token *tokens)
 {
     t_token *cur;
     t_token *next;
 
-    if (!tokens || !*tokens)
+    if (!tokens)
         return;
-    cur = *tokens;
+    cur = tokens;
     while (cur)
     {
         next = cur->next;
@@ -67,5 +67,4 @@ void free_tokens(t_token **tokens)
         free(cur);
         cur = next;
     }
-    *tokens = NULL;
 }

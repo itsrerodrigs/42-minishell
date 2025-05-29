@@ -72,7 +72,7 @@ int main(int argc, char *argv[], char *envp[])
 
     return 0;
 }*/
-
+/*
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -220,7 +220,7 @@ t_token *create_test_tokens(void)
     return head;
 }
 
-/* Função para liberar tokens */
+// Função para liberar tokens 
 void free_tokens(t_token **tokens)
 {
     t_token *current;
@@ -245,7 +245,7 @@ void free_tokens(t_token **tokens)
     *tokens = NULL;
 }
 
-/* Função para imprimir a lista de comandos */
+// Função para imprimir a lista de comandos
 void print_commands(t_command *cmd)
 {
     int i;
@@ -294,7 +294,7 @@ void print_commands(t_command *cmd)
     }
 }
 
-/* Função para liberar comandos e tudo que eles possuem */
+// Função para liberar comandos e tudo que eles possuem 
 void free_commands(t_command **cmd_list)
 {
     t_command *current;
@@ -345,4 +345,56 @@ int main(void)
     free_tokens(&tokens);
 
     return 0;
+}*/
+
+#include "minishell.h"
+
+int	main(int argc, char **argv, char **envp)
+{
+	t_shell	shell;
+	char	*input;
+	t_token	*tokens;
+	t_command *commands;
+
+	(void)argc;
+	(void)argv;
+
+	// Inicializa shell
+	shell.envp = envp;
+	shell.exit_status = 0;
+	shell.current_cmd = NULL;
+
+	while (1)
+	{
+		input = readline("minishell> ");
+		if (!input)
+			break;
+
+		if (*input)
+			add_history(input);
+
+		// Tokeniza entrada
+		tokens = get_tokens(input); // assume que você tem uma função get_tokens
+		if (!tokens)
+		{
+			free(input);
+			continue;
+		}
+
+		// Faz o parsing
+		commands = parse_tokens(tokens);
+		shell.current_cmd = commands;
+
+		// Aqui vai a execução (você pode deixar comentado por enquanto)
+		// ft_exec(&shell);
+
+		// DEBUG opcional
+		print_commands(commands);
+
+		// Libera tudo
+		free_tokens(&tokens);
+		// free_commands(commands); // criar essa função depois
+		free(input);
+	}
+	return (0);
 }

@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "tokens.h"
 #include "parser.h"
 #include <stdlib.h>
 
@@ -68,7 +69,7 @@ int     add_arg(t_command *cmd, char *arg)
 * @return 1 in case of success or 0 on failure
 */
 
-int     add_redir(t_command *cmd, t_token_type type, char *filename)
+int     add_redir(t_command *cmd, t_redir_type type, char *filename)
 {
     t_redirect *new_redir;
     t_redirect *last;
@@ -109,10 +110,23 @@ int     handle_cmd_or_arg(t_command *cmd, t_token *token)
 */
 int handle_redir(t_command *cmd, t_token *token)
 {
+    t_redir_type redir_type;
+
     if (!token || !token->next || !token->next->value)
         return 0;
 
-    if (!add_redir(cmd, token->type, token->next->value))
+    if (token->type == TOKEN_REDIR_IN)
+        redir_type = REDIR_IN;
+    else if (token->type == TOKEN_REDIR_OUT)
+        redir_type = REDIR_OUT;
+    else if (token->type == TOKEN_APPEND)
+        redir_type = REDIR_APPEND;
+    else if (token->type == TOKEN_HEREDOC)
+        redir_type = REDIR_HEREDOC;
+    else
+        return 0;
+
+    if (!add_redir(cmd, redir_type, token->next->value))
         return 0;
 
     return 1;

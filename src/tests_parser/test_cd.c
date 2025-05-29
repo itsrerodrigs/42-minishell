@@ -7,12 +7,12 @@ t_token *create_tokens_cd(void)
 	t_token *head = malloc(sizeof(t_token));
 	t_token *cur = head;
 
-	cur->type = TOKEN_VALUE;
+	cur->type = TOKEN_WORD;
 	cur->value = ft_strdup("cd");
 	cur->next = malloc(sizeof(t_token));
 	cur = cur->next;
 
-	cur->type = TOKEN_VALUE;
+	cur->type = TOKEN_WORD;
 	cur->value = ft_strdup("/home/user");
 	cur->next = malloc(sizeof(t_token));
 	cur = cur->next;
@@ -35,5 +35,5 @@ void test_builtin_cd(void)
 		printf("cd: PASS\n");
 
 	free_commands(&cmds);
-	free_tokens(&tokens);
+	free_tokens(tokens);
 }

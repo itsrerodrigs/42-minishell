@@ -6,7 +6,7 @@ t_token *create_tokens_pwd(void)
 {
 	t_token *head = malloc(sizeof(t_token));
 
-	head->type = TOKEN_VALUE;
+	head->type = TOKEN_WORD;
 	head->value = ft_strdup("pwd");
 	head->next = malloc(sizeof(t_token));
 	head = head->next;
@@ -29,5 +29,5 @@ void test_builtin_pwd(void)
 		printf("pwd: PASS\n");
 
 	free_commands(&cmds);
-	free_tokens(&tokens);
+	free_tokens(tokens);
 }

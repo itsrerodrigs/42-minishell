@@ -7,12 +7,12 @@ t_token *create_tokens_export(void)
 	t_token *head = malloc(sizeof(t_token));
 	t_token *cur = head;
 
-	cur->type = TOKEN_VALUE;
+	cur->type = TOKEN_WORD;
 	cur->value = ft_strdup("export");
 	cur->next = malloc(sizeof(t_token));
 	cur = cur->next;
 
-	cur->type = TOKEN_VALUE;
+	cur->type = TOKEN_WORD;
 	cur->value = ft_strdup("VAR=value");
 	cur->next = malloc(sizeof(t_token));
 	cur = cur->next;
@@ -35,5 +35,5 @@ void test_builtin_export(void)
 		printf("export: PASS\n");
 
 	free_commands(&cmds);
-	free_tokens(&tokens);
+	free_tokens(tokens);
 }

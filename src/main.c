@@ -15,7 +15,7 @@
 #include "../inc/parsing.h"
 
 
-int main(void)
+/*int main(void)
 {
 	t_token *input;
 	
@@ -29,7 +29,7 @@ int main(void)
 	}		
     return (EXIT_SUCCESS);
 }
-
+*/
 /* ************************************************************************** */
 /* main para testa os tokens*/
 

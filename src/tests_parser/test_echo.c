@@ -7,17 +7,17 @@ t_token *create_tokens_echo(void)
 	t_token *head = malloc(sizeof(t_token));
 	t_token *cur = head;
 
-	cur->type = TOKEN_VALUE;
+	cur->type = TOKEN_WORD;
 	cur->value = ft_strdup("echo");
 	cur->next = malloc(sizeof(t_token));
 	cur = cur->next;
 
-	cur->type = TOKEN_VALUE;
+	cur->type = TOKEN_WORD;
 	cur->value = ft_strdup("hello");
 	cur->next = malloc(sizeof(t_token));
 	cur = cur->next;
 
-	cur->type = TOKEN_VALUE;
+	cur->type = TOKEN_WORD;
 	cur->value = ft_strdup("world");
 	cur->next = malloc(sizeof(t_token));
 	cur = cur->next;
@@ -40,5 +40,5 @@ void test_builtin_echo(void)
 		printf("echo: PASS\n");
 
 	free_commands(&cmds);
-	free_tokens(&tokens);
+	free_tokens(tokens);
 }

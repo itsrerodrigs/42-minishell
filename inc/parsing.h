@@ -1,3 +1,4 @@
+/* REMOVER ARQUIVO
 #ifndef PARSING_H
 #define PARSING_H
 
@@ -14,8 +15,8 @@ typedef struct s_cmd
 t_cmd *create_command(void);
 
 
-/*variable expansion*/
+variable expansion
 char        *extract_variable(const char *input, size_t *index_ptr);
 char        *expand_variables(const char *input);
 
-#endif
+#endif*/

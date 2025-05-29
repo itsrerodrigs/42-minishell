@@ -10,6 +10,9 @@
 #include <string.h>
 #include "libft/libft.h"
 #include "builtins.h"
+#include "tokens.h"
+#include "parser.h"
+//#include "parsing.h" remover
 
 #define Y		"\033[1;33m"
 #define G		"\033[1;32m"
@@ -26,38 +29,27 @@
 
 #define INITIAL_TOKENS_CAPACITY 16
 
-typedef enum e_token_type
+/*typedef enum e_token_type
 {
-    TOKEN_VALUE,         /* Regular command or argument (e.g., "ls", "echo")  */
-    TOKEN_SINGLE_QUOTED, /* Single-quoted string (e.g., 'hello world')  */
-    TOKEN_DOUBLE_QUOTED, /* Double-quoted string (e.g., "hello world")  */
-    TOKEN_PIPE,          /* Pipe symbol "|"  */
-    TOKEN_REDIR_OUT,     /* Output redirection ">"  */
-    TOKEN_REDIR_IN,      /* Input redirection "<"  */
-    TOKEN_APPEND,        /* Append redirection ">>"  */
-    TOKEN_HEREDOC,       /* Here-document "<<"  */
-    TOKEN_EOF,           /* End of file (useful for parsing)  */
-    TOKEN_SEMICOLON      /* Command separator ";"  */
-} t_token_type;
+    TOKEN_VALUE,         // Regular command or argument (e.g., "ls", "echo") 
+    TOKEN_SINGLE_QUOTED, // Single-quoted string (e.g., 'hello world') 
+    TOKEN_DOUBLE_QUOTED, // Double-quoted string (e.g., "hello world") 
+    TOKEN_PIPE,          // Pipe symbol "|"  
+    TOKEN_REDIR_OUT,     // Output redirection ">" 
+    TOKEN_REDIR_IN,      // Input redirection "<"  
+    TOKEN_APPEND,        // Append redirection ">>"  add redir_append
+    TOKEN_HEREDOC,       // Here-document "<<" add redir_heredoc 
+    TOKEN_EOF,           // End of file (useful for parsing) 
+    TOKEN_SEMICOLON      // Command separator ";"  
+} t_token_type;*/
 
-
-typedef struct s_token 
-{
-    char *value;
-    t_token_type type;
-    struct s_token *next;
-    // int redir_fd;
-    // int syntax_error; 
-} t_token;
-
-
-/* exec_builtin 
+/* exec_builtin  EXCLUIR ESSE BLOCO!
 typedef struct s_cmd {
     char **args; 
     int argc;  // numero de args passados
 } t_cmd;
 
-typedef struct s_shell {
+typedef struct s_shell { EXCLUIR ESSE BLOCO
     t_cmd *current_cmd; 
     char **envp; // cópia do ambiente do sistema que manipula export e unset
     int exit_status; // ultimo estatus de saída do shell
@@ -69,12 +61,12 @@ char        *display_prompt(void);
 t_token     *read_input(void);
 
 /*token*/
-void	    free_tokens(t_token **tokens);
-t_token     *create_token(char *buf);
-t_token     **init_token_array(size_t *bufsize);
+//void	    free_tokens(t_token **tokens);
+//t_token     *create_token(char *buf);
+//t_token     **init_token_array(size_t *bufsize);
 int         realloc_tokens(t_token ***tokens_ptr, size_t *bufsize);
-t_token     **get_tokens(t_token *input);
-char    	*ft_strtok(char *str, const char *delim, char **saveptr);
+//t_token     **get_tokens(t_token *input);
+//char    	*ft_strtok(char *str, const char *delim, char **saveptr);
 
 /*execução dos comandos*/
 void ft_exec(t_shell *shell);
@@ -84,7 +76,7 @@ char *extract_variable(const char *input, size_t *index_ptr);
 char *expand_variables(const char *input);
 
 /*quotes*/
-t_token *handle_quotes(char **saveptr, char quote_char);
+//t_token *handle_quotes(char **saveptr, char quote_char);
 
 /*signals*/
 void sigint_handler(int signum);
