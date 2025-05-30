@@ -49,48 +49,58 @@ int parse_redir(t_command *cmd, t_token **token_ptr)
 * handles tokens such aas words, quotes, pipes, redir, semicolons
 * @return a linked list of parsed command structures (t_command)
 */
+int handle_special_tokens(t_command **current, t_token **tokens)
+{
+    if ((*tokens)->type == TOKEN_PIPE)
+    {
+        if (!(*tokens)->next || (*tokens)->next->type == TOKEN_PIPE)
+            return syntax_error("|");
+        (*current)->is_pipe = 1;
+        *current = new_command(*current);
+    }
+    else if ((*tokens)->type == TOKEN_SEMICOLON)
+    {
+        if (!(*tokens)->next || (*tokens)->next->type == TOKEN_SEMICOLON)
+            return syntax_error(";");
+        *current = new_command(*current);
+    }
+    return 0;
+}
 
-t_command *parse_tokens(t_token *tokens)
+t_command *parse_tokens(t_token *tokens, t_shell *shell)
 {
     t_command *cmd_list;
     t_command *current;
+    int error;
 
+    expand_token_list(tokens, shell);
     cmd_list = init_command();
     if (!cmd_list)
         return (NULL);
     current = cmd_list;
-
     while (tokens != NULL && tokens->type != TOKEN_EOF)
     {
-        if (tokens->type == TOKEN_WORD
-        || tokens->type == TOKEN_SINGLE_QUOTED
-        || tokens->type == TOKEN_DOUBLE_QUOTED)
+        if (is_token_cmd(tokens))
         {
             if (!handle_cmd_or_arg(current, tokens))
                 return (NULL);
         }
-        else if (tokens->type == TOKEN_PIPE)
-        {            
-            current->is_pipe = 1;
-            current = new_command(current);
-            if (!current)
+        else if (tokens->type == TOKEN_PIPE || tokens->type == TOKEN_SEMICOLON)
+        {
+            error = handle_special_tokens(&current, &tokens);
+            if (error != 0)
                 return (NULL);
         }
-        else if (tokens->type == TOKEN_REDIR_OUT
-        || tokens->type == TOKEN_REDIR_IN
-        || tokens->type == TOKEN_APPEND
-        || tokens->type == TOKEN_HEREDOC)
+        else if (is_token_redir(tokens))
         {
+            if (!tokens->next || tokens->next->type != TOKEN_WORD)
+                return syntax_error("newline"), NULL;
             if (!parse_redir(current, &tokens))
                 return (NULL);
             continue;
         }
-        else if (tokens->type == TOKEN_SEMICOLON)
-        {
-            current = new_command(current);
-            if (!current)
-                return (NULL);
-        }
+        else
+            return syntax_error(tokens->value), NULL;
         tokens = tokens->next;
     }
     return (cmd_list);

@@ -10,8 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "minishell.h"
 #include "builtins.h"
+#include "executor.h"
 
 /*
  * @brief Executes the current command from the shell state.
@@ -25,42 +26,28 @@
 void ft_exec(t_shell *shell)
 {
     char **args;
-    pid_t pid;
-    int status;
 
     if (!shell || !shell->current_cmd)
         return;
-
     args = shell->current_cmd->args;
     if (!args || !args[0])
         return;
-
-    /* Check if the command is a built-in.*/
     if (exec_builtin(shell))
         return;
-
-    /*father*/
-    pid = fork();
-    if (pid < 0)
-    {
-        perror("minishell: fork");
-        shell->exit_status = 1;
-        return;
-    }
-    else if (pid == 0)
-    {
-        execve(args[0], args, shell->envp);
-        perror("minishell");
-        exit(127);
-    }
-    else
-    {
-        waitpid(pid, &status, 0);
-        if (WIFEXITED(status))
-            shell->exit_status = WEXITSTATUS(status);
-    }
-
-    /* TODO: Implement external command handling (fork + execve) */
-    //p(RED "Command not found: %s\n" RST, args[0]);
+    exec_external(shell, args);
 }
+
+/*
+ * @brief Handles the "command not found" error.
+ * @param shell Shell context to update exit_status.
+ * @param cmd Command that failed to execute.
+ */
+void handle_cmd_not_found(t_shell *shell, char *cmd)
+{
+    ft_putstr_fd("minishell: command not found: ", STDERR_FILENO);
+    ft_putendl_fd(cmd, STDERR_FILENO);
+    shell->exit_status = 127;
+}
+
+
 

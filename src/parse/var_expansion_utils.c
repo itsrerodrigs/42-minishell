@@ -12,7 +12,7 @@
 
 #include "../inc/minishell.h"
 #include "../inc/tokens.h"
-#include "../inc/parsing.h"
+#include "../inc/parser.h"
 
 /*
 ** @brief: extract the variable name from the input string(skips $, {, etc)
@@ -41,11 +41,13 @@ static void extract_var_name(const char *input, size_t *index_ptr, char *var_nam
 ** @param: index_ptr - current index pointer
 ** @return: pointer to environment value
 */
-char *extract_variable(const char *input, size_t *index_ptr)
+char *extract_variable(const char *input, size_t *index_ptr, char **envp)
 {
 	char var_name[BUFFER_SIZE];
 	char *value;
+	int i;
 
+	value = NULL;
 	if(input[*index_ptr] == '{')
 	{
 		(index_ptr)++;
@@ -55,7 +57,20 @@ char *extract_variable(const char *input, size_t *index_ptr)
 	}
 	else
 		extract_var_name(input, index_ptr, var_name);
-	value = getenv((const char *)var_name);
+	if(!envp)
+		return NULL;
+	i = 0;
+	while (envp[i])
+	{
+		if (ft_strncmp(envp[i], var_name, ft_strlen(var_name)) == 0
+            && envp[i][ft_strlen(var_name)] == '=')
+        {
+            value = ft_strdup(envp[i] + ft_strlen(var_name) + 1);
+            break;
+        }
+        i++;
+    }
+	//value = getenv((const char *)var_name);
 	if (!value)
 	{
 		p(RED "Debug:Variable not found: %s\n" RST, (const char *)var_name);

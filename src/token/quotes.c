@@ -12,7 +12,7 @@
 
 #include "../inc/minishell.h"
 #include "../inc/tokens.h"
-#include "../inc/parsing.h"
+#include "../inc/parser.h"
 
 /*
 **	@brief: extracts a quotes substring from the input
@@ -56,7 +56,7 @@ char *extract_quoted(char **saveptr, char quote_char)
 **		quote_char - quoting character
 ** @return: new token constructed from the quoted input
 */
-t_token *handle_quotes(char **saveptr, char quote_char)
+t_token *handle_quotes(char **saveptr, char quote_char, t_shell *shell)
 {
 	char *start;
 	char *expanded;
@@ -68,7 +68,7 @@ t_token *handle_quotes(char **saveptr, char quote_char)
 		return (NULL);
 	if(quote_char == '"')
 	{
-		expanded = expand_variables(start);
+		expanded = expand_variables(start, shell->envp);
 		if(!expanded)
 		{
 			p("Error: Memory allocation failed during variable expansion.\n");

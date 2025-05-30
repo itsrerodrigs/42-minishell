@@ -13,6 +13,7 @@
 #include "builtins.h"
 #include "tokens.h"
 #include "parser.h"
+#include "executor.h"
 //#include "parsing.h" remover
 
 #define Y		"\033[1;33m"
@@ -73,8 +74,8 @@ int         realloc_tokens(t_token ***tokens_ptr, size_t *bufsize);
 void ft_exec(t_shell *shell);
 
 /*variable expansion*/
-char *extract_variable(const char *input, size_t *index_ptr);
-char *expand_variables(const char *input);
+char *extract_variable(const char *input, size_t *index_ptr, char **envp);
+char *expand_variables(const char *input, char **envp);
 
 /*quotes*/
 //t_token *handle_quotes(char **saveptr, char quote_char);
@@ -87,5 +88,7 @@ void        *ft_malloc(size_t size);
 void	    *ft_realloc(void *ptr, size_t size);
 
 void ft_exit(t_shell *shell);
+void fill_shell_struct(t_shell *shell, char **args);
+char **simple_split(char *input);
 
 #endif

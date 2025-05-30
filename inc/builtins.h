@@ -6,7 +6,7 @@
 /*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 19:49:10 by renrodri          #+#    #+#             */
-/*   Updated: 2025/05/29 20:02:08 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/05/30 14:10:30 by renrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ char    *get_cd_path(t_shell *shell, char **args);
 void    update_pwd_vars(t_shell *shell, char *oldpwd);
 void    update_env_var(t_shell *shell, const char *key, const char *value);
 int ft_isdigit_str(const char *str);
+char **dup_envp(char **envp);
+void free_envp(char **envp);
 char    **realloc_mem(char **ptr, size_t new_size);
 char    *get_env_value(char **envp, const char *key);
 int     exec_builtin(t_shell *shell);
@@ -44,5 +46,4 @@ int builtin_env(t_shell *shell, char **args);
 int builtin_exit(t_shell *shell, char **args);
 int builtin_unset(t_shell *shell, char **args);
 int builtin_pwd(t_shell *shell, char **args);
-
 #endif

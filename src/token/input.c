@@ -12,7 +12,7 @@
 
 #include "../inc/minishell.h"
 #include "../inc/tokens.h"
-#include "../inc/parsing.h"
+#include "../inc/parser.h"
 #include "debug.h"
 
 /*
@@ -91,7 +91,7 @@ void setup_signal_handling(void)
  **         Continuously prompts for input, processes commands, and cleans up memory.
  ** @return: Always returns NULL, as the function is structured for continuous input processing.
  */
-t_token *process_input(void)
+t_token *process_input(t_shell *shell)
 {
     char *input;
     t_token *tokens;
@@ -105,7 +105,7 @@ t_token *process_input(void)
             input = read_input();
             continue;
         }
-        tokens = get_tokens(input); 
+        tokens = get_tokens(input, shell); 
         if (tokens)
         {
             /* ft_exec_tokens(tokens); */ //TODO: Implement this function

@@ -13,6 +13,54 @@
 #include "../inc/minishell.h"
 
 /*
+* @brief duplicates the environment array
+*/
+char **dup_envp(char **envp)
+{
+    int i = 0;
+    char **new_env;
+
+    while (envp[i])
+        i++;
+
+    new_env = malloc(sizeof(char *) * (i + 1));
+    if (!new_env)
+        return NULL;
+
+    for (int j = 0; j < i; j++)
+    {
+        new_env[j] = strdup(envp[j]);
+        if (!new_env[j])
+        {
+            while (j > 0)
+                free(new_env[--j]);
+            free(new_env);
+            return NULL;
+        }
+    }
+    new_env[i] = NULL;
+    return new_env;
+}
+
+/*
+ * @brief frees the duplicated environment
+ */
+void free_envp(char **envp)
+{
+    int i = 0;
+
+    if (!envp)
+        return;
+
+    while (envp[i])
+    {
+        free(envp[i]);
+        i++;
+    }
+    free(envp);
+}
+
+/*
 * @brief prints all environment variables
 * @params shell shows structure containing the current envp
 * @note should only print variables that has a value (i.e. in KEY=VALUE format)

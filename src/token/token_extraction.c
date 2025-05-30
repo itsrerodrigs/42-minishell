@@ -61,7 +61,7 @@ t_token *create_token(char *buf, t_token_type type)
  ** @param: saveptr - Pointer to the current tokenizer state.
  ** @return: Pointer to the first token in the linked list.
  */
-t_token *extract_tokens(char **saveptr)
+t_token *extract_tokens(char **saveptr, t_shell *shell)
 {
     t_token     *head;
     t_token     *current;
@@ -70,7 +70,7 @@ t_token *extract_tokens(char **saveptr)
 
     head = NULL;
     current = NULL;    
-    while ((token_str = ft_strtok(NULL, DELIM, saveptr)))
+    while ((token_str = ft_strtok(NULL, DELIM, saveptr, shell)))
     {
         new_token = create_token(token_str, get_token_type(token_str));
         if (!new_token) 
@@ -111,12 +111,12 @@ t_token_type get_token_type(char *token_str)
  ** @param: input - Raw input string to tokenize.
  ** @return: Pointer to the first token in the linked list.
  */
-t_token *get_tokens(char *input)
+t_token *get_tokens(char *input, t_shell *shell)
 {
     char *saveptr;
     
     if (!input) 
         return (NULL);
     saveptr = input;
-    return (extract_tokens(&saveptr));
+    return (extract_tokens(&saveptr, shell));
 }

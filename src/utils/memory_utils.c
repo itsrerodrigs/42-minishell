@@ -12,7 +12,7 @@
 
 #include "../inc/minishell.h"
 #include "../inc/tokens.h"
-#include "../inc/parsing.h"
+#include "../inc/parser.h"
 
 /*
 ** @brief: Allocates memory of size 'size' and returns a pointer to it.

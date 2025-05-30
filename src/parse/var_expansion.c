@@ -12,7 +12,7 @@
 
 #include "../inc/minishell.h"
 #include "../inc/tokens.h"
-#include "../inc/parsing.h"
+#include "../inc/parser.h"
 
 /*
  ** @brief: Resizes the expanded string buffer based on the inserted value.
@@ -42,12 +42,12 @@ static char *resize_expanded(char *expanded, size_t *new_size, const char *value
  **         new_size - pointer to current allocated size.
  ** @return: pointer to updated expanded string.
  */
-static char *need_expansion(const char *input, size_t *index_ptr, char *expanded, size_t *new_size)
+static char *need_expansion(const char *input, size_t *index_ptr, char *expanded, size_t *new_size, char **envp)
 {
     char *value;
 
     (*index_ptr)++;
-    value = extract_variable(input, index_ptr);
+    value = extract_variable(input, index_ptr, envp);
     if (!value)
         value = ft_strdup("");
     expanded = resize_expanded(expanded, new_size, value);
@@ -92,7 +92,7 @@ static char *regular_char(const char *input, size_t *index_ptr, char *expanded, 
  ** @param: input - the source string
  ** @return: new dynamically allocated string with variables expanded.
  */
-char *expand_variables(const char *input)
+char *expand_variables(const char *input, char **envp)
 {
     char    *expanded;
     size_t  new_size;
@@ -109,7 +109,7 @@ char *expand_variables(const char *input)
     while (input[index_ptr])
     {
         if (input[index_ptr] == '$' && input[index_ptr + 1] != '\0')
-            expanded = need_expansion(input, &index_ptr, expanded, &new_size);
+            expanded = need_expansion(input, &index_ptr, expanded, &new_size, envp);
         else
             expanded = regular_char(input, &index_ptr, expanded, &new_size);
         if (!expanded)
@@ -119,4 +119,23 @@ char *expand_variables(const char *input)
         }
     }
     return (expanded);
+}
+
+void expand_token_list(t_token *tokens, t_shell *shell)
+{
+    while (tokens)
+    {
+        if (tokens->type == TOKEN_SINGLE_QUOTED)
+        {
+            tokens = tokens->next;
+            continue;
+        }
+        char *expanded = expand_variables(tokens->value, shell->envp);
+        if (expanded)
+        {
+            free(tokens->value);
+            tokens->value = expanded;
+        }
+        tokens = tokens->next;
+    }
 }

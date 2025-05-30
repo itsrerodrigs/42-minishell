@@ -12,7 +12,7 @@
 
 #include "../inc/minishell.h"
 #include "../inc/tokens.h"
-#include "../inc/parsing.h"
+#include "../inc/parser.h"
 
 
 /*int main(void)
@@ -64,56 +64,75 @@
 }
 
  */
-
- #include "minishell.h"
-#include "tokens.h"
-#include "parser.h"
+#include "../inc/minishell.h"
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
-int	main(int argc, char **argv, char **envp)
+#define MAX_ARGS 100
+
+char **simple_split(char *input)
 {
-	t_shell shell;
-	char *input;
-	t_token *tokens;
-	t_command *commands;
+    char **args = malloc(sizeof(char *) * (MAX_ARGS + 1));
+    char *token;
+    int i = 0;
 
-	(void)argc;
-	(void)argv;
+    if (!args)
+        return NULL;
 
-	shell.envp = envp;
-	shell.exit_status = 0;
-	shell.current_cmd = NULL;
+    token = strtok(input, " \t\n");
+    while (token && i < MAX_ARGS)
+    {
+        args[i++] = strdup(token);
+        token = strtok(NULL, " \t\n");
+    }
+    args[i] = NULL;
+    return args;
+}
 
-	while (1)
-	{
-		input = readline("minishell> ");
-		if (!input)
-			break;
+void fill_shell_struct(t_shell *shell, char **args)
+{
+    shell->current_cmd = malloc(sizeof(t_command));
+    if (!shell->current_cmd)
+        return;
+    shell->current_cmd->args = args;
+}
 
-		if (*input)
-			add_history(input);
+int main(void)
+{
+    char *input;
+    char **args;
+    t_shell shell;
 
-		// Tokenização
-		tokens = get_tokens(input);
-		if (!tokens)
-		{
-			free(input);
-			continue;
-		}
+    while (1)
+    {
+        input = readline("minishell-test$ ");
+        if (!input)
+            break;
+        if (input[0] != '\0')
+            add_history(input);
 
-		// Parsing
-		commands = parse_tokens(tokens);
-		shell.current_cmd = commands;
+        args = simple_split(input);
+        if (!args || !args[0])
+        {
+            free(input);
+            continue;
+        }
 
-		// Teste: imprime a estrutura gerada
-		print_commands(commands);
-		ft_exec(&shell);
+        fill_shell_struct(&shell, args);
 
-		// Limpeza
-		free_tokens(tokens);
-		free_commands(commands);
-		free(input);
-	}
-	return (0);
+        if (exec_builtin(&shell) == 0)
+            printf("Not a builtin: %s\n", args[0]);
+
+        // limpar
+        for (int i = 0; args[i]; i++)
+            free(args[i]);
+        free(args);
+        free(shell.current_cmd);
+        free(input);
+    }
+
+    return 0;
 }
