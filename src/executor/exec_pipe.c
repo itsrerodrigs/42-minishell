@@ -47,20 +47,21 @@ static pid_t fork_and_pipe(int pipefd[2], int *prev_fd, int is_pipe)
  */
 static void setup_redirections(t_command *cmd, int *prev_fd, int pipefd[2], int is_pipe)
 {
-	(void)cmd;
+    if (apply_redirections(cmd) != 0)
+        exit(1);
 
-	if (*prev_fd != -1)
-	{
-		dup2(*prev_fd, STDIN_FILENO);
-		close(*prev_fd);
-	}
+    if (*prev_fd != -1)
+    {
+        dup2(*prev_fd, STDIN_FILENO);
+        close(*prev_fd);
+    }
 
-	if (is_pipe)
-	{
-		close(pipefd[0]);
-		dup2(pipefd[1], STDOUT_FILENO);
-		close(pipefd[1]);
-	}
+    if (is_pipe)
+    {
+        close(pipefd[0]);
+        dup2(pipefd[1], STDOUT_FILENO);
+        close(pipefd[1]);
+    }
 }
 
 /*
@@ -70,22 +71,21 @@ static void setup_redirections(t_command *cmd, int *prev_fd, int pipefd[2], int 
  */
 static void exec_command(t_shell *shell, t_command *cmd)
 {
-	char *cmd_path;
+    char *cmd_path;
 
-	if (apply_redirections(cmd))
-		exit(1);
-	if (exec_builtin(shell))
-		exit(shell->exit_status);
-	cmd_path = find_executable(cmd->cmd, shell);
-	if (!cmd_path)
-	{
-		ft_putendl_fd("command not found", STDERR_FILENO);
-		exit(127);
-	}
+    if (exec_builtin(shell))
+        exit(shell->exit_status);
 
-	execve(cmd_path, cmd->args, shell->envp);
-	perror("execve");
-	exit(EXIT_FAILURE);
+    cmd_path = find_executable(cmd->cmd, shell);
+    if (!cmd_path)
+    {
+        ft_putendl_fd("command not found", STDERR_FILENO);
+        exit(127);
+    }
+
+    execve(cmd_path, cmd->args, shell->envp);
+    perror("execve");
+    exit(EXIT_FAILURE);
 }
 
 /*
