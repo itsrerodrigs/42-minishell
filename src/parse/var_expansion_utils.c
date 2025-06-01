@@ -62,15 +62,14 @@ char *extract_variable(const char *input, size_t *index_ptr, char **envp)
 	i = 0;
 	while (envp[i])
 	{
-		if (ft_strncmp(envp[i], var_name, ft_strlen(var_name)) == 0
-            && envp[i][ft_strlen(var_name)] == '=')
-        {
-            value = ft_strdup(envp[i] + ft_strlen(var_name) + 1);
-            break;
-        }
-        i++;
+    if (strncmp(envp[i], var_name, strlen(var_name)) == 0 &&
+        envp[i][strlen(var_name)] == '=')
+    {
+        value = ft_strdup(envp[i] + strlen(var_name) + 1);
+        break;
     }
-	//value = getenv((const char *)var_name);
+    i++;
+	}
 	if (!value)
 	{
 		p(RED "Debug:Variable not found: %s\n" RST, (const char *)var_name);

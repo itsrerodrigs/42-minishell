@@ -62,7 +62,14 @@ int apply_redirections(t_command *cmd)
 			if (apply_output_redir(redir))
 				return (1);
 		}
-		// REDIR_HEREDOC ainda será tratado separadamente
+		else if (redir->type == REDIR_HEREDOC)
+		{
+			int heredoc_fd = handle_heredoc(redir);
+			if (heredoc_fd < 0)
+				return (1);
+			dup2(heredoc_fd, STDIN_FILENO);
+			close(heredoc_fd);
+		}
 		redir = redir->next;
 	}
 	return (0);

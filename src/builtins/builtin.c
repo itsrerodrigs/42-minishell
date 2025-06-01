@@ -10,21 +10,28 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "minishell.h"
 
-int ft_env(char **args)
+/*
+ * brief prints all the environment variables to the standart output
+ * params args - an array of strings representing command-line arguments
+ * return 0 on success or 1 if the environment variablws are not accessible
+*/
+
+
+int	ft_env(char **args)
 {
-    extern char **environ;
-    int i;
+	extern char	**environ;
+	int	i;
 
-    i = 0;
-    (void)args;
-    if (!environ)
-        return(1);
-    while (environ[i])
-    {
-        p("%s\n", environ[i]);
-        i++;
-    }
-    return(0);
+	i = 0;
+	(void)args;
+	if (!environ)
+		return(1);
+	while (environ[i])
+	{
+		p("%s\n", environ[i]);
+		i++;
+	}
+	return(0);
 }

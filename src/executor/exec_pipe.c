@@ -70,13 +70,13 @@ static void setup_redirections(t_command *cmd, int *prev_fd, int pipefd[2], int 
  */
 static void exec_command(t_shell *shell, t_command *cmd)
 {
+	char *cmd_path;
+
 	if (apply_redirections(cmd))
 		exit(1);
-
 	if (exec_builtin(shell))
 		exit(shell->exit_status);
-
-	char *cmd_path = find_executable(cmd->cmd, shell->envp);
+	cmd_path = find_executable(cmd->cmd, shell);
 	if (!cmd_path)
 	{
 		ft_putendl_fd("command not found", STDERR_FILENO);

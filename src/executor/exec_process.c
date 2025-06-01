@@ -43,7 +43,7 @@ void launch_process(t_shell *shell, t_command *cmd)
 	char *cmd_path;
 	char **args = cmd->args;
 
-	cmd_path = find_executable(cmd->cmd, shell->envp);
+	cmd_path = find_executable(cmd->cmd, shell);
 	if (!cmd_path)
 	{
 		ft_putstr_fd(cmd->cmd, STDERR_FILENO);

@@ -19,28 +19,28 @@
 * @note if doesn't have any arguments, it should change to $HOME directory
 */
 
-int     builtin_cd(t_shell *shell, char **args)
+int	builtin_cd(t_shell *shell, char **args)
 {
-    char    *path;
-    char    cwd[PATH_MAX];
-    char    *oldpwd;
+	char	*path;
+	char	cwd[PATH_MAX];
+	char	*oldpwd;
 
-    path = get_cd_path(shell, args);
-    if (!path)
-        return (1);
-    if (!getcwd(cwd, sizeof(cwd)))
-        return (1);
-    oldpwd = ft_strdup(cwd);
-    if (!oldpwd)
-        return (1);
-    if (chdir(path) != 0)
-    {
-        ft_putstr_fd("cd: ", STDERR_FILENO);
-        perror(path);
-        free(oldpwd);
-        return (1);
-    }
-    update_pwd_vars(shell, oldpwd);
-    free(oldpwd);
-    return (0);
+	path = get_cd_path(shell, args);
+	if (!path)
+		return (1);
+	if (!getcwd(cwd, sizeof(cwd)))
+		return (1);
+	oldpwd = ft_strdup(cwd);
+	if (!oldpwd)
+		return (1);
+	if (chdir(path) != 0)
+	{
+		ft_putstr_fd("cd: ", STDERR_FILENO);
+		perror(path);
+		free(oldpwd);
+		return (1);
+	}
+	update_pwd_vars(shell, oldpwd);
+	free(oldpwd);
+	return (0);
 }

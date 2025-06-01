@@ -31,13 +31,22 @@ t_command *new_command(t_command *current)
 
 int parse_redir(t_command *cmd, t_token **token_ptr)
 {
-    t_token *token = *token_ptr;
+    t_token *token;
+    t_token *next;
 
-    if (!handle_redir(cmd, token))
-        return (0);
+    token = *token_ptr;
+    next = token->next;
 
-    if (!token->next)  // Verifica se o próximo token existe
-        return (0);
+    if (!next || next->type != TOKEN_WORD)
+        return syntax_error(token->value);
+    if (token->type == TOKEN_REDIR_IN)
+        add_redir(cmd, REDIR_IN, next->value);
+    else if (token->type == TOKEN_REDIR_OUT)
+        add_redir(cmd, REDIR_OUT, next->value);
+    else if (token->type == TOKEN_APPEND)
+        add_redir(cmd, REDIR_APPEND, next->value);
+    else if (token->type == TOKEN_HEREDOC)
+        add_redir(cmd, REDIR_HEREDOC, next->value);
 
     *token_ptr = token->next->next; // Avança dois nós: redir + filename
     return (1);

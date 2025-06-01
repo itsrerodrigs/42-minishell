@@ -12,23 +12,39 @@
 
 #include "minishell.h"
 #include "executor.h"
+#include <sys/wait.h>
+#include <unistd.h>
+#include <stdlib.h>
 
 /*
- * @brief Executes an external command with execve.
- * @param cmd_path Full path to the executable.
- * @param args Arguments including the command name.
- * @param envp Shell environment.
+ * @brief Executes external (non-builtin) commands.
+ * @param shell The shell context containing environment and status.
+ * @param args The arguments array (args[0] is the command).
+ * @return 0 on success, 127 if not found, 1 on error.
  */
 int exec_external(t_shell *shell, char **args)
 {
-    char *cmd_path = find_executable(args[0], shell->envp);
+    pid_t pid;
+    int status;
+    char *cmd_path;
+
+    cmd_path = find_executable(args[0], shell);
     if (!cmd_path)
     {
         handle_cmd_not_found(shell, args[0]);
-        return 127;
+        return (127);
     }
-    execve(cmd_path, args, shell->envp);
-    perror("execve");
+    pid = fork();
+    if (pid < 0)
+        return (perror("fork"), 1);
+    if (pid == 0)
+    {
+        execve(cmd_path, args, shell->envp);
+        perror("execve");
+        exit(EXIT_FAILURE);
+    }
+    waitpid(pid, &status, 0);
+    shell->exit_status = WIFEXITED(status) ? WEXITSTATUS(status) : 1;
     free(cmd_path);
-    return 1;
+    return (0);
 }

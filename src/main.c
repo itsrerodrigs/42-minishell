@@ -9,130 +9,65 @@
 /*   Updated: 2025/05/14 22:46:38 by marieli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include "../inc/minishell.h"
-#include "../inc/tokens.h"
-#include "../inc/parser.h"
-
-
-/*int main(void)
-{
-	t_token *input;
-	
-    setup_signal_handling();
-    p(C "Initializing Minishell.. \n" RST);
-	while(1)
-	{
-		input = process_input();
-		if (!input) 
-			break;
-	}		
-    return (EXIT_SUCCESS);
-}
-*/
-/* ************************************************************************** */
-/* main para testa os tokens*/
-
-/* int main(void)
-{
-    t_token *input;
-    t_token **tokens;
-    
-    while (1)
-    {
-        input = read_input();
-        if (!input)
-            break;
-        tokens = get_tokens(input);
-        if (tokens)
-        {
-            int i = 0;
-            while (tokens[i])
-            {
-                printf("%s\n", tokens[i]->value);
-                i++;
-            }
-            free_tokens(tokens);
-        }
-        else
-        {
-            printf("no tokens found");
-        }
-        cleanup_input(input); 
-    }
-    return (EXIT_SUCCESS);
-}
-
- */
-#include "../inc/minishell.h"
+#include "minishell.h"
 #include <readline/readline.h>
 #include <readline/history.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
 
-#define MAX_ARGS 100
-
-char **simple_split(char *input)
+/*
+ * @brief Initializes the shell struct.
+ * @param shell The shell structure to fill.
+ * @param envp The environment variables.
+ */
+void init_shell(t_shell *shell, char **envp)
 {
-    char **args = malloc(sizeof(char *) * (MAX_ARGS + 1));
-    char *token;
-    int i = 0;
+    shell->envp = dup_envp(envp);
+    shell->exit_status = 0;
+    shell->current_cmd = NULL;
+}
 
-    if (!args)
-        return NULL;
-
-    token = strtok(input, " \t\n");
-    while (token && i < MAX_ARGS)
+/*
+ * @brief Frees everything for a new input cycle.
+ */
+void cleanup_cycle(t_shell *shell, char *input, t_token *tokens)
+{
+    if (input)
+        free(input);
+    if (shell->current_cmd)
     {
-        args[i++] = strdup(token);
-        token = strtok(NULL, " \t\n");
+        free_commands(shell->current_cmd);
+        shell->current_cmd = NULL;
     }
-    args[i] = NULL;
-    return args;
+    if (tokens)
+        free_tokens(tokens);
 }
 
-void fill_shell_struct(t_shell *shell, char **args)
+int main(int argc, char **argv, char **envp)
 {
-    shell->current_cmd = malloc(sizeof(t_command));
-    if (!shell->current_cmd)
-        return;
-    shell->current_cmd->args = args;
-}
-
-int main(void)
-{
-    char *input;
-    char **args;
     t_shell shell;
+    char *input;
+    t_token *tokens;
 
+    (void)argc;
+    (void)argv;
+    init_shell(&shell, envp);
     while (1)
     {
-        input = readline("minishell-test$ ");
+        input = readline("minishell$ ");
         if (!input)
             break;
-        if (input[0] != '\0')
+        if (*input)
             add_history(input);
-
-        args = simple_split(input);
-        if (!args || !args[0])
+        tokens = get_tokens(input, &shell);
+        if (!tokens)
         {
-            free(input);
+            cleanup_cycle(&shell, input, NULL);
             continue;
         }
-
-        fill_shell_struct(&shell, args);
-
-        if (exec_builtin(&shell) == 0)
-            printf("Not a builtin: %s\n", args[0]);
-
-        // limpar
-        for (int i = 0; args[i]; i++)
-            free(args[i]);
-        free(args);
-        free(shell.current_cmd);
-        free(input);
+        shell.current_cmd = parse_tokens(tokens, &shell);
+        if (shell.current_cmd)
+            ft_exec(&shell);
+        cleanup_cycle(&shell, input, tokens);
     }
-
-    return 0;
+    free_envp(shell.envp);
+    return (0);
 }
