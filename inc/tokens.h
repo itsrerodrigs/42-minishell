@@ -1,5 +1,5 @@
-#ifndef TOKENIZATION_H
-#define TOKENIZATION_H
+#ifndef TOKENS_H
+#define TOKENS_H
 
 #include "minishell.h"
 
@@ -31,13 +31,16 @@ typedef struct s_token {
 /*token*/
 void        free_tokens(t_token *head);
 t_token     *create_token(char *buf, t_token_type type);
-t_token *extract_tokens(char **saveptr, t_shell *shell);
+// t_token *extract_tokens(char **saveptr, t_shell *shell);
 t_token *get_tokens(char *input, t_shell *shell);
-t_token_type get_token_type(char *token_str);
+// t_token_type get_token_type(char *token_str);
 char        *ft_strtok(char *str, const char *delim, char **saveptr, t_shell *shell);
 
 /*quotes*/
 t_token     *handle_quotes(char **saveptr, char quote_char, t_shell *shell);
 
+/*variable expansion*/
+char *extract_variable(const char *input, size_t *index_ptr, char **envp);
+char *expand_variables(const char *input, char **envp);
 
 #endif

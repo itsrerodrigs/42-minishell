@@ -14,7 +14,7 @@
 #include "tokens.h"
 #include "parser.h"
 #include "executor.h"
-//#include "parsing.h" remover
+#include "sig.h"
 
 #define Y		"\033[1;33m"
 #define G		"\033[1;32m"
@@ -30,6 +30,8 @@
 #endif
 
 #define INITIAL_TOKENS_CAPACITY 16
+
+extern volatile sig_atomic_t g_child_running;
 
 /*typedef enum e_token_type
 {
@@ -59,29 +61,9 @@ typedef struct s_shell { EXCLUIR ESSE BLOCO
 
 /*------------------------Prototypes------------------------------------*/
 /*input*/
-char        *display_prompt(void);
+// char        *display_prompt(void);
 char     *read_input(void);
 
-/*token*/
-//void	    free_tokens(t_token **tokens);
-//t_token     *create_token(char *buf);
-//t_token     **init_token_array(size_t *bufsize);
-int         realloc_tokens(t_token ***tokens_ptr, size_t *bufsize);
-//t_token     **get_tokens(t_token *input);
-//char    	*ft_strtok(char *str, const char *delim, char **saveptr);
-
-/*execução dos comandos*/
-void ft_exec(t_shell *shell);
-
-/*variable expansion*/
-char *extract_variable(const char *input, size_t *index_ptr, char **envp);
-char *expand_variables(const char *input, char **envp);
-
-/*quotes*/
-//t_token *handle_quotes(char **saveptr, char quote_char);
-
-/*signals*/
-void sigint_handler(int signum);
 
 /*memory*/
 void        *ft_malloc(size_t size);

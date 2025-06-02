@@ -9,65 +9,51 @@
 /*   Updated: 2025/05/14 22:46:38 by marieli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "minishell.h"
-#include <readline/readline.h>
-#include <readline/history.h>
+#include "tokens.h"
+#include "parser.h"
+#include "debug.h"
+#include "sig.h"
 
-/*
- * @brief Initializes the shell struct.
- * @param shell The shell structure to fill.
- * @param envp The environment variables.
- */
-void init_shell(t_shell *shell, char **envp)
-{
-    shell->envp = dup_envp(envp);
-    shell->exit_status = 0;
-    shell->current_cmd = NULL;
-}
-
-/*
- * @brief Frees everything for a new input cycle.
- */
-void cleanup_cycle(t_shell *shell, char *input, t_token *tokens)
-{
-    if (input)
-        free(input);
-    if (shell->current_cmd)
-    {
-        free_commands(shell->current_cmd);
-        shell->current_cmd = NULL;
-    }
-    if (tokens)
-        free_tokens(tokens);
-}
 
 int main(int argc, char **argv, char **envp)
 {
     t_shell shell;
     char *input;
     t_token *tokens;
+    t_command *commands;
 
     (void)argc;
     (void)argv;
-    init_shell(&shell, envp);
+
+    /* Initialize shell structure */
+    shell.envp = envp;
+    shell.exit_status = 0;
+    shell.current_cmd = NULL;
+
+    /* Set up Ctrl+C signal handler */
+    setup_signal_handling();
+    p(C "Initializing Minishell..\n" RST);
+
+   /* Main loop: read input, tokenize, parse, and execute */
     while (1)
     {
-        input = readline("minishell$ ");
+        input = read_input();
         if (!input)
             break;
-        if (*input)
-            add_history(input);
         tokens = get_tokens(input, &shell);
         if (!tokens)
         {
-            cleanup_cycle(&shell, input, NULL);
+            free(input);
             continue;
         }
-        shell.current_cmd = parse_tokens(tokens, &shell);
-        if (shell.current_cmd)
-            ft_exec(&shell);
-        cleanup_cycle(&shell, input, tokens);
+        commands = parse_tokens(tokens, &shell);
+        shell.current_cmd = commands;        
+        ft_exec(&shell);
+        free_tokens(tokens);
+        free_commands(commands);
+        free(input);
     }
-    free_envp(shell.envp);
-    return (0);
+    return (EXIT_SUCCESS);
 }

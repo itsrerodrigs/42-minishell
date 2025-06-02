@@ -20,7 +20,7 @@
 ** 			quote_char - type of quote
 ** @return: pointer to extracted quoted string
 */
-char *extract_quoted(char **saveptr, char quote_char)
+static char *extract_quoted(char **saveptr, char quote_char)
 {
 	char *start;
 	char *end;

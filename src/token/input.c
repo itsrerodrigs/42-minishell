@@ -10,16 +10,18 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
-#include "../inc/tokens.h"
-#include "../inc/parser.h"
+#include "minishell.h"
+#include "tokens.h"
+#include "parser.h"
 #include "debug.h"
+#include "sig.h"
+
 
 /*
  ** @brief: Constructs and returns the prompt string.
  ** @return: dynamically allocated prompt string 
  */
-char *display_prompt(void)
+/* char *display_prompt(void)
 {
     char cwd[BUFSIZ];
     char *prompt;
@@ -41,7 +43,31 @@ char *display_prompt(void)
         return (prompt);
     }
     return (strdup("minishell> "));
+} */
+
+static char *display_prompt(void)
+{
+    char cwd[BUFSIZ];
+    char *prompt;
+    size_t prompt_size;
+
+    if (isatty(fileno(stdin)))
+    {
+        getcwd(cwd, sizeof(cwd));
+        prompt_size = ft_strlen(G) + ft_strlen(" minishell> ") +
+                      ft_strlen(RST) + 1;
+        prompt = ft_malloc(prompt_size);
+        if (!prompt)
+            return (NULL);
+        prompt[0] = '\0';
+        ft_strlcat(prompt, G, prompt_size);
+        ft_strlcat(prompt, " minishell> ", prompt_size);
+        ft_strlcat(prompt, RST, prompt_size);
+        return (prompt);
+    }
+    return (strdup("minishell> "));
 }
+
 
 /*
  ** @brief: Reads user input using the prompt and returns a token.
@@ -62,28 +88,12 @@ char *read_input(void)
     }
     if (*buf)
         add_history(buf);
-    if (ft_strncmp(buf, "exit", 4) == 0 && ft_strlen(buf) == 4)
-    {
-        free(buf);
-        exit(0);
-    }
+    // if (ft_strncmp(buf, "exit", 4) == 0 && ft_strlen(buf) == 4)
+    // {
+    //     free(buf);
+    //     exit(0);
+    // }
     return (buf);
-}
-/*
- ** @brief: Sets up signal handling for SIGINT.
- */
-void setup_signal_handling(void)
-{
-    struct sigaction sa;
-
-    sa.sa_handler = sigint_handler;
-    sigemptyset(&sa.sa_mask);
-    sa.sa_flags = SA_RESTART;
-	if (sigaction(SIGINT, &sa, NULL) == -1)
-	{
-		perror("sigaction failed");
-		exit(EXIT_FAILURE);
-	}
 }
 
 /*
@@ -91,29 +101,28 @@ void setup_signal_handling(void)
  **         Continuously prompts for input, processes commands, and cleans up memory.
  ** @return: Always returns NULL, as the function is structured for continuous input processing.
  */
-t_token *process_input(t_shell *shell)
-{
-    char *input;
-    t_token *tokens;
+// t_token *process_input(t_shell *shell)
+// {
+//     char *input;
+//     t_token *tokens;
 
-    input = read_input();
-    while (input)
-    {
-        if (!*input)
-        {
-            free(input);
-            input = read_input();
-            continue;
-        }
-        tokens = get_tokens(input, shell); 
-        if (tokens)
-        {
-            /* ft_exec_tokens(tokens); */ //TODO: Implement this function
-            print_tokens(tokens); /*debug*/
-            free_tokens(tokens);
-        }
-        free(input);
-        input = read_input();
-    }
-    return (NULL);
-}
+//     input = read_input();
+//     while (input)
+//     {
+//         if (!*input)
+//         {
+//             free(input);
+//             input = read_input();
+//             continue;
+//         }
+//         tokens = get_tokens(input, shell); 
+//         if (tokens)
+//         {
+//             print_tokens(tokens); /*debug*/
+//             free_tokens(tokens);
+//         }
+//         free(input);
+//         input = read_input();
+//     }
+//     return (NULL);
+// }

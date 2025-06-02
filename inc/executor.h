@@ -16,6 +16,7 @@ char *get_cmd_path(char *cmd, char **paths);
 char *ft_strjoin_path(char *s1, char *s2);
 void free_split(char **arr);
 char *join_path(const char *dir, const char *cmd);
+char get_executable_path(char *cmd, t_shell *shell);
 
 void child_exec(char *cmd_path, char **args, t_command *cmd, char **envp);
 int validate_command(t_shell *shell);

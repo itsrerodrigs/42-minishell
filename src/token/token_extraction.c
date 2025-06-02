@@ -26,10 +26,33 @@ void free_tokens(t_token *head)
     {
         tmp = head;
         head = head->next;
-       // free(tmp->value);
+        free(tmp->value);
         free(tmp);
     }
 }
+
+/*
+ ** @brief: Determines the type of a token based on its content.
+ ** @param: token_str - String representing a token.
+ ** @return: Token type as `t_id` (e.g., TOKEN_PIPE, TOKEN_WORD, etc.).
+ */
+static t_token_type get_token_type(char *token_str)
+{
+    if (!token_str) 
+        return (TOKEN_WORD);
+    if (!strcmp(token_str, "|")) 
+        return (TOKEN_PIPE);
+    if (!strcmp(token_str, "<"))   
+        return (TOKEN_REDIR_IN);
+    if (!strcmp(token_str, ">")) 
+        return (TOKEN_REDIR_OUT);
+    if (!strcmp(token_str, ">>")) 
+        return (TOKEN_APPEND);
+    if (!strcmp(token_str, "<<")) 
+        return (TOKEN_HEREDOC);
+    return (TOKEN_WORD);
+}
+
 /*
  ** @brief: Creates a new token with the given value and type.
  ** @param: buf - Token value string.
@@ -61,7 +84,7 @@ t_token *create_token(char *buf, t_token_type type)
  ** @param: saveptr - Pointer to the current tokenizer state.
  ** @return: Pointer to the first token in the linked list.
  */
-t_token *extract_tokens(char **saveptr, t_shell *shell)
+static t_token *extract_tokens(char **saveptr, t_shell *shell)
 {
     t_token     *head;
     t_token     *current;
@@ -82,28 +105,6 @@ t_token *extract_tokens(char **saveptr, t_shell *shell)
         current = new_token;
     }
     return (head);
-}
-
-/*
- ** @brief: Determines the type of a token based on its content.
- ** @param: token_str - String representing a token.
- ** @return: Token type as `t_id` (e.g., TOKEN_PIPE, TOKEN_WORD, etc.).
- */
-t_token_type get_token_type(char *token_str)
-{
-    if (!token_str) 
-        return (TOKEN_WORD);
-    if (!strcmp(token_str, "|")) 
-        return (TOKEN_PIPE);
-    if (!strcmp(token_str, "<"))   
-        return (TOKEN_REDIR_IN);
-    if (!strcmp(token_str, ">")) 
-        return (TOKEN_REDIR_OUT);
-    if (!strcmp(token_str, ">>")) 
-        return (TOKEN_APPEND);
-    if (!strcmp(token_str, "<<")) 
-        return (TOKEN_HEREDOC);
-    return (TOKEN_WORD);
 }
 
 /*
