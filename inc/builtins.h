@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 19:49:10 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/03 11:42:21 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/03 15:15:45 by renrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,10 @@ typedef struct s_builtin {
 } t_builtin;
 
 /* builtins funcionts*/
-char    *get_cd_path(t_shell *shell, char **args);
+char    *get_cd_path_expanded(t_shell *shell, char **args);
+char    *save_and_get_oldpwd(void);
+int     execute_chdir(const char *path);
+
 void    update_pwd_vars(t_shell *shell, char *oldpwd);
 void    update_env_var(t_shell *shell, const char *key, const char *value);
 int ft_isdigit_str(const char *str);

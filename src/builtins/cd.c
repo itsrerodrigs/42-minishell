@@ -6,7 +6,7 @@
 /*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 17:24:13 by renrodri          #+#    #+#             */
-/*   Updated: 2025/05/13 19:43:47 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/03 15:13:46 by renrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,26 +21,23 @@
 
 int	builtin_cd(t_shell *shell, char **args)
 {
-	char	*path;
-	char	cwd[PATH_MAX];
-	char	*oldpwd;
+	char	*path_to_go;
+	char	*old_pwd_val;
+	int		status;
 
-	path = get_cd_path(shell, args);
-	if (!path)
+	path_to_go = get_cd_path_expanded(shell, args);
+	if (!path_to_go)
 		return (1);
-	if (!getcwd(cwd, sizeof(cwd)))
+	old_pwd_val = save_and_get_oldpwd();
+	if (!old_pwd_val)
 		return (1);
-	oldpwd = ft_strdup(cwd);
-	if (!oldpwd)
-		return (1);
-	if (chdir(path) != 0)
+	status = execute_chdir(path_to_go);
+	if (status != 0)
 	{
-		ft_putstr_fd("cd: ", STDERR_FILENO);
-		perror(path);
-		free(oldpwd);
+		free(old_pwd_val);
 		return (1);
 	}
-	update_pwd_vars(shell, oldpwd);
-	free(oldpwd);
+	update_pwd_vars(shell, old_pwd_val);
+	free(old_pwd_val);
 	return (0);
 }

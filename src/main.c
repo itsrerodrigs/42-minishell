@@ -73,9 +73,9 @@ static void init_shell_job_control(t_shell *shell)
     }
 }
 
-static void init_shell_struct(t_shell *shell, char **envp)
+static void init_shell_struct(t_shell *shell)
 {
-    shell->envp = envp;
+    shell->envp = NULL;
     shell->exit_status = 0;
     shell->current_cmd = NULL;
 }
@@ -115,11 +115,18 @@ int main(int argc, char **argv, char **envp)
     (void)argc;
     (void)argv;
 
-    init_shell_struct(&shell, envp);
+    init_shell_struct(&shell);
+    shell.envp = dup_envp(envp);
+    if (!shell.envp)
+    {
+        ft_putendl_fd("minishell: Failed to duplicate environment", STDERR_FILENO);
+        return (EXIT_FAILURE);
+    }
     setup_signal_handling();
     init_shell_job_control(&shell);
     p(C "Initializing Minishell..\n" RST);
     s_process_loop(&shell);
+    free_envp(shell.envp);
 
     return (EXIT_SUCCESS);
 }
