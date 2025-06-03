@@ -115,6 +115,7 @@ static void s_process_loop(t_shell *shell)
         // Cleanup after execution
         free_tokens(tokens);
         free_commands(commands);
+        shell->current_cmd = NULL;
         free(input);
     }
 }
