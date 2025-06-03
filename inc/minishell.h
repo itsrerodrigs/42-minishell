@@ -9,6 +9,7 @@
 #include <readline/history.h>
 #include <string.h>
 #include <sys/wait.h> // waitpid, fork e exceve
+#include <sys/ioctl.h>
 #include "libft/libft.h"
 #include "builtins.h"
 #include "tokens.h"

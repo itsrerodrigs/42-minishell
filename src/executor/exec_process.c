@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_process.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 14:39:47 by renrodri          #+#    #+#             */
-/*   Updated: 2025/05/30 14:39:47 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/03 13:07:41 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,4 +69,31 @@ void launch_process(t_shell *shell, t_command *cmd)
 			shell->exit_status = WEXITSTATUS(shell->exit_status);
 	}
 	free(cmd_path);
+}
+
+void exec_command(t_shell *shell, t_command *cmd)
+{
+    char *cmd_path;
+
+    if (shell->shell_is_interactive)
+    {
+        setpgid(0, 0);
+        set_foreground_process(shell->shell_terminal_fd, getpgrp());
+    }
+
+    if (exec_builtin(shell))
+        exit(shell->exit_status);
+
+    cmd_path = find_executable(cmd->cmd, shell);
+    if (!cmd_path)
+    {
+        ft_putstr_fd(cmd->cmd, STDERR_FILENO);
+        ft_putendl_fd(": command not found", STDERR_FILENO);
+        exit(127);
+    }
+
+    execve(cmd_path, cmd->args, shell->envp);
+    perror("minishell: execve failed");
+    free(cmd_path);
+    exit(EXIT_FAILURE);
 }

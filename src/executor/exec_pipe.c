@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 14:39:44 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/02 18:02:38 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/03 13:12:49 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,151 +63,85 @@ static void	setup_redirections(t_command *cmd, int *prev_fd, int pipefd[2],
 	}
 }
 
-/*
- * @brief Executes the command: handles redirections,
-	builtins and external commands.
- * @param shell Pointer to shell context.
- * @param cmd Pointer to the current command.
- */
-static void	exec_command(t_shell *shell, t_command *cmd)
+static void exec_pipe_child(t_shell *shell, t_command *cmd,
+    int *prev_fd, int pipefd[2], int is_pipe)
 {
-	char	*cmd_path;
-
-	if (exec_builtin(shell))
-		exit(shell->exit_status);
-	cmd_path = find_executable(cmd->cmd, shell);
-	if (!cmd_path)
-	{
-		ft_putendl_fd("command not found", STDERR_FILENO);
-		exit(127);
-	}
-	execve(cmd_path, cmd->args, shell->envp);
-	perror("execve");
-	exit(EXIT_FAILURE);
+    (void)is_pipe;
+    set_child_signals();
+    setup_redirections(cmd, prev_fd, pipefd, is_pipe);
+    exec_command(shell, cmd);
 }
 
-/*
- * @brief Executes a sequence of piped commands.
-
-	* @param shell Pointer to shell context containing environment and command list.
- * @param first_cmd Pointer to the first command in the pipeline.
- */
-/* void exec_pipeline(t_shell *shell, t_command *first_cmd)
+static void pipe_fd_parent(int pipefd[2], int *prev_fd, int is_pipe)
 {
-	int			pipefd[2];
-	int			prev_fd;
-	t_command	*current;
-	pid_t		pid;
-
-	prev_fd = -1;
-	current = first_cmd;
-	while (current)
-	{
-		pid = fork_and_pipe(pipefd, &prev_fd, current->is_pipe);
-		if (pid == 0) // Child process
-		{
-			setup_redirections(current, &prev_fd, pipefd, current->is_pipe);
-			exec_command(shell, current);
-		}
-		else if (pid > 0) // Parent process
-		{
-			if (prev_fd != -1)
-				close(prev_fd);
-			if (current->is_pipe)
-			{
-				close(pipefd[1]);
-				prev_fd = pipefd[0];
-			}
-			else
-				prev_fd = -1;
-		}
-		else
-			return ; // fork or pipe error
-		current = current->next;
-	}
-	while (wait(NULL) > 0)
-		;
-}
- */
-
-static void	pipeline_child_process(t_shell *shell, t_command *cmd, int *prev_fd,
-		int pipefd[2], int is_pipe)
-{
-	(void)is_pipe;
-	set_child_default_signals();
-	setup_redirections(cmd, prev_fd, pipefd, cmd->is_pipe);
-	exec_command(shell, cmd);
+    if (*prev_fd != -1)
+        close(*prev_fd);
+    if (is_pipe)
+    {
+        close(pipefd[0]);
+        *prev_fd = pipefd[0];
+    }
+    else
+        *prev_fd = -1;
 }
 
-static void	pipeline_parent_fd_management(int *prev_fd, int pipefd[2], int is_pipe)
+static void exec_pipe_loop(t_shell *shell, t_command *first_cmd,
+                                         int pipe_fds[2], int *pid_tracker_ptr, int *last_executed_pid_ptr)
 {
-	if (*prev_fd != -1)
-		close(*prev_fd);
-	if (is_pipe)
-	{
-		close(pipefd[1]);
-		*prev_fd = pipefd[0];
-	}
-	else
-		*prev_fd = -1;
+    t_command *current_cmd;
+
+    current_cmd = first_cmd;
+
+    while (current_cmd)
+    {
+        *pid_tracker_ptr = fork_and_pipe(pipe_fds, pid_tracker_ptr, current_cmd->is_pipe);
+        if (*pid_tracker_ptr < 0)
+        {
+            perror("minishell: fork or pipe failed");
+            shell->exit_status = 1;
+            break;
+        }
+        if (*pid_tracker_ptr == 0)
+        {
+            set_child_signals();
+            exec_pipe_child(shell, current_cmd, pid_tracker_ptr, pipe_fds, current_cmd->is_pipe);
+        }
+        else
+        {
+            if (shell->shell_is_interactive)
+                set_foreground_process(shell->shell_terminal_fd, *pid_tracker_ptr);
+
+            pipe_fd_parent(pipe_fds, pid_tracker_ptr, current_cmd->is_pipe);
+            *last_executed_pid_ptr = *pid_tracker_ptr;
+        }
+        current_cmd = current_cmd->next;
+    }
 }
 
-static void	wait_for_pipeline_children(t_shell *shell, pid_t last_pid)
+static void pipe_cleanup(t_shell *shell, int last_executed_pid, t_old_signals *old_sa)
 {
-	pid_t	waited_pid;
-	int		status;
+    if (shell->shell_is_interactive)
+        set_foreground_process(shell->shell_terminal_fd, shell->shell_pgid);
 
-	while (1)
-	{
-		waited_pid = wait(&status);
-		if (waited_pid < 0)
-			break ;
-		if (waited_pid == last_pid)
-		{
-			if (WIFEXITED(status))
-				shell->exit_status = WEXITSTATUS(status);
-			else if (WIFSIGNALED(status))
-				shell->exit_status = 128 + WTERMSIG(status);
-			if (WTERMSIG(status) == SIGINT)
-				ft_putendl_fd("Interrupted by signal", STDERR_FILENO);
-		}
-	}
+    pipe_wait_children(shell, last_executed_pid);
+    restore_signals(&old_sa->int_sa, &old_sa->quit_sa);
+    g_child_running = 0;
 }
 
 void exec_pipeline(t_shell *shell, t_command *first_cmd)
 {
-
-    int             pipe_fds[2]; // 1. For pipe file descriptors
-    int             pid_tracker; // 2. Used for current PID (0 for child, >0 for parent), also acts as prev_fd.
-    t_command       *current_cmd; // 3. Iterator for command list
-    t_old_signals   old_parent_signals; // 4. Stores old signal handlers
-    int             last_executed_pid; // 5. Tracks the PID of the last command for exit status
+    int pipe_fds[2];
+    int pid_tracker;
+    t_command *current_cmd_start;
+    t_old_signals old_sa;
+    int last_executed_pid;
 
     pid_tracker = -1;
-    current_cmd = first_cmd;
+    current_cmd_start = first_cmd;
     last_executed_pid = -1;
 
     g_child_running = 1;
-    save_and_ignore_signals(&old_parent_signals.int_sa, &old_parent_signals.quit_sa);
-    while (current_cmd)
-    {
-        pid_tracker = fork_and_pipe(pipe_fds, &pid_tracker, current_cmd->is_pipe);
-        if (pid_tracker == 0) // Child process
-            pipeline_child_process(shell, current_cmd, &pid_tracker, pipe_fds, current_cmd->is_pipe);
-        else if (pid_tracker > 0) // Parent process
-        {
-            pipeline_parent_fd_management(pipe_fds, &pid_tracker, current_cmd->is_pipe);
-            last_executed_pid = pid_tracker; // Store the PID of the last command
-        }
-        else // Fork or pipe error
-        {
-            perror("command failed due to fork/pipe error");
-            shell->exit_status = 1; // Set a generic error status
-            break; // Exit loop on critical error
-        }
-        current_cmd = current_cmd->next;
-    }
-    wait_for_pipeline_children(shell, last_executed_pid);
-    restore_signals(&old_parent_signals.int_sa, &old_parent_signals.quit_sa); 
-    g_child_running = 0;
+    save_and_ignore_signals(&old_sa.int_sa, &old_sa.quit_sa);
+    exec_pipe_loop(shell, current_cmd_start, pipe_fds, &pid_tracker, &last_executed_pid);
+    pipe_cleanup(shell, last_executed_pid, &old_sa);
 }

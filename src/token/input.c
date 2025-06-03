@@ -54,18 +54,18 @@ static char *display_prompt(void)
     if (isatty(fileno(stdin)))
     {
         getcwd(cwd, sizeof(cwd));
-        prompt_size = ft_strlen(G) + ft_strlen(" minishell> ") +
+        prompt_size = ft_strlen(G) + ft_strlen(" minishell:~$ ") +
                       ft_strlen(RST) + 1;
         prompt = ft_malloc(prompt_size);
         if (!prompt)
             return (NULL);
         prompt[0] = '\0';
         ft_strlcat(prompt, G, prompt_size);
-        ft_strlcat(prompt, " minishell> ", prompt_size);
+        ft_strlcat(prompt, " minishell:~$ ", prompt_size);
         ft_strlcat(prompt, RST, prompt_size);
         return (prompt);
     }
-    return (strdup("minishell> "));
+    return (strdup("minishell:~$ "));
 }
 
 

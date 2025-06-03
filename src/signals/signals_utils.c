@@ -33,7 +33,7 @@ void restore_signals(struct sigaction *old_int, struct sigaction *old_quit)
     sigaction(SIGQUIT, old_quit, NULL); // Restore old SIGQUIT handler
 }
 
-void set_child_default_signals(void)
+void set_child_signals(void)
 {
     struct sigaction sa_dfl;
 

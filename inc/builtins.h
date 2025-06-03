@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 19:49:10 by renrodri          #+#    #+#             */
-/*   Updated: 2025/05/31 21:58:53 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/03 11:42:21 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,9 @@ typedef struct s_shell {
     t_command *current_cmd; 
     char **envp; /* cópia do ambiente do sistema que manipula export e unset */
     int exit_status; /* ultimo estatus de saída do shell */
+    pid_t shell_pgid; /*mari: for signal handling*/
+    int shell_is_interactive; /*mari: for signal handling*/
+    int shell_terminal_fd; /*mari: for signal handling*/
 } t_shell;
 
 typedef int (*builtin_func)(t_shell *shell, char **args);
