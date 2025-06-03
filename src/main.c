@@ -57,6 +57,12 @@ int main(int argc, char **argv, char **envp)
 }
  *****/
 
+ /*
+ ** @brief: Initializes the shell's job control.
+ ** This involves setting up process groups and terminal control
+ ** so signals (like Ctrl+C or Ctrl+\) are handled correctly.
+ ** @param shell: Pointer to the shell's main structure.
+ */
 static void init_shell_job_control(t_shell *shell)
 {
     shell->shell_is_interactive = isatty(STDIN_FILENO);
@@ -73,6 +79,11 @@ static void init_shell_job_control(t_shell *shell)
     }
 }
 
+/*
+ ** @brief: Initializes the fundamental members of the shell's main structure.
+ ** @param shell: Pointer to the shell's main structure.
+ ** @param envp: The environment pointer (array of strings) passed to main.
+ */
 static void init_shell_struct(t_shell *shell, char **envp)
 {
     shell->envp = envp;
