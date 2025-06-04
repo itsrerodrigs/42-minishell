@@ -10,6 +10,7 @@
 #include <string.h>
 #include <sys/wait.h> // waitpid, fork e exceve
 #include <sys/ioctl.h>
+#include <limits.h> // PATH_MAX
 #include "libft/libft.h"
 #include "builtins.h"
 #include "tokens.h"

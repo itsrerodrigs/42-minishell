@@ -6,11 +6,12 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 16:22:13 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/04 14:37:27 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/04 14:44:01 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
 
 /*
 * @brief prints the current working directory

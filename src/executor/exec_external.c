@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 14:41:47 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/04 13:23:22 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/04 14:51:07 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,13 @@ int exec_external(t_shell *shell, char **args)
     // Phase 1: Pre-execution setup and fork
     cmd_path = find_executable(args[0], shell);
     if (!cmd_path)
+    {
+        ft_putstr_fd(args[0], STDERR_FILENO);
+        ft_putendl_fd(": command not found", STDERR_FILENO);
+        shell->exit_status = 127;
         return (127);
+    }
+        
 
     g_child_running = 1;
     save_and_ignore_signals(&old_sa.int_sa, &old_sa.quit_sa);
