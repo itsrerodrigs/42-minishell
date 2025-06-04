@@ -57,12 +57,6 @@ int main(int argc, char **argv, char **envp)
 }
  *****/
 
- /*
- ** @brief: Initializes the shell's job control.
- ** This involves setting up process groups and terminal control
- ** so signals (like Ctrl+C or Ctrl+\) are handled correctly.
- ** @param shell: Pointer to the shell's main structure.
- */
 static void init_shell_job_control(t_shell *shell)
 {
     shell->shell_is_interactive = isatty(STDIN_FILENO);
@@ -76,17 +70,12 @@ static void init_shell_job_control(t_shell *shell)
         signal(SIGTSTP, SIG_IGN); // Ctrl-Z (Stop signal)
         signal(SIGTTIN, SIG_IGN); // TTY input signal
         signal(SIGTTOU, SIG_IGN); // TTY output signal
-    }
+    }    
 }
 
-/*
- ** @brief: Initializes the fundamental members of the shell's main structure.
- ** @param shell: Pointer to the shell's main structure.
- ** @param envp: The environment pointer (array of strings) passed to main.
- */
-static void init_shell_struct(t_shell *shell, char **envp)
+static void init_shell_struct(t_shell *shell)
 {
-    shell->envp = envp;
+    shell->envp = NULL;
     shell->exit_status = 0;
     shell->current_cmd = NULL;
 }
@@ -115,23 +104,32 @@ static void s_process_loop(t_shell *shell)
         // Cleanup after execution
         free_tokens(tokens);
         free_commands(commands);
-        shell->current_cmd = NULL;
         free(input);
     }
 }
 
 int main(int argc, char **argv, char **envp)
 {
+    char debug_msg[100];
+    snprintf(debug_msg, sizeof(debug_msg), "Minishell: Main started. PID: %d\n", getpid());
+    write(STDERR_FILENO, debug_msg, strlen(debug_msg));
     t_shell shell;
     
     (void)argc;
     (void)argv;
 
-    init_shell_struct(&shell, envp);
+    init_shell_struct(&shell);
+    shell.envp = dup_envp(envp);
+    if (!shell.envp)
+    {
+        ft_putendl_fd("minishell: Failed to duplicate environment", STDERR_FILENO);
+        return (EXIT_FAILURE);
+    }
     setup_signal_handling();
     init_shell_job_control(&shell);
     p(C "Initializing Minishell..\n" RST);
     s_process_loop(&shell);
+    free_envp(shell.envp);
 
     return (EXIT_SUCCESS);
 }

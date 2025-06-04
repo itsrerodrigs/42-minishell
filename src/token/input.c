@@ -88,11 +88,6 @@ char *read_input(void)
     }
     if (*buf)
         add_history(buf);
-    // if (ft_strncmp(buf, "exit", 4) == 0 && ft_strlen(buf) == 4)
-    // {
-    //     free(buf);
-    //     exit(0);
-    // }
     return (buf);
 }
 
@@ -101,28 +96,28 @@ char *read_input(void)
  **         Continuously prompts for input, processes commands, and cleans up memory.
  ** @return: Always returns NULL, as the function is structured for continuous input processing.
  */
-// t_token *process_input(t_shell *shell)
-// {
-//     char *input;
-//     t_token *tokens;
+t_token *process_input(t_shell *shell)
+{
+    char *input;
+    t_token *tokens;
 
-//     input = read_input();
-//     while (input)
-//     {
-//         if (!*input)
-//         {
-//             free(input);
-//             input = read_input();
-//             continue;
-//         }
-//         tokens = get_tokens(input, shell); 
-//         if (tokens)
-//         {
-//             print_tokens(tokens); /*debug*/
-//             free_tokens(tokens);
-//         }
-//         free(input);
-//         input = read_input();
-//     }
-//     return (NULL);
-// }
+    input = read_input();
+    while (input)
+    {
+        if (!*input)
+        {
+            free(input);
+            input = read_input();
+            continue;
+        }
+        tokens = get_tokens(input, shell); 
+        if (tokens)
+        {
+            // print_tokens(tokens); /*debug*/
+            free_tokens(tokens);
+        }
+        free(input);
+        input = read_input();
+    }
+    return (NULL);
+}

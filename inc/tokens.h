@@ -37,10 +37,10 @@ t_token *get_tokens(char *input, t_shell *shell);
 char        *ft_strtok(char *str, const char *delim, char **saveptr, t_shell *shell);
 
 /*quotes*/
-t_token     *handle_quotes(char **saveptr, char quote_char, t_shell *shell);
+t_token *handle_quotes(char **saveptr, char quote_char, t_shell *shell);
 
 /*variable expansion*/
-char *extract_variable(const char *input, size_t *index_ptr, char **envp);
-char *expand_variables(const char *input, char **envp);
+char *extract_variable(const char *input, size_t *index_ptr, char **envp, int exit_status);
+char *expand_variables(const char *input, char **envp, int exit_status);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 19:49:10 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/03 11:42:21 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/04 13:21:48 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,4 +50,5 @@ int builtin_exit(t_shell *shell, char **args);
 int builtin_unset(t_shell *shell, char **args);
 int builtin_pwd(t_shell *shell, char **args);
 int builtin_printenv(t_shell *shell, char **args);
+builtin_func find_builtin(char *cmd);
 #endif

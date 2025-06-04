@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 16:34:22 by mmariano          #+#    #+#             */
-/*   Updated: 2025/06/02 18:41:44 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/04 13:27:11 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,8 +92,9 @@ int builtin_exit(t_shell *shell, char **args)
             handle_non_numeric_exit_arg(args[1]);
         exit_code = ft_atoi(args[1]);
     }
-    p(RED "Shutting down...\n" RST); 
+    // printf(RED "Shutting down...\n" RST); 
+    ft_putendl_fd("exit", STDERR_FILENO);
     fflush(stdout);
-    usleep(421337);
+    // usleep(421337);
     exit(exit_code);
 }

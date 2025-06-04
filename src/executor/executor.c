@@ -23,15 +23,35 @@
  *       message indicating that the command is not found. External command handling
  *       (fork/execve) is yet to be implemented.
  */
+// void ft_exec(t_shell *shell)
+// {
+//     char **args;
+
+//     if (!shell || !shell->current_cmd)
+//         return;
+//     args = shell->current_cmd->args;
+//     if (!args || !args[0])
+//         return;
+//     if (exec_builtin(shell))
+//         return;
+//     exec_external(shell, args);
+// }
+
+
 void ft_exec(t_shell *shell)
 {
     char **args;
 
-    if (!shell || !shell->current_cmd)
+    if (!shell || !shell->current_cmd || !shell->current_cmd->args || !shell->current_cmd->args[0])
         return;
     args = shell->current_cmd->args;
     if (!args || !args[0])
         return;
+    if (shell->current_cmd->next)
+    {
+        exec_pipeline(shell, shell->current_cmd);
+        return;
+    }
     if (exec_builtin(shell))
         return;
     exec_external(shell, args);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_builtin.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 16:36:07 by renrodri          #+#    #+#             */
-/*   Updated: 2025/05/02 17:10:03 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/04 14:41:10 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static t_builtin *get_builtins(void)
     return builtins;
 }
 
-static builtin_func find_builtin(char *cmd)
+builtin_func find_builtin(char *cmd) //tire o estatico pq va ser chamada por outras funçõe
 {
     t_builtin *builtins;
     int     i;
@@ -35,7 +35,7 @@ static builtin_func find_builtin(char *cmd)
     i = 0;
     while (builtins[i].name)
     {
-        if (ft_strncmp(cmd, builtins[i].name, ft_strlen(builtins[i].name)) == 0)
+        if (ft_strncmp(cmd, builtins[i].name, ft_strlen(builtins[i].name)) == 0 && ft_strlen(cmd) == ft_strlen(builtins[i].name))
         {
             return builtins[i].func;
         }
@@ -46,8 +46,9 @@ static builtin_func find_builtin(char *cmd)
 
 int     exec_builtin(t_shell *shell)
 {
-    char    *cmd;
-    builtin_func func;
+    char            *cmd;
+    builtin_func    func;
+    int             builtin_return_status;
 
     if (!shell || !shell->current_cmd || !shell->current_cmd->args[0])
         return (0);
@@ -55,7 +56,10 @@ int     exec_builtin(t_shell *shell)
     cmd = shell->current_cmd->args[0];
     func = find_builtin(cmd);
     if (func)
-        return func(shell, shell->current_cmd->args);
-    
+    {
+        builtin_return_status = func(shell, shell->current_cmd->args);
+        shell->exit_status = builtin_return_status;
+        return (1);
+    }  
     return (0);
 }

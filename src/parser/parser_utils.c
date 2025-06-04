@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 16:04:57 by renrodri          #+#    #+#             */
-/*   Updated: 2025/05/21 16:04:57 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/04 13:52:39 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int     add_arg(t_command *cmd, char *arg)
         new_args[i] = cmd->args[i];
         i++;
     }
-    new_args[i++] = arg;
+    new_args[i++] = ft_strdup(arg);
     new_args[i] = NULL;
     free(cmd->args);
     cmd->args = new_args;
@@ -78,7 +78,7 @@ int     add_redir(t_command *cmd, t_redir_type type, char *filename)
     if (!new_redir)
         return (0);
     new_redir->type = type;
-    new_redir->filename = filename;
+    new_redir->filename = ft_strdup(filename);
     new_redir->next = NULL;
     if (!cmd->redirs)
     {
@@ -99,7 +99,7 @@ int     handle_cmd_or_arg(t_command *cmd, t_token *token)
 {
     if (!cmd->cmd)
     {
-        cmd->cmd = token->value;
+        cmd->cmd = ft_strdup(token->value);
         return (add_arg(cmd, token->value));
     }
     else

@@ -42,24 +42,24 @@ static char *resize_expanded(char *expanded, size_t *new_size, const char *value
  **         new_size - pointer to current allocated size.
  ** @return: pointer to updated expanded string.
  */
-static char *need_expansion(const char *input, size_t *index_ptr, char *expanded, size_t *new_size, char **envp)
-{
-    char *value;
+// static char *need_expansion(const char *input, size_t *index_ptr, char *expanded, size_t *new_size, char **envp)
+// {
+//     char *value;
 
-    (*index_ptr)++;
-    value = extract_variable(input, index_ptr, envp);
-    if (!value)
-        value = ft_strdup("");
-    expanded = resize_expanded(expanded, new_size, value);
-    if (!expanded)
-    {
-        free(value);
-        return (NULL);
-    }
-    ft_strlcat(expanded, value, *new_size + 1);
-    free(value);
-    return (expanded);
-}
+//     (*index_ptr)++;
+//     value = extract_variable(input, index_ptr, envp);
+//     if (!value)
+//         value = ft_strdup("");
+//     expanded = resize_expanded(expanded, new_size, value);
+//     if (!expanded)
+//     {
+//         free(value);
+//         return (NULL);
+//     }
+//     ft_strlcat(expanded, value, *new_size + 1);
+//     free(value);
+//     return (expanded);
+// }
 
 /*
  ** @brief: Appends a regular (non-variable) character to the expanded string.
@@ -92,7 +92,72 @@ static char *regular_char(const char *input, size_t *index_ptr, char *expanded, 
  ** @param: input - the source string
  ** @return: new dynamically allocated string with variables expanded.
  */
-char *expand_variables(const char *input, char **envp)
+// char *expand_variables(const char *input, char **envp)
+// {
+//     char    *expanded;
+//     size_t  new_size;
+//     size_t  index_ptr;
+
+//     if (!input)
+//         return (NULL);
+//     new_size = 0;
+//     index_ptr = 0;
+//     expanded = malloc(ft_strlen(input) + 1);
+//     if (!expanded)
+//         return (NULL);
+//     expanded[0] = '\0';
+//     while (input[index_ptr])
+//     {
+//         if (input[index_ptr] == '$' && input[index_ptr + 1] != '\0')
+//             expanded = need_expansion(input, &index_ptr, expanded, &new_size, envp);
+//         else
+//             expanded = regular_char(input, &index_ptr, expanded, &new_size);
+//         if (!expanded)
+//         {
+//             free(expanded);
+//             return (NULL);  
+//         }
+//     }
+//     return (expanded);
+// }
+
+// void expand_token_list(t_token *tokens, t_shell *shell)
+// {
+//     while (tokens)
+//     {
+//         if (tokens->type == TOKEN_SINGLE_QUOTED)
+//         {
+//             tokens = tokens->next;
+//             continue;
+//         }
+//         char *expanded = expand_variables(tokens->value, shell->envp);
+//         if (expanded)
+//         {
+//             free(tokens->value);
+//             tokens->value = expanded;
+//         }
+//         tokens = tokens->next;
+//     }
+// }
+
+static char *need_expansion(const char *input, size_t *index_ptr, char *expanded, size_t *new_size, char **envp, int exit_status) // Added exit_status
+{
+    char *value;
+
+    (*index_ptr)++;
+    value = extract_variable(input, index_ptr, envp, exit_status);
+    expanded = resize_expanded(expanded, new_size, value);
+    if (!expanded)
+    {
+        free(value);
+        return (NULL);
+    }
+    ft_strlcat(expanded, value, *new_size + 1);
+    free(value);
+    return (expanded);
+}
+
+char *expand_variables(const char *input, char **envp, int exit_status)
 {
     char    *expanded;
     size_t  new_size;
@@ -108,13 +173,28 @@ char *expand_variables(const char *input, char **envp)
     expanded[0] = '\0';
     while (input[index_ptr])
     {
-        if (input[index_ptr] == '$' && input[index_ptr + 1] != '\0')
-            expanded = need_expansion(input, &index_ptr, expanded, &new_size, envp);
+        // Correctly handle '$' at the end of string or followed by non-variable char
+        if (input[index_ptr] == '$' && input[index_ptr + 1] != '\0' &&
+            (ft_isalpha(input[index_ptr + 1]) || input[index_ptr + 1] == '_' ||
+             input[index_ptr + 1] == '?' || input[index_ptr + 1] == '$' ||
+             input[index_ptr + 1] == '{')) // Check for valid start of var name
+        {
+            expanded = need_expansion(input, &index_ptr, expanded, &new_size, envp, exit_status); // Pass exit_status
+        }
+        else if (input[index_ptr] == '$' && input[index_ptr + 1] == '\0') // Case: "echo $"
+        {
+            expanded = regular_char(input, &index_ptr, expanded, &new_size); // Treat as regular char '$'
+        }
+        else if (input[index_ptr] == '$' && ft_isspace(input[index_ptr + 1])) // Case: "echo $ "
+        {
+            expanded = regular_char(input, &index_ptr, expanded, &new_size); // Treat as regular char '$'
+        }
         else
             expanded = regular_char(input, &index_ptr, expanded, &new_size);
+        
         if (!expanded)
         {
-            free(expanded);
+            // free(expanded); // Already freed in regular_char/need_expansion if NULL is returned
             return (NULL);  
         }
     }
@@ -130,8 +210,9 @@ void expand_token_list(t_token *tokens, t_shell *shell)
             tokens = tokens->next;
             continue;
         }
-        char *expanded = expand_variables(tokens->value, shell->envp);
-        if (expanded)
+        // Pass shell->exit_status to expand_variables
+        char *expanded = expand_variables(tokens->value, shell->envp, shell->exit_status);
+        if (expanded) // expanded will never be NULL if allocation succeeds, but check anyway
         {
             free(tokens->value);
             tokens->value = expanded;

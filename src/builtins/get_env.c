@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_env.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:47:37 by renrodri          #+#    #+#             */
-/*   Updated: 2025/05/07 13:47:37 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/04 13:38:36 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ char    *get_env_value(char **envp, const char *key)
     i = 0;
     while (envp[i])
     {
-        printf("Checking '%s' against '%s'\n", envp[i], key);
+        // printf("Checking '%s' against '%s'\n", envp[i], key);
         if (strncmp(envp[i], key, key_len) == 0 && envp[i][key_len] == '=')
             return &envp[i][key_len + 1];
         i++;

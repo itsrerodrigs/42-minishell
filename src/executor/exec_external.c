@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 14:41:47 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/03 13:14:44 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/04 13:23:22 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,11 +87,13 @@
 } */
 
 
-static void handle_child_process(t_shell *shell, char *cmd_path) 
+static void handle_child_process(t_shell *shell, char *cmd_path,  char **args) 
 {
-    (void)cmd_path;
     set_child_signals();
-    exec_command(shell, shell->current_cmd); 
+    execve(cmd_path, args, shell->envp);
+    perror("minishell: execve failed");
+    free(cmd_path); // Only if execve fails
+    exit(EXIT_FAILURE);
 }
 
 static void handle_parent_process(t_shell *shell, pid_t pid, char *cmd_path, t_old_signals *old_sa) 
@@ -139,7 +141,7 @@ int exec_external(t_shell *shell, char **args)
 
     // Phase 2: Handle child or parent logic
     if (pid == 0)
-        handle_child_process(shell, cmd_path);
+        handle_child_process(shell, cmd_path, args);
     else
         handle_parent_process(shell, pid, cmd_path, &old_sa);
     return (0);

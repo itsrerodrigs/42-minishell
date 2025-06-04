@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtins_utils.c                                    :+:      :+:   :+:   */
+/*   builtins_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 22:23:01 by renrodri          #+#    #+#             */
-/*   Updated: 2025/05/11 22:23:01 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/04 13:37:25 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,9 @@ void	update_env_var(t_shell *shell, const char *key, const char *value)
 		}
 		i++;
 	}
-	shell->envp = realloc_mem(shell->envp, (i + 2) * sizeof(char *));
+	//mari: troquei realloc_mem por ft_realloc por causa do leak de memória
+	// shell->envp = realloc_mem(shell->envp, (i + 2) * sizeof(char *));
+	shell->envp = ft_realloc(shell->envp, (i + 2) * sizeof(char *));
 	if (shell->envp)
 	{
 		shell->envp[i] = new_var;

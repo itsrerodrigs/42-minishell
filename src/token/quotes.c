@@ -50,31 +50,60 @@ static char *extract_quoted(char **saveptr, char quote_char)
 }
 
 
-/*
-** @brief:  call extract quotes and applies variable expansion for double quotes
-** @param: saveptr - pointer to tokenizer state, 
-**		quote_char - quoting character
-** @return: new token constructed from the quoted input
-*/
+// /*
+// ** @brief:  call extract quotes and applies variable expansion for double quotes
+// ** @param: saveptr - pointer to tokenizer state, 
+// **		quote_char - quoting character
+// ** @return: new token constructed from the quoted input
+// */
+// t_token *handle_quotes(char **saveptr, char quote_char, t_shell *shell)
+// {
+// 	char *start;
+// 	char *expanded;
+	
+// 	if (!saveptr || !*saveptr || **saveptr != quote_char)
+// 		return (NULL);
+// 	start = extract_quoted(saveptr, quote_char);
+// 	if (!start)
+// 		return (NULL);
+// 	if(quote_char == '"')
+// 	{
+// 		expanded = expand_variables(start, shell->envp);
+// 		if(!expanded)
+// 		{
+// 			p("Error: Memory allocation failed during variable expansion.\n");
+// 			return (NULL);
+// 		}
+// 		return (create_token(expanded, TOKEN_WORD));
+// 	}
+// 	return(create_token(start,TOKEN_WORD));
+// }
+
 t_token *handle_quotes(char **saveptr, char quote_char, t_shell *shell)
 {
-	char *start;
-	char *expanded;
-	
-	if (!saveptr || !*saveptr || **saveptr != quote_char)
-		return (NULL);
-	start = extract_quoted(saveptr, quote_char);
-	if (!start)
-		return (NULL);
-	if(quote_char == '"')
-	{
-		expanded = expand_variables(start, shell->envp);
-		if(!expanded)
-		{
-			p("Error: Memory allocation failed during variable expansion.\n");
-			return (NULL);
-		}
-		return (create_token(expanded, TOKEN_WORD));
-	}
-	return(create_token(start,TOKEN_WORD));
+    char *start;
+    char *expanded;
+    t_token *new_token; // Declare token here
+
+    if (!saveptr || !*saveptr || **saveptr != quote_char)
+        return (NULL);
+    start = extract_quoted(saveptr, quote_char);
+    if (!start)
+        return (NULL);
+
+    if (quote_char == '"')
+    {
+        expanded = expand_variables(start, shell->envp, shell->exit_status); // Pass envp and exit_status
+        if (!expanded)
+        {
+            p("Error: Memory allocation failed during variable expansion.\n");
+            return (NULL);
+        }
+        new_token = create_token(expanded, TOKEN_WORD); // Double quoted result is a word
+    }
+    else // quote_char == '\''
+    {
+        new_token = create_token(start, TOKEN_SINGLE_QUOTED); // Single quoted tokens
+    }
+    return (new_token);
 }

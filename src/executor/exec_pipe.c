@@ -6,13 +6,14 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 14:39:44 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/03 13:12:49 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/04 13:20:13 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
 #include "minishell.h"
 #include "sig.h"
+#include "builtins.h"
 
 /*
  * @brief Creates a pipe if needed and forks a new process.
@@ -69,7 +70,14 @@ static void exec_pipe_child(t_shell *shell, t_command *cmd,
     (void)is_pipe;
     set_child_signals();
     setup_redirections(cmd, prev_fd, pipefd, is_pipe);
-    exec_command(shell, cmd);
+    builtin_func func = find_builtin(cmd->args[0]);
+    if (func)
+    {
+        func(shell, cmd->args);
+        exit(shell->exit_status);
+    }
+    else
+        exec_command(shell, cmd);
 }
 
 static void pipe_fd_parent(int pipefd[2], int *prev_fd, int is_pipe)
