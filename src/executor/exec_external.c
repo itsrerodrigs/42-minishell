@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 14:41:47 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/04 14:51:07 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/04 15:09:17 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,7 @@
 static void handle_child_process(t_shell *shell, char *cmd_path,  char **args) 
 {
     set_child_signals();
+    setpgid(0, 0);
     execve(cmd_path, args, shell->envp);
     perror("minishell: execve failed");
     free(cmd_path); // Only if execve fails

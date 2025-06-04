@@ -22,6 +22,6 @@ void child_exec(char *cmd_path, char **args, t_command *cmd, char **envp);
 int validate_command(t_shell *shell);
 
 /*mari*/
-void exec_command(t_shell *shell, t_command *cmd);
+void exec_command(t_shell *shell, t_command *cmd, char *caller_cmd_path);
 
 #endif
