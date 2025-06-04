@@ -58,7 +58,7 @@ int main(int argc, char **argv, char **envp)
  *****/
 
 static void init_shell_job_control(t_shell *shell)
-{
+{/*
     shell->shell_is_interactive = isatty(STDIN_FILENO);
     {
         shell->shell_terminal_fd = STDIN_FILENO; 
@@ -70,7 +70,9 @@ static void init_shell_job_control(t_shell *shell)
         signal(SIGTSTP, SIG_IGN); // Ctrl-Z (Stop signal)
         signal(SIGTTIN, SIG_IGN); // TTY input signal
         signal(SIGTTOU, SIG_IGN); // TTY output signal
-    }
+    }*/
+        shell->shell_is_interactive = 0;
+    
 }
 
 static void init_shell_struct(t_shell *shell)
@@ -110,6 +112,9 @@ static void s_process_loop(t_shell *shell)
 
 int main(int argc, char **argv, char **envp)
 {
+    char debug_msg[100];
+    snprintf(debug_msg, sizeof(debug_msg), "Minishell: Main started. PID: %d\n", getpid());
+    write(STDERR_FILENO, debug_msg, strlen(debug_msg));
     t_shell shell;
     
     (void)argc;

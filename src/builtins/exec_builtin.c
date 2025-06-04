@@ -6,7 +6,7 @@
 /*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 16:36:07 by renrodri          #+#    #+#             */
-/*   Updated: 2025/05/02 17:10:03 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/04 03:55:41 by renrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,16 +46,19 @@ static builtin_func find_builtin(char *cmd)
 
 int     exec_builtin(t_shell *shell)
 {
-    char    *cmd;
+    char    *cmd_name;
     builtin_func func;
+    int     exit_status;
 
     if (!shell || !shell->current_cmd || !shell->current_cmd->args[0])
         return (0);
-    
-    cmd = shell->current_cmd->args[0];
-    func = find_builtin(cmd);
+    cmd_name = shell->current_cmd->args[0];
+    func = find_builtin(cmd_name);
     if (func)
-        return func(shell, shell->current_cmd->args);
-    
+    {
+        exit_status = func(shell, shell->current_cmd->args);
+        exit(exit_status);
+    }
+        //return func(shell, shell->current_cmd->args);
     return (0);
 }
