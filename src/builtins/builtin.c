@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 18:29:56 by mmariano          #+#    #+#             */
-/*   Updated: 2025/04/28 16:34:50 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/05 18:31:40 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@
  * params args - an array of strings representing command-line arguments
  * return 0 on success or 1 if the environment variablws are not accessible
 */
-
-
 int	ft_env(char **args)
 {
 	extern char	**environ;

@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 22:23:01 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/04 13:37:25 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/05 18:31:52 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,6 @@ void	update_env_var(t_shell *shell, const char *key, const char *value)
 		}
 		i++;
 	}
-	//mari: troquei realloc_mem por ft_realloc por causa do leak de memória
-	// shell->envp = realloc_mem(shell->envp, (i + 2) * sizeof(char *));
 	shell->envp = ft_realloc(shell->envp, (i + 2) * sizeof(char *));
 	if (shell->envp)
 	{

@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 13:26:41 by mmariano          #+#    #+#             */
-/*   Updated: 2025/06/03 13:09:15 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/05 18:29:02 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 #define SIG_H
 
 #include "minishell.h"
-#include <signal.h>
 
 typedef struct s_old_signals
 {
