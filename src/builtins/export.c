@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 15:56:49 by renrodri          #+#    #+#             */
-/*   Updated: 2025/05/02 17:14:53 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/05 13:45:51 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ static int	ft_try_update_existing_var(char **envp, const char *var,
 	return (0);
 }
 
-static void	add_or_update_env(char ***envp, const char *var)
+void	add_or_update_env(char ***envp, const char *var)
 {
 	int		i;
 	char	*equals_pos;

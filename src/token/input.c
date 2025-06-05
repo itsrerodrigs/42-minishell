@@ -112,10 +112,7 @@ t_token *process_input(t_shell *shell)
         }
         tokens = get_tokens(input, shell); 
         if (tokens)
-        {
-            // print_tokens(tokens); /*debug*/
             free_tokens(tokens);
-        }
         free(input);
         input = read_input();
     }

@@ -10,50 +10,104 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
-#include "../inc/tokens.h"
-#include "../inc/parser.h"
+#include "minishell.h"
+#include "tokens.h"
+#include "parser.h"
 
 /*
-**	@brief: extracts a quotes substring from the input
-** @param: 	saveptr - state pointer, 
-** 			quote_char - type of quote
-** @return: pointer to extracted quoted string
-*/
-static char *extract_quoted(char **saveptr, char quote_char)
-{
-	char *start;
-	char *end;
+ * @brief Extracts a quoted substring from the input.
+ * Returns a NEWLY ALLOCATED string.
+ * @param saveptr Pointer to the tokenizer state. Points to the char *after* the opening quote upon entry.
+ * @param quote_char Type of quote.
+ * @return Pointer to newly allocated extracted quoted string, or NULL if memory allocation fails or unmatched quote.
+ * The caller is responsible for freeing the returned string.
+ */
+// src/quotes/quotes.c
+// char *extract_quoted(char **saveptr, char quote_char)
+// {
+//     char *start_content;
+//     char *end_content;
+//     char *extracted_copy;
+//     size_t len;
 
-	start = ++(*saveptr);
-	end = start;
-	while (*end)
-	{
-		if (*end == '\\' && (*(end +1) == quote_char))
-		{
-			end += 2;
-			continue;
-		}
-		if (*end == quote_char)
-			break;
-		end++;
-	}
-	if (*end == '\0')
-	{
-		p("Error: Unmatched quote\n");
-		*saveptr = NULL;
-		return (NULL);
-	}
-	*end = '\0';
-	*saveptr = end + 1;
-	return(start);
+//     // (*saveptr)++; 
+//     start_content = *saveptr; 
+//     end_content = start_content;
+//     while (*end_content)
+//     {
+//         if (*end_content == '\\' && (*(end_content + 1) == quote_char))
+//         {
+//             end_content += 2;
+//             continue;
+//         }
+//         if (*end_content == quote_char)
+//             break;
+//         end_content++;
+//     }
+//     if (*end_content == '\0')
+//     {
+//         ft_putendl_fd("minishell: error: unmatched quote", STDERR_FILENO);
+//         *saveptr = NULL;
+//         return (NULL);
+//     }
+//     len = end_content - start_content; // Length is now correctly calculated for content only
+//     extracted_copy = ft_strndup(start_content, len); // Duplicates content only
+//     if (!extracted_copy)
+//     {
+//         perror("minishell: ft_strndup failed");
+//         *saveptr = NULL;
+//         return (NULL);
+//     }
+//     *saveptr = end_content + 1;
+//     return(extracted_copy);
+// }
+
+char *extract_quoted(char **saveptr, char quote_char)
+{
+    char *start_content;
+    char *end_content;
+    char *extracted_copy;
+    size_t len;
+
+    (*saveptr)++;
+    start_content = *saveptr; 
+    end_content = start_content;
+    while (*end_content)
+    {
+        if (*end_content == '\\' && (*(end_content + 1) == quote_char))
+        {
+            end_content += 2; 
+            continue;
+        }
+        if (*end_content == quote_char) 
+            break;
+        end_content++;
+    }
+    if (*end_content == '\0')
+    {
+        ft_putendl_fd("minishell: error: unmatched quote", STDERR_FILENO);
+        *saveptr = NULL;
+        return (NULL);
+    }
+
+    len = end_content - start_content; // Length is now correctly calculated for content only
+    extracted_copy = ft_strndup(start_content, len); // Duplicates content only
+    if (!extracted_copy)
+    {
+        perror("minishell: ft_strndup failed");
+        *saveptr = NULL; // Signal allocation error
+        return (NULL);
+    }
+
+    *saveptr = end_content + 1; // Move saveptr past the closing quote
+    return(extracted_copy);
 }
 
 t_token *handle_quotes(char **saveptr, char quote_char, t_shell *shell)
 {
     char *start;
     char *expanded;
-    t_token *new_token; // Declare token here
+    t_token *new_token;
 
     if (!saveptr || !*saveptr || **saveptr != quote_char)
         return (NULL);
@@ -70,12 +124,8 @@ t_token *handle_quotes(char **saveptr, char quote_char, t_shell *shell)
             return (NULL);
         }
         new_token = create_token(expanded, TOKEN_WORD); // Double quoted result is a word
-		p("DEBUG: Double quoted token. Value: '%s', Type: TOKEN_WORD\n", new_token->value); 
     }
     else // quote_char == '\''
-    {
         new_token = create_token(start, TOKEN_SINGLE_QUOTED);
-		p("DEBUG: Single quoted token. Value: '%s', Type: TOKEN_SINGLE_QUOTED\n", new_token->value);
-    }
     return (new_token);
 }

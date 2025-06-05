@@ -17,46 +17,6 @@
 #include "sig.h"
 
 
-/**** 
-int main(int argc, char **argv, char **envp)
-{
-    t_shell shell;
-    char *input;
-    t_token *tokens;
-    t_command *commands;
-
-    (void)argc;
-    (void)argv;
-
-    shell.envp = envp;
-    shell.exit_status = 0;
-    shell.current_cmd = NULL;
-
-    setup_signal_handling();
-    p(C "Initializing Minishell..\n" RST);
-
-    while (1)
-    {
-        input = read_input();
-        if (!input)
-            break;
-        tokens = get_tokens(input, &shell);
-        if (!tokens)
-        {
-            free(input);
-            continue;
-        }
-        commands = parse_tokens(tokens, &shell);
-        shell.current_cmd = commands;        
-        ft_exec(&shell);
-        free_tokens(tokens);
-        free_commands(commands);
-        free(input);
-    }
-    return (EXIT_SUCCESS);
-}
- *****/
-
 static void init_shell_job_control(t_shell *shell)
 {
     shell->shell_is_interactive = isatty(STDIN_FILENO);
@@ -133,3 +93,4 @@ int main(int argc, char **argv, char **envp)
 
     return (EXIT_SUCCESS);
 }
+

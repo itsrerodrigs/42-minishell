@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 16:12:34 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/04 13:46:58 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/05 16:44:42 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,8 +75,74 @@ int handle_special_tokens(t_command **current, t_token **tokens)
     }
     return 0;
 }
+static int s_handle_word_token(t_command *current_cmd, t_token *token, t_shell *shell)
+{
+    char *equals_pos;
+    int is_valid_name;
+    char *c;
 
-t_command *parse_tokens(t_token *tokens, t_shell *shell)
+    equals_pos = ft_strchr(token->value, '='); 
+    if (equals_pos && equals_pos != token->value && (ft_isalpha(token->value[0]) || token->value[0] == '_')) 
+    {
+        is_valid_name = 1; 
+        for (c = token->value; c < equals_pos; ++c) 
+        {
+            if (!ft_isalnum(*c) && *c != '_') 
+            { 
+                is_valid_name = 0;
+                break;
+            }
+        }
+        if (is_valid_name) 
+        {
+            add_or_update_env(&shell->envp, token->value);
+            return (1);
+        }
+    }
+    return (handle_cmd_or_arg(current_cmd, token));
+}
+
+
+// t_command *parse_tokens(t_token *tokens, t_shell *shell)
+// {
+//     t_command *cmd_list;
+//     t_command *current;
+//     int error;
+
+//     expand_token_list(tokens, shell);
+//     cmd_list = init_command();
+//     if (!cmd_list)
+//         return (NULL);
+//     current = cmd_list;
+//     while (tokens != NULL && tokens->type != TOKEN_EOF)
+//     {
+//         if (is_token_cmd(tokens))
+//         {
+//             if (!handle_cmd_or_arg(current, tokens))
+//                 return (NULL);
+//         }
+//         else if (tokens->type == TOKEN_PIPE || tokens->type == TOKEN_SEMICOLON)
+//         {
+//             error = handle_special_tokens(&current, &tokens);
+//             if (error != 0)
+//                 return (NULL);
+//         }
+//         else if (is_token_redir(tokens))
+//         {
+//             if (!tokens->next || tokens->next->type != TOKEN_WORD)
+//                 return syntax_error("newline"), NULL;
+//             if (!parse_redir(current, &tokens))
+//                 return (NULL);
+//             continue;
+//         }
+//         else
+//             return syntax_error(tokens->value), NULL;
+//         tokens = tokens->next;
+//     }
+//     return (cmd_list);
+// }
+
+t_command *parse_tokens(t_token *tokens, t_shell *shell) 
 {
     t_command *cmd_list;
     t_command *current;
@@ -87,28 +153,25 @@ t_command *parse_tokens(t_token *tokens, t_shell *shell)
     if (!cmd_list)
         return (NULL);
     current = cmd_list;
-    while (tokens != NULL && tokens->type != TOKEN_EOF)
+    while (tokens != NULL && tokens->type != TOKEN_EOF) 
     {
-        if (is_token_cmd(tokens))
-        {
-            if (!handle_cmd_or_arg(current, tokens))
+        if (is_token_cmd(tokens)) 
+        { 
+            if (!s_handle_word_token(current, tokens, shell))
                 return (NULL);
         }
-        else if (tokens->type == TOKEN_PIPE || tokens->type == TOKEN_SEMICOLON)
-        {
+        else if (tokens->type == TOKEN_PIPE || tokens->type == TOKEN_SEMICOLON) {
             error = handle_special_tokens(&current, &tokens);
-            if (error != 0)
-                return (NULL);
+            if (error != 0) return (NULL);
         }
-        else if (is_token_redir(tokens))
+        else if (is_token_redir(tokens)) 
         {
             if (!tokens->next || tokens->next->type != TOKEN_WORD)
                 return syntax_error("newline"), NULL;
-            if (!parse_redir(current, &tokens))
-                return (NULL);
-            continue;
+            if (!parse_redir(current, &tokens)) return (NULL);
+            tokens = tokens->next;
         }
-        else
+        else 
             return syntax_error(tokens->value), NULL;
         tokens = tokens->next;
     }

@@ -6,7 +6,7 @@
 #    By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/29 18:39:36 by marielidias       #+#    #+#              #
-#    Updated: 2025/06/03 14:56:30 by mmariano         ###   ########.fr        #
+#    Updated: 2025/06/05 14:35:31 by mmariano         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,7 @@ SRCS = ft_atoi.c     ft_atol.c      ft_bzero.c      ft_calloc.c   \
        ft_strjoin.c   ft_strlcat.c    ft_strlcpy.c    ft_strlen.c \
        ft_strmapi.c   ft_strnstr.c    ft_strncmp.c    ft_strrchr.c \
        ft_strtrim.c   ft_substr.c     ft_tolower.c    ft_toupper.c \
-       get_next_line.c ft_strcmp.c
+       get_next_line.c ft_strcmp.c    ft_strndup.c
 
 OBJS = $(SRCS:.c=.o)
 

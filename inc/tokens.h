@@ -36,10 +36,12 @@ t_token *get_tokens(char *input, t_shell *shell);
 t_token_type get_token_type(char *token_str);
 // char        *ft_strtok(char *str, const char *delim, char **saveptr, t_shell *shell);
 t_token *ft_get_next_token(char *str, const char *delim, char **saveptr, t_shell *shell);
+char *extract_next_token(char **saveptr, const char *delim);
 
 
 /*quotes*/
 t_token *handle_quotes(char **saveptr, char quote_char, t_shell *shell);
+char *extract_quoted(char **saveptr, char quote_char);
 
 /*variable expansion*/
 char *extract_variable(const char *input, size_t *index_ptr, char **envp, int exit_status);

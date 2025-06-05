@@ -120,30 +120,19 @@ char *expand_variables(const char *input, char **envp, int exit_status)
     expanded[0] = '\0';
     while (input[index_ptr])
     {
-        // Correctly handle '$' at the end of string or followed by non-variable char
         if (input[index_ptr] == '$' && input[index_ptr + 1] != '\0' &&
             (ft_isalpha(input[index_ptr + 1]) || input[index_ptr + 1] == '_' ||
              input[index_ptr + 1] == '?' || input[index_ptr + 1] == '$' ||
              input[index_ptr + 1] == '{')) // Check for valid start of var name
-        {
             expanded = need_expansion(input, &index_ptr, expanded, &new_size, envp, exit_status); // Pass exit_status
-        }
         else if (input[index_ptr] == '$' && input[index_ptr + 1] == '\0') // Case: "echo $"
-        {
             expanded = regular_char(input, &index_ptr, expanded, &new_size); // Treat as regular char '$'
-        }
         else if (input[index_ptr] == '$' && ft_isspace(input[index_ptr + 1])) // Case: "echo $ "
-        {
-            expanded = regular_char(input, &index_ptr, expanded, &new_size); // Treat as regular char '$'
-        }
+            expanded = regular_char(input, &index_ptr, expanded, &new_size);
         else
             expanded = regular_char(input, &index_ptr, expanded, &new_size);
-        
         if (!expanded)
-        {
-            // free(expanded); // Already freed in regular_char/need_expansion if NULL is returned
             return (NULL);  
-        }
     }
     return (expanded);
 }
@@ -152,16 +141,13 @@ void expand_token_list(t_token *tokens, t_shell *shell)
 {
     while (tokens)
     {
-        p("DEBUG: Processing token. Value: '%s', Type: %d\n", tokens->value, tokens->type);
         if (tokens->type == TOKEN_SINGLE_QUOTED)
         {
-            p("DEBUG: Skipping single-quoted token: '%s'\n", tokens->value);
             tokens = tokens->next;
             continue;
         }
-        // Pass shell->exit_status to expand_variables
         char *expanded = expand_variables(tokens->value, shell->envp, shell->exit_status);
-        if (expanded) // expanded will never be NULL if allocation succeeds, but check anyway
+        if (expanded)
         {
             free(tokens->value);
             tokens->value = expanded;
