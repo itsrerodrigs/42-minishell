@@ -87,59 +87,6 @@ static char *regular_char(const char *input, size_t *index_ptr, char *expanded, 
     return (expanded);
 }
 
-/*
- ** @brief: Expands all environment variables in the input string.
- ** @param: input - the source string
- ** @return: new dynamically allocated string with variables expanded.
- */
-// char *expand_variables(const char *input, char **envp)
-// {
-//     char    *expanded;
-//     size_t  new_size;
-//     size_t  index_ptr;
-
-//     if (!input)
-//         return (NULL);
-//     new_size = 0;
-//     index_ptr = 0;
-//     expanded = malloc(ft_strlen(input) + 1);
-//     if (!expanded)
-//         return (NULL);
-//     expanded[0] = '\0';
-//     while (input[index_ptr])
-//     {
-//         if (input[index_ptr] == '$' && input[index_ptr + 1] != '\0')
-//             expanded = need_expansion(input, &index_ptr, expanded, &new_size, envp);
-//         else
-//             expanded = regular_char(input, &index_ptr, expanded, &new_size);
-//         if (!expanded)
-//         {
-//             free(expanded);
-//             return (NULL);  
-//         }
-//     }
-//     return (expanded);
-// }
-
-// void expand_token_list(t_token *tokens, t_shell *shell)
-// {
-//     while (tokens)
-//     {
-//         if (tokens->type == TOKEN_SINGLE_QUOTED)
-//         {
-//             tokens = tokens->next;
-//             continue;
-//         }
-//         char *expanded = expand_variables(tokens->value, shell->envp);
-//         if (expanded)
-//         {
-//             free(tokens->value);
-//             tokens->value = expanded;
-//         }
-//         tokens = tokens->next;
-//     }
-// }
-
 static char *need_expansion(const char *input, size_t *index_ptr, char *expanded, size_t *new_size, char **envp, int exit_status) // Added exit_status
 {
     char *value;
@@ -205,8 +152,10 @@ void expand_token_list(t_token *tokens, t_shell *shell)
 {
     while (tokens)
     {
+        p("DEBUG: Processing token. Value: '%s', Type: %d\n", tokens->value, tokens->type);
         if (tokens->type == TOKEN_SINGLE_QUOTED)
         {
+            p("DEBUG: Skipping single-quoted token: '%s'\n", tokens->value);
             tokens = tokens->next;
             continue;
         }

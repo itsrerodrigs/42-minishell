@@ -36,7 +36,7 @@ void free_tokens(t_token *head)
  ** @param: token_str - String representing a token.
  ** @return: Token type as `t_id` (e.g., TOKEN_PIPE, TOKEN_WORD, etc.).
  */
-static t_token_type get_token_type(char *token_str)
+t_token_type get_token_type(char *token_str)
 {
     if (!token_str) 
         return (TOKEN_WORD);
@@ -84,23 +84,42 @@ t_token *create_token(char *buf, t_token_type type)
  ** @param: saveptr - Pointer to the current tokenizer state.
  ** @return: Pointer to the first token in the linked list.
  */
-static t_token *extract_tokens(char **saveptr, t_shell *shell)
-{
-    t_token     *head;
-    t_token     *current;
-    t_token     *new_token;
-    char        *token_str;
+// static t_token *extract_tokens(char **saveptr, t_shell *shell)
+// {
+//     t_token     *head;
+//     t_token     *current;
+//     t_token     *new_token;
+//     char        *token_str;
+
+//     head = NULL;
+//     current = NULL;    
+//     while ((token_str = ft_strtok(NULL, DELIM, saveptr, shell)))
+//     {
+//         new_token = create_token(token_str, get_token_type(token_str));
+//         if (!new_token) 
+//             return (free_tokens(head), NULL);
+//         if (!head) 
+//             head = new_token;
+//         else 
+//             current->next = new_token;
+//         current = new_token;
+//     }
+//     return (head);
+// }
+
+static t_token *extract_tokens(char **saveptr, t_shell *shell) {
+    t_token *head;
+    t_token *current;
+    t_token *new_token; // This will directly receive the t_token*
 
     head = NULL;
-    current = NULL;    
-    while ((token_str = ft_strtok(NULL, DELIM, saveptr, shell)))
-    {
-        new_token = create_token(token_str, get_token_type(token_str));
-        if (!new_token) 
+    current = NULL;
+    while ((new_token = ft_get_next_token(NULL, DELIM, saveptr, shell))) { // Use new tokenizer function
+        if (!new_token)
             return (free_tokens(head), NULL);
-        if (!head) 
+        if (!head)
             head = new_token;
-        else 
+        else
             current->next = new_token;
         current = new_token;
     }

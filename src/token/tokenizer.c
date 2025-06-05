@@ -30,10 +30,10 @@ static void skip_delim(char **saveptr, const char *delim)
  ** @param saveptr: Pointer to the tokenizer state.
  ** @return: Extracted quoted string or NULL if an error occurs.
  */
-static char *handle_token_quotes(char **saveptr, t_shell *shell)
+static t_token *handle_token_quotes(char **saveptr, t_shell *shell)
 {
-    t_token *quoted_token;
-    char quote_char;
+    // t_token     *quoted_token;
+    char        quote_char;
 
     if (!saveptr || !*saveptr)
         return (NULL);
@@ -41,11 +41,12 @@ static char *handle_token_quotes(char **saveptr, t_shell *shell)
     quote_char = **saveptr;
     if (quote_char != '\'' && quote_char != '"')
         return (NULL);
-    quoted_token = handle_quotes(saveptr, quote_char, shell);
-    if (quoted_token)
-        return quoted_token->value;
+    return (handle_quotes(saveptr, quote_char, shell));
+    // quoted_token = handle_quotes(saveptr, quote_char, shell);
+    // if (quoted_token)
+    //     return quoted_token->value;
 
-    return (NULL);
+    // return (NULL);
 }
 
 
@@ -80,22 +81,50 @@ static char *extract_next_token(char **saveptr, const char *delim)
  ** 		saveptr: Pointer to track progress across calls.
  ** @return: Pointer to the next token, or NULL if no token remains.
  */
-char *ft_strtok(char *str, const char *delim, char **saveptr, t_shell *shell)
-{
-    char *token;
+// char *ft_strtok(char *str, const char *delim, char **saveptr, t_shell *shell)
+// {
+//     char *token;
+
+//     if (!saveptr || !delim)
+//         return (NULL);
+//     if (str)
+//         *saveptr = str;
+//     skip_delim(saveptr, delim); 
+//     if (**saveptr == '\0')
+//         return (NULL);
+//     if (**saveptr == '\'' || **saveptr == '"')
+//     {
+//         token = handle_token_quotes(saveptr, shell);
+//         if (token)
+//             return (token);
+//     }
+//     return (extract_next_token(saveptr, delim));
+// }
+
+t_token *ft_get_next_token(char *str, const char *delim, char **saveptr, t_shell *shell) {
+    t_token *new_token; // Declare new_token at top
 
     if (!saveptr || !delim)
         return (NULL);
     if (str)
         *saveptr = str;
-    skip_delim(saveptr, delim); 
+    skip_delim(saveptr, delim);
     if (**saveptr == '\0')
         return (NULL);
-    if (**saveptr == '\'' || **saveptr == '"')
-    {
-        token = handle_token_quotes(saveptr, shell);
-        if (token)
-            return (token);
+
+    // Handle quotes first
+    char quote_char = **saveptr;
+    if (quote_char == '\'' || quote_char == '"') {
+        new_token = handle_token_quotes(saveptr, shell); // This returns t_token* directly
+        return (new_token);
     }
-    return (extract_next_token(saveptr, delim));
+
+    // If not quoted, extract the next unquoted token string
+    char *token_str_value = extract_next_token(saveptr, delim);
+    if (!token_str_value)
+        return (NULL);
+
+    // Create a new token for the unquoted string, let get_token_type classify it
+    new_token = create_token(token_str_value, get_token_type(token_str_value));
+    return (new_token);
 }

@@ -49,36 +49,6 @@ static char *extract_quoted(char **saveptr, char quote_char)
 	return(start);
 }
 
-
-// /*
-// ** @brief:  call extract quotes and applies variable expansion for double quotes
-// ** @param: saveptr - pointer to tokenizer state, 
-// **		quote_char - quoting character
-// ** @return: new token constructed from the quoted input
-// */
-// t_token *handle_quotes(char **saveptr, char quote_char, t_shell *shell)
-// {
-// 	char *start;
-// 	char *expanded;
-	
-// 	if (!saveptr || !*saveptr || **saveptr != quote_char)
-// 		return (NULL);
-// 	start = extract_quoted(saveptr, quote_char);
-// 	if (!start)
-// 		return (NULL);
-// 	if(quote_char == '"')
-// 	{
-// 		expanded = expand_variables(start, shell->envp);
-// 		if(!expanded)
-// 		{
-// 			p("Error: Memory allocation failed during variable expansion.\n");
-// 			return (NULL);
-// 		}
-// 		return (create_token(expanded, TOKEN_WORD));
-// 	}
-// 	return(create_token(start,TOKEN_WORD));
-// }
-
 t_token *handle_quotes(char **saveptr, char quote_char, t_shell *shell)
 {
     char *start;
@@ -100,10 +70,12 @@ t_token *handle_quotes(char **saveptr, char quote_char, t_shell *shell)
             return (NULL);
         }
         new_token = create_token(expanded, TOKEN_WORD); // Double quoted result is a word
+		p("DEBUG: Double quoted token. Value: '%s', Type: TOKEN_WORD\n", new_token->value); 
     }
     else // quote_char == '\''
     {
-        new_token = create_token(start, TOKEN_SINGLE_QUOTED); // Single quoted tokens
+        new_token = create_token(start, TOKEN_SINGLE_QUOTED);
+		p("DEBUG: Single quoted token. Value: '%s', Type: TOKEN_SINGLE_QUOTED\n", new_token->value);
     }
     return (new_token);
 }
