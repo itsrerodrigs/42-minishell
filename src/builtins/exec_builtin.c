@@ -6,12 +6,11 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 16:36:07 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/06 15:31:45 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/04 14:41:10 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-#include "builtins.h"
+#include "../inc/minishell.h"
 
 static t_builtin *get_builtins(void)
 {
@@ -22,7 +21,6 @@ static t_builtin *get_builtins(void)
         {"exit", builtin_exit},
         {"unset", builtin_unset},
         {"pwd", builtin_pwd},
-        {"setenv", builtin_setenv},
         {NULL, NULL}
     };
     return builtins;

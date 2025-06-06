@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 19:49:10 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/06 15:39:59 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/06 15:14:08 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,5 @@ void	     add_or_update_env(char ***envp, const char *var);
 char    *get_cd_path_expanded(t_shell *shell, char **args);
 char    *save_and_get_oldpwd(void);
 int     execute_chdir(const char *path);
-int	builtin_setenv(t_shell *shell, char **args);
 
 #endif
