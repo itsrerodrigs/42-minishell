@@ -206,6 +206,7 @@ t_token *ft_get_next_token(char *str, const char *delim, char **saveptr, t_shell
     t_token *new_token;
     char *token_str_value;
     char quote_char;
+    char    *start_of_token;
 
     if (!saveptr || !delim)
         return (NULL);
@@ -214,7 +215,8 @@ t_token *ft_get_next_token(char *str, const char *delim, char **saveptr, t_shell
     skip_delim(saveptr, delim);
     if (**saveptr == '\0')
         return (NULL);
-    quote_char = **saveptr;
+    start_of_token = *saveptr;
+    quote_char = *start_of_token;
     if (quote_char == '\'' || quote_char == '"') 
     {
         new_token = handle_token_quotes(saveptr, shell); // This returns t_token* directly
