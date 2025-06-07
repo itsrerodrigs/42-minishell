@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 19:49:10 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/07 07:36:59 by marieli          ###   ########.fr       */
+/*   Updated: 2025/06/05 18:23:59 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,5 @@ int          builtin_pwd(t_shell *shell, char **args);
 int          builtin_printenv(t_shell *shell, char **args);
 builtin_func find_builtin(char *cmd);
 void	     add_or_update_env(char ***envp, const char *var);
-char    *get_cd_path_expanded(t_shell *shell, char **args);
-char    *save_and_get_oldpwd(void);
-int     execute_chdir(const char *path);
 
 #endif
