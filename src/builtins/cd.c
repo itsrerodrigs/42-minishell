@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 17:24:13 by renrodri          #+#    #+#             */
-/*   Updated: 2025/05/13 19:43:47 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/09 17:13:27 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ int	builtin_cd(t_shell *shell, char **args)
 	char	*path;
 	char	cwd[PATH_MAX];
 	char	*oldpwd;
+	(void)args;
 
 	path = get_cd_path(shell, args);
 	if (!path)
