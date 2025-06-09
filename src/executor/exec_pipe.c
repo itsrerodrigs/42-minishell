@@ -6,7 +6,7 @@
 /*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 14:39:44 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/09 17:31:34 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/09 17:54:59 by renrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -219,6 +219,56 @@ static void exec_pipe_loop(t_shell *shell, t_command *first_cmd,
             }
         } else {
             current_cmd->heredoc_pipe_read_fd = -1;
+        }
+        if (is_builtin_parent_executable(current_cmd))
+        {
+            int saved_stdin = dup(STDIN_FILENO);
+            int saved_stdout = dup(STDOUT_FILENO);
+            int exit_code = 1;
+            if (saved_stdin == -1 || saved_stdout == -1)
+            {
+                perror("dup failed for builtin redirection");
+                shell->exit_status = 1;
+                if (current_cmd->heredoc_pipe_read_fd != 1)
+                {
+                    close(current_cmd->heredoc_pipe_read_fd);
+                    current_cmd->heredoc_pipe_read_fd = -1;
+                }
+                break;
+            }
+            if (apply_redirections(current_cmd) == 0)
+            {
+                builtin_func func = find_builtin(current_cmd->args[0]);
+                if (func)
+                {
+                    exit_code = func(shell, current_cmd->args);
+                }
+            } 
+            else
+            {
+                exit_code = 1;
+            }
+            shell->exit_status = exit_code;
+
+            if (dup2(saved_stdin, STDERR_FILENO) == -1)
+            {
+                perror("dup2 restore stdin failed");
+                exit(1);
+            }
+            close(saved_stdin);
+            if (dup2(saved_stdout, STDOUT_FILENO) == -1)
+            {
+                perror("dup2 restore stdout failed");
+                exit(1);
+            }
+            close(saved_stdout);
+            if (current_cmd->heredoc_pipe_read_fd != -1)
+            {
+                close(current_cmd->heredoc_pipe_read_fd);
+                current_cmd->heredoc_pipe_read_fd = -1;
+            }
+            current_cmd = current_cmd->next;
+            continue;
         }
         pipe_fds[0] = -1;
         pipe_fds[1] = -1;

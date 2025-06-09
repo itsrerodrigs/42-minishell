@@ -10,7 +10,8 @@
 #include <string.h>
 #include <sys/wait.h> 
 #include <sys/ioctl.h>
-#include <limits.h> 
+#include <limits.h>
+#include <stdbool.h> 
 #include "libft/libft.h"
 #include "builtins.h"
 #include "tokens.h"

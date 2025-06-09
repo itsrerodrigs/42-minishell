@@ -6,7 +6,7 @@
 /*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 16:36:07 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/09 17:31:35 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/09 18:05:34 by renrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,21 @@ builtin_func	find_builtin(char *cmd)
 		i++;
 	}
 	return (NULL);
+}
+
+bool is_builtin_parent_executable(t_command *cmd)
+{
+	if (!cmd || !cmd->args || !cmd->args[0])
+		return (false);
+	if (ft_strncmp(cmd->args[0], "cd", ft_strlen(cmd->args[0]) +1) ||
+		ft_strncmp(cmd->args[0], "exit", ft_strlen(cmd->args[0]) + 1) ||
+		ft_strncmp(cmd->args[0], "export", ft_strlen(cmd->args[0]) + 1) ||
+		ft_strncmp(cmd->args[0], "unset", ft_strlen(cmd->args[0]) + 1))
+		{
+			//export logic here!
+			return (!cmd->is_pipe && cmd->prev_pipe_read_fd == -1);
+		}
+		return (false);
 }
 
 int	exec_builtin(t_shell *shell)

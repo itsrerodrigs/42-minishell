@@ -6,7 +6,7 @@
 /*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 19:49:10 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/09 17:37:29 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/09 17:45:52 by renrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,5 +54,6 @@ int          builtin_printenv(t_shell *shell, char **args);
 builtin_func find_builtin(char *cmd);
 void	     add_or_update_env(char ***envp, const char *var);
 char    *get_cd_path_expanded(t_shell *shell, char **args);
+bool is_builtin_parent_executable(t_command *cmd);
 
 #endif

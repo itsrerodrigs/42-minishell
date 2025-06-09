@@ -6,7 +6,7 @@
 /*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 23:03:48 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/09 16:53:21 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/09 18:06:43 by renrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ typedef struct s_command
         int heredoc_pipe_read_fd;
         int pipe_fds[2];
         pid_t pid;
-        int prev_pipr_read_fd;
+        int prev_pipe_read_fd;
 }       t_command;
 
 

@@ -6,7 +6,7 @@
 /*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 20:12:22 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/09 16:47:31 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/09 18:10:26 by renrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,13 @@
 #include "executor.h"
 #include <fcntl.h>
 
+/*
 static void write_heredoc_line(int pipe_write_fd, char *line)
 {
     ft_putstr_fd(line, pipe_write_fd);
     ft_putstr_fd("\n", pipe_write_fd);
     free(line);
-}
+}*/
 
 static void set_child_heredoc_sig(void)
 {
@@ -38,7 +39,7 @@ static void child_heredoc_logic(int pipe_write_fd, const char *delimiter)
         line = readline("> ");
         if (!line)
             break;
-        if (ft_strncmp(line, delimiter) == 0)
+        if (ft_strncmp(line, delimiter, ft_strlen(delimiter) + 1) == 0)
         {
             free(line);
             break;
@@ -48,7 +49,7 @@ static void child_heredoc_logic(int pipe_write_fd, const char *delimiter)
         free(line);
     }
     close(pipe_write_fd);
-    exit(EXIT_SUCESS);
+    exit(EXIT_SUCCESS);
 }
 
 int process_heredoc(const char *delimiter)

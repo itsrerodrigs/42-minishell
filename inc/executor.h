@@ -3,7 +3,7 @@
 
 #include "minishell.h"
 
-int 		handle_heredoc(t_redirect *redir);
+int process_heredoc(const char *delimiter);
 int 		apply_redirections(t_command *cmd);
 void 		exec_pipeline(t_shell *shell, t_command *first_cmd);
 int 		exec_external(t_shell *shell, char **args);
