@@ -89,7 +89,6 @@ void setup_signal_handling(void)
         perror("sigaction for SIGINT failed");
         exit(EXIT_FAILURE);
     }
-
     sa_quit.sa_handler = SIG_IGN; /* Ignore ctrl+\ */
     sigemptyset(&sa_quit.sa_mask);
     sa_quit.sa_flags = 0;

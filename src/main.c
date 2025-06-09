@@ -27,7 +27,6 @@ static void init_shell_job_control(t_shell *shell)
         setpgid(0, 0);
         shell->shell_pgid = getpgrp();
         set_foreground_process(shell->shell_terminal_fd, shell->shell_pgid);
-        signal(SIGTSTP, SIG_IGN); // Ctrl-Z (Stop signal)
         signal(SIGTTIN, SIG_IGN); // TTY input signal
         signal(SIGTTOU, SIG_IGN); // TTY output signal
     }    

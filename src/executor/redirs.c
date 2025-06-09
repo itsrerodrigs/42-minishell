@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   redirs.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 14:49:31 by renrodri          #+#    #+#             */
-/*   Updated: 2025/05/30 14:49:31 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/09 15:32:56 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <fcntl.h>
 #include <unistd.h>
+#include <errno.h>
 
 /*
  * @brief Opens a file for input redirection.
@@ -27,7 +28,7 @@ static int apply_input_redir(char *filename)
 	return (0);
 }
 
-/*
+/* 
  * @brief Opens a file for output redirection (overwrite).
  */
 static int apply_output_redir(char *filename)
@@ -39,6 +40,7 @@ static int apply_output_redir(char *filename)
 	close(fd);
 	return (0);
 }
+
 
 /*
  * @brief Opens a file for output redirection (append).

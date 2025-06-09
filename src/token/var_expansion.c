@@ -24,13 +24,19 @@
 static char *resize_expanded(char *expanded, size_t *new_size, const char *value)
 {
     char *temp;
+    char *old_expanded;
+
+    old_expanded = expanded;
     *new_size += ft_strlen(value);
     temp = ft_realloc(expanded, *new_size + 1);
     if (!temp)
     {
-        free(expanded);
+        if (old_expanded)
+            free(old_expanded);
         return (NULL);
     }
+    if (temp != old_expanded && old_expanded != NULL)
+        free(old_expanded);
     return (temp);
 }
 

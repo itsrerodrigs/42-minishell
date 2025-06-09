@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 16:04:57 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/04 13:52:39 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/09 15:20:26 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,14 @@ int     add_arg(t_command *cmd, char *arg)
         i++;
     }
     new_args[i++] = ft_strdup(arg);
+    if (!new_args[i - 1])
+    {
+        while (i > 0)
+        {
+            free(new_args[--i]);
+            return (0);
+        }
+    }
     new_args[i] = NULL;
     free(cmd->args);
     cmd->args = new_args;
@@ -100,11 +108,13 @@ int     handle_cmd_or_arg(t_command *cmd, t_token *token)
     if (!cmd->cmd)
     {
         cmd->cmd = ft_strdup(token->value);
+        if (!cmd->cmd)
+            return (0);
         return (add_arg(cmd, token->value));
     }
     else
         return (add_arg(cmd, token->value));
-    //return (1);
+    // return (1);
 }
 
 /*

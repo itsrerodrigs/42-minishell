@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 16:12:34 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/05 16:44:42 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/09 15:19:18 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,46 +103,9 @@ static int s_handle_word_token(t_command *current_cmd, t_token *token, t_shell *
 }
 
 
-// t_command *parse_tokens(t_token *tokens, t_shell *shell)
-// {
-//     t_command *cmd_list;
-//     t_command *current;
-//     int error;
+// In file: 42-minishell/src/parser/parser.c
 
-//     expand_token_list(tokens, shell);
-//     cmd_list = init_command();
-//     if (!cmd_list)
-//         return (NULL);
-//     current = cmd_list;
-//     while (tokens != NULL && tokens->type != TOKEN_EOF)
-//     {
-//         if (is_token_cmd(tokens))
-//         {
-//             if (!handle_cmd_or_arg(current, tokens))
-//                 return (NULL);
-//         }
-//         else if (tokens->type == TOKEN_PIPE || tokens->type == TOKEN_SEMICOLON)
-//         {
-//             error = handle_special_tokens(&current, &tokens);
-//             if (error != 0)
-//                 return (NULL);
-//         }
-//         else if (is_token_redir(tokens))
-//         {
-//             if (!tokens->next || tokens->next->type != TOKEN_WORD)
-//                 return syntax_error("newline"), NULL;
-//             if (!parse_redir(current, &tokens))
-//                 return (NULL);
-//             continue;
-//         }
-//         else
-//             return syntax_error(tokens->value), NULL;
-//         tokens = tokens->next;
-//     }
-//     return (cmd_list);
-// }
-
-t_command *parse_tokens(t_token *tokens, t_shell *shell) 
+t_command *parse_tokens(t_token *tokens, t_shell *shell)
 {
     t_command *cmd_list;
     t_command *current;
@@ -153,27 +116,58 @@ t_command *parse_tokens(t_token *tokens, t_shell *shell)
     if (!cmd_list)
         return (NULL);
     current = cmd_list;
-    while (tokens != NULL && tokens->type != TOKEN_EOF) 
+
+    while (tokens != NULL && tokens->type != TOKEN_EOF)
     {
-        if (is_token_cmd(tokens)) 
-        { 
-            if (!s_handle_word_token(current, tokens, shell))
-                return (NULL);
-        }
-        else if (tokens->type == TOKEN_PIPE || tokens->type == TOKEN_SEMICOLON) {
-            error = handle_special_tokens(&current, &tokens);
-            if (error != 0) return (NULL);
-        }
-        else if (is_token_redir(tokens)) 
+        if (is_token_cmd(tokens)) // Handle command names and arguments (TOKEN_WORD, QUOTED)
         {
-            if (!tokens->next || tokens->next->type != TOKEN_WORD)
-                return syntax_error("newline"), NULL;
-            if (!parse_redir(current, &tokens)) return (NULL);
+            if (!s_handle_word_token(current, tokens, shell))
+            {
+                free_commands(cmd_list);
+                return (NULL);
+            }
+            // >>> CRITICAL: Advance 'tokens' by 1 for the word token consumed by s_handle_word_token <<<
             tokens = tokens->next;
         }
-        else 
-            return syntax_error(tokens->value), NULL;
-        tokens = tokens->next;
+        else if (tokens->type == TOKEN_PIPE || tokens->type == TOKEN_SEMICOLON)
+        {
+            // Handle pipe or semicolon operators
+            error = handle_special_tokens(&current, &tokens);
+            if (error != 0)
+            {
+                free_commands(cmd_list);
+                return (NULL);
+            }
+            // >>> CRITICAL: Advance 'tokens' by 1 for the pipe/semicolon token <<<
+            tokens = tokens->next;
+        }
+        else if (is_token_redir(tokens)) // Handle redirection operators
+        {
+            // Validate if a filename token exists after the redirection operator
+            if (!tokens->next || tokens->next->type != TOKEN_WORD)
+            {
+                syntax_error("newline");
+                free_commands(cmd_list);
+                return (NULL);
+            }
+
+            // parse_redir handles adding the redirection.
+            // >>> CRITICAL: parse_redir *also* advances the 'tokens' pointer by 2 (operator + filename). <<<
+            // >>>           Therefore, NO 'tokens = tokens->next;' is needed here.                     <<<
+            if (!parse_redir(current, &tokens))
+            {
+                free_commands(cmd_list);
+                return (NULL);
+            }
+        }
+        else // Catch-all for any unexpected token types
+        {
+            syntax_error(tokens->value);
+            free_commands(cmd_list);
+            return (NULL);
+        }
+        // >>> CRITICAL: THERE MUST BE NO 'tokens = tokens->next;' HERE AT THE END OF THE LOOP BODY. <<<
+        // Each branch above is now fully responsible for advancing the 'tokens' pointer correctly.
     }
     return (cmd_list);
 }
