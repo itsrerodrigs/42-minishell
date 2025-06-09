@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd_utils.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 14:53:25 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/06 15:10:09 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/09 17:37:35 by renrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,4 +73,59 @@ int     execute_chdir(const char *path)
         return (1);
     }
     return (0);
+}
+
+// In file: 42-minishell/src/builtins/builtins_utils.c
+
+// Auxiliary function to handle 'cd' or 'cd ~'
+static char *get_home_path(t_shell *shell)
+{
+    char *home_val = get_env_value(shell->envp, "HOME");
+    if (!home_val)
+    {
+        ft_putendl_fd("cd: HOME not set", STDERR_FILENO);
+        return (NULL);
+    }
+    return (ft_strdup(home_val));
+}
+
+// Auxiliary function to handle 'cd -'
+static char *get_oldpwd_path(t_shell *shell)
+{
+    char *oldpwd_val = get_env_value(shell->envp, "OLDPWD");
+    if (!oldpwd_val)
+    {
+        ft_putendl_fd("cd: OLDPWD not set", STDERR_FILENO);
+        return (NULL);
+    }
+    ft_putendl_fd(oldpwd_val, STDOUT_FILENO);
+    return (ft_strdup(oldpwd_val));
+}
+
+// Auxiliary function to handle 'cd ~/path'
+static char *get_expanded_path(t_shell *shell, char *arg)
+{
+    char *home_val = get_env_value(shell->envp, "HOME");
+    if (!home_val)
+    {
+        ft_putendl_fd("cd: HOME not set", STDERR_FILENO);
+        return (NULL);
+    }
+    char *path = ft_strjoin(ft_strdup(home_val), arg + 1);
+    if (!path)
+        perror("cd: malloc failed for path expansion");
+    return (path);
+}
+
+// Refactored get_cd_path function
+char *get_cd_path(t_shell *shell, char **args)
+{
+    if (!args[1] || ft_strcmp(args[1], "~") == 0)
+        return (get_home_path(shell));
+    else if (ft_strcmp(args[1], "-") == 0)
+        return (get_oldpwd_path(shell));
+    else if (ft_strncmp(args[1], "~/", 2) == 0)
+        return (get_expanded_path(shell, args[1]));
+    else
+        return (ft_strdup(args[1])); // Direct path, duplicate for consistent freeing
 }

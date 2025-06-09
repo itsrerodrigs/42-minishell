@@ -6,7 +6,11 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 22:23:01 by renrodri          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2025/06/09 15:55:57 by renrodri         ###   ########.fr       */
+=======
+/*   Updated: 2025/06/09 17:07:20 by mmariano         ###   ########.fr       */
+>>>>>>> 423b62f68895a38f823222888bfd262cb24669bc
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +20,11 @@
 * @brief get the path to change the directory to
 * @note returns HOME if no arguments is given
 */
-char	*get_cd_path(t_shell *shell, char **args)
-{
-	char	*path;
+// char	*get_cd_path(t_shell *shell, char **args)
+// {
+// 	char	*path;
 
+<<<<<<< HEAD
 	if (!args[1])
 	{
 		path = get_env_value(shell->envp, "HOME");
@@ -30,6 +35,18 @@ char	*get_cd_path(t_shell *shell, char **args)
 		path = args[1];
 	return (path);
 }
+=======
+// 	if (!args[1])
+// 	{
+// 		path = get_env_value(shell->envp, "HOME");
+// 		if (!path)
+// 		ft_putendl_fd("cd: HOME not set", STDERR_FILENO);
+// 	}
+// 	else
+// 		path = args[1];
+// 	return (path);
+// }
+>>>>>>> 423b62f68895a38f823222888bfd262cb24669bc
 
 /* 
 * @brief updates the OLDPWD and PWD environment variables.

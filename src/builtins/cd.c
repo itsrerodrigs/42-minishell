@@ -6,7 +6,7 @@
 /*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 17:24:13 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/09 15:51:22 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/09 17:37:18 by renrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ int	builtin_cd(t_shell *shell, char **args)
 	char	*path;
 	char	cwd[PATH_MAX];
 	char	*oldpwd;
+	(void)args;
 
 	path = get_cd_path(shell, args);
 	if (!path)
