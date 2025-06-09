@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirs.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 14:49:31 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/09 16:17:42 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/09 17:11:26 by renrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,11 +60,18 @@ static int apply_append_redir(char *filename)
  */
 static int apply_heredoc_redir(t_redirect *redir)
 {
-	int fd = handle_heredoc(redir);
-	if (fd < 0)
+	if (heredoc_fd == -1)
+	{
+		ftprint(stderr, "heredoc error: invalid file descriptor.");
 		return (1);
-	dup2(fd, STDIN_FILENO);
-	close(fd);
+	}
+	if (dup2(heredoc_fd, STDIN_FILENO) == -1)
+	{
+		perror("dup2 error (heredoc STDIN)");
+		close(heredoc_fd);
+		return (1);
+	}
+	close (heredoc_fd);
 	return (0);
 }
 

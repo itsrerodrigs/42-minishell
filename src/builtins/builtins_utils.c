@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 22:23:01 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/05 18:31:52 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/09 15:55:57 by renrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	*get_cd_path(t_shell *shell, char **args)
 	{
 		path = get_env_value(shell->envp, "HOME");
 		if (!path)
-		ft_putendl_fd("cd: HOME not set", STDERR_FILENO);
+			ft_putendl_fd("cd: HOME not set", STDERR_FILENO);
 	}
 	else
 		path = args[1];
@@ -57,18 +57,19 @@ void	update_env_var(t_shell *shell, const char *key, const char *value)
 	i = 0;
 	new_var = malloc(new_size);
 	if (!new_var)
-		return;
+		return ;
 	ft_strlcpy(new_var, key, new_size);
 	ft_strlcat(new_var, "=", new_size);
 	ft_strlcat(new_var, value, new_size);
 	while (shell->envp[i])
 	{
 		equal_sign = ft_strchr(shell->envp[i], '=');
-		if (equal_sign && ft_strncmp(shell->envp[i], key, equal_sign - shell->envp[i]) == 0)
+		if (equal_sign && ft_strncmp(shell->envp[i], 
+					key, equal_sign - shell->envp[i]) == 0)
 		{
 			free(shell->envp[i]);
 			shell->envp[i] = new_var;
-			return;
+			return ;
 		}
 		i++;
 	}

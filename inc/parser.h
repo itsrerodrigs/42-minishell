@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 23:03:48 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/05 18:31:21 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/09 16:53:21 by renrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,10 @@ typedef struct s_command
         t_redirect *redirs; 
         struct s_command *next; 
         int is_pipe;
+        int heredoc_pipe_read_fd;
+        int pipe_fds[2];
+        pid_t pid;
+        int prev_pipr_read_fd;
 }       t_command;
 
 

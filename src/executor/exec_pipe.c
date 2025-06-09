@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipe.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 14:39:44 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/04 15:40:05 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/09 17:31:34 by renrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,19 +51,27 @@ extern volatile sig_atomic_t g_child_running;
 static void setup_redirections(t_command *cmd, int prev_pipe_read_fd, int pipefd[2],
         int is_pipe)
 {
-    if (apply_redirections(cmd) != 0)
-        exit(1);
     if (prev_pipe_read_fd != -1)
     {
-        dup2(prev_pipe_read_fd, STDIN_FILENO);
+        if (dup2(prev_pipe_read_fd, STDIN_FILENO) == -1)
+        {
+            perror("dup2 error for previous pipe input");
+            exit(1);
+        }
         close(prev_pipe_read_fd);
     }
     if (is_pipe)
     {
         close(pipefd[0]);
-        dup2(pipefd[1], STDOUT_FILENO);
+        if (dup2(pipefd[1], STDOUT_FILENO) == -1)
+        {
+            perror("dup2 error for current pipe output");
+            exit(1);
+        }
         close(pipefd[1]);
     }
+    if (apply_redirections(cmd) != 0)
+        exit(1);
 }
 
 static void exec_pipe_child(t_shell *shell, t_command *cmd,
@@ -73,7 +81,7 @@ static void exec_pipe_child(t_shell *shell, t_command *cmd,
     builtin_func    func;
 
     set_child_signals();
-    setpgid(0, 0);
+    //setpgid(0, 0);
     setup_redirections(cmd, prev_pipe_read_fd, pipefd, is_pipe);
 
     func = find_builtin(cmd->args[0]);
@@ -186,6 +194,32 @@ static void exec_pipe_loop(t_shell *shell, t_command *first_cmd,
 
     while (current_cmd)
     {
+        if (current_cmd->redirs)
+        {
+            t_redirect *redir_node = current_cmd->redirs;
+            while (redir_node)
+            {
+                if (redir_node->type == REDIR_HEREDOC)
+                {
+                    current_cmd->heredoc_pipe_read_fd = process_heredoc(redir_node->filename);
+                    if (current_cmd->heredoc_pipe_read_fd == -1)
+                    {
+                        shell->exit_status = 1;
+                        if (prev_pipe_read_fd != 1)
+                            close(prev_pipe_read_fd);
+                        if (pipe_fds[0] != -1)
+                        {
+                            close(pipe_fds[0]);
+                            close(pipe_fds[1]);
+                        }
+                        return ;
+                    }
+                }
+                redir_node = redir_node->next;
+            }
+        } else {
+            current_cmd->heredoc_pipe_read_fd = -1;
+        }
         pipe_fds[0] = -1;
         pipe_fds[1] = -1;
         if (current_cmd->is_pipe)
@@ -194,7 +228,10 @@ static void exec_pipe_loop(t_shell *shell, t_command *first_cmd,
             {
                 perror("minishell: pipe failed");
                 shell->exit_status = 1;
-                if (prev_pipe_read_fd != -1) close(prev_pipe_read_fd);
+                if (prev_pipe_read_fd != -1)
+                    close(prev_pipe_read_fd);
+                if (current_cmd->heredoc_pipe_read_fd != 1)
+                    close(current_cmd->heredoc_pipe_read_fd);
                 break;
             }
         }

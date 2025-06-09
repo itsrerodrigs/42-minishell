@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   job_control.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 12:16:51 by mmariano          #+#    #+#             */
-/*   Updated: 2025/06/03 13:40:22 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/09 17:27:59 by renrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,13 +56,16 @@ void pipe_wait_children(t_shell *shell, pid_t last_pid)
     pid_t waited_pid;
     int status;
 
-    while (1)
+    if (last_pid != 1)
     {
-        waited_pid = wait(&status);
-
-        if (waited_pid < 0)
-            break;
+        waited_pid = waitpid(last_pid, &status, 0);
         if (waited_pid == last_pid)
-			update_exit_status_from_wait_status(shell, status);
+        {
+            update_exit_status_from_wait_status(shell, status);
+        }
+    }
+    while ((waited_pid = waitpid(-1, &status, WNOHANG)) > 0)
+    {
+        (void)status;
     }
 }
