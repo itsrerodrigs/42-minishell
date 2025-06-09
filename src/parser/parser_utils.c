@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 16:04:57 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/09 16:10:04 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/09 16:16:19 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,8 +105,6 @@ int     add_redir(t_command *cmd, t_redir_type type, char *filename)
 */
 int     handle_cmd_or_arg(t_command *cmd, t_token *token)
 {
-    if (!add_arg(cmd, token->value))
-        return (0);
     if (!cmd->cmd)
     {
         cmd->cmd = ft_strdup(token->value);
@@ -118,12 +116,6 @@ int     handle_cmd_or_arg(t_command *cmd, t_token *token)
         return (add_arg(cmd, token->value));
     // return (1);
 }
-        //cmd->cmd = ft_strdup(token->value);
-        //return (add_arg(cmd, token->value));
-   // }
-    //else
-      //  return (add_arg(cmd, token->value));
-    //return (1);
 
 /*
 * @brief handle a direction token and its following filename token
@@ -134,7 +126,7 @@ int handle_redir(t_command *cmd, t_token *token)
     t_redir_type redir_type;
 
     if (!token || !token->next || !token->next->value)
-        return (0);
+        return 0;
 
     if (token->type == TOKEN_REDIR_IN)
         redir_type = REDIR_IN;
@@ -145,10 +137,10 @@ int handle_redir(t_command *cmd, t_token *token)
     else if (token->type == TOKEN_HEREDOC)
         redir_type = REDIR_HEREDOC;
     else
-        return (0);
+        return 0;
 
     if (!add_redir(cmd, redir_type, token->next->value))
-        return (0);
+        return 0;
 
-    return (1);
+    return 1;
 }

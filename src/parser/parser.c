@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 16:12:34 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/09 16:10:19 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/09 16:17:04 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int parse_redir(t_command *cmd, t_token **token_ptr)
     else if (token->type == TOKEN_HEREDOC)
         add_redir(cmd, REDIR_HEREDOC, next->value);
 
-    *token_ptr = token->next->next;
+    *token_ptr = token->next->next; // Avança dois nós: redir + filename
     return (1);
 }
 
@@ -75,7 +75,6 @@ int handle_special_tokens(t_command **current, t_token **tokens)
     }
     return 0;
 }
-
 static int s_handle_word_token(t_command *current_cmd, t_token *token, t_shell *shell)
 {
     char *equals_pos;
