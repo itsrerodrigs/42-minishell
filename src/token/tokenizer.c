@@ -183,17 +183,17 @@ char *extract_next_token(char **saveptr, const char *delim)
  ** @param saveptr: Pointer to the tokenizer state.
  ** @return: Extracted quoted string or NULL if an error occurs.
  */
-static t_token *handle_token_quotes(char **saveptr, t_shell *shell)
-{
-    char        quote_char;
+// static t_token *handle_token_quotes(char **saveptr, t_shell *shell)
+// {
+//     char        quote_char;
 
-    if (!saveptr || !*saveptr)
-        return (NULL);
-    quote_char = **saveptr;
-    if (quote_char != '\'' && quote_char != '"')
-        return (NULL);
-    return (handle_quotes(saveptr, quote_char, shell));
-}
+//     if (!saveptr || !*saveptr)
+//         return (NULL);
+//     quote_char = **saveptr;
+//     if (quote_char != '\'' && quote_char != '"')
+//         return (NULL);
+//     return (handle_quotes(saveptr, quote_char, shell));
+// }
 
 static void skip_delim(char **saveptr, const char *delim) 
 {
@@ -201,32 +201,84 @@ static void skip_delim(char **saveptr, const char *delim)
         (*saveptr)++;
 }
 
-t_token *ft_get_next_token(char *str, const char *delim, char **saveptr, t_shell *shell) 
+
+
+static t_token *s_extract_operator_token(char **saveptr)
+{
+    char    *op_start;
+    size_t  len;
+    t_token_type type;
+
+    op_start = *saveptr;
+    len = 0;
+
+    // Check for multi-character operators first (e.g., >>, <<)
+    if (ft_strncmp(op_start, ">>", 2) == 0) 
+    {
+        type = TOKEN_APPEND;
+        len = 2;
+    } else if (ft_strncmp(op_start, "<<", 2) == 0) 
+    {
+        type = TOKEN_HEREDOC;
+        len = 2;
+    }
+    // Then single-character operators
+    else if (*op_start == '|') 
+    {
+        type = TOKEN_PIPE;
+        len = 1;
+    } else if (*op_start == '<') 
+    {
+        type = TOKEN_REDIR_IN;
+        len = 1;
+    } else if (*op_start == '>') 
+    {
+        type = TOKEN_REDIR_OUT;
+        len = 1;
+    }
+    else
+        return (NULL);
+
+    char *op_value = ft_strndup(op_start, len);
+    if (!op_value)
+        return (NULL); // Memory allocation failure
+
+    *saveptr += len; // Advance saveptr past the consumed operator
+    return (create_token(op_value, type)); // Use your existing create_token
+}
+
+t_token *ft_get_next_token(char *str, const char *delim, char **saveptr, t_shell *shell)
 {
     t_token *new_token;
     char *token_str_value;
     char quote_char;
+    const char *whitespace_delim;
+    
+    whitespace_delim = " \t\n"; 
 
-    if (!saveptr || !delim)
+    if (!saveptr || !delim) 
         return (NULL);
     if (str)
         *saveptr = str;
-    skip_delim(saveptr, delim);
+    skip_delim(saveptr, whitespace_delim); 
+
     if (**saveptr == '\0')
         return (NULL);
+    new_token = s_extract_operator_token(saveptr);
+    if (new_token) 
+        return (new_token);
     quote_char = **saveptr;
-    if (quote_char == '\'' || quote_char == '"') 
+    if (quote_char == '\'' || quote_char == '"')
     {
-        new_token = handle_token_quotes(saveptr, shell); // This returns t_token* directly
+        new_token = handle_quotes(saveptr, quote_char, shell);
         if (new_token)
             return (new_token);
         return (NULL);
     }
-    token_str_value = extract_next_token(saveptr, delim);
+    token_str_value = extract_next_token(saveptr, delim); 
     if (!token_str_value)
         return (NULL);
 
     new_token = create_token(token_str_value, get_token_type(token_str_value));
     return (new_token);
 }
-

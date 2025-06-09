@@ -26,6 +26,7 @@ void free_tokens(t_token *head)
     {
         tmp = head;
         head = head->next;
+        if (tmp->value)
             free(tmp->value);
         free(tmp);
     }

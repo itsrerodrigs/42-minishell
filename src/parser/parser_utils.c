@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 16:04:57 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/09 14:46:13 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/09 16:01:23 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,15 +57,17 @@ int     add_arg(t_command *cmd, char *arg)
         new_args[i] = cmd->args[i];
         i++;
     }
-    new_args[i] = ft_strdup(arg);
-    if (!new_args[i])
+    new_args[i++] = ft_strdup(arg);
+    if (!new_args[i - 1])
     {
-        free(new_args);
-        return (0);
+        while (i > 0)
+        {
+            free(new_args[--i]);
+            return (0);
+        }
     }
-    new_args[i + 1] = NULL;
-    if (cmd->args)
-        free(cmd->args);
+    new_args[i] = NULL;
+    free(cmd->args);
     cmd->args = new_args;
     return (1);
 }
@@ -107,9 +109,14 @@ int     handle_cmd_or_arg(t_command *cmd, t_token *token)
         return (0);
     if (!cmd->cmd)
     {
-        cmd->cmd = cmd->args[0];
+        cmd->cmd = ft_strdup(token->value);
+        if (!cmd->cmd)
+            return (0);
+        return (add_arg(cmd, token->value));
     }
-    return (1);
+    else
+        return (add_arg(cmd, token->value));
+    // return (1);
 }
         //cmd->cmd = ft_strdup(token->value);
         //return (add_arg(cmd, token->value));
