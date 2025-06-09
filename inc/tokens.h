@@ -7,16 +7,16 @@ typedef struct s_shell t_shell;
 
 typedef enum e_token_type
 {
-    TOKEN_WORD,         
-    TOKEN_SINGLE_QUOTED, 
-    TOKEN_DOUBLE_QUOTED, 
-    TOKEN_PIPE,         
-    TOKEN_REDIR_OUT,     
-    TOKEN_REDIR_IN,      
-    TOKEN_APPEND,       
-    TOKEN_HEREDOC,       
-    TOKEN_EOF,          
-    TOKEN_SEMICOLON     
+    TOKEN_WORD,
+    TOKEN_SINGLE_QUOTED,
+    TOKEN_DOUBLE_QUOTED,
+    TOKEN_PIPE,
+    TOKEN_REDIR_OUT,
+    TOKEN_REDIR_IN,
+    TOKEN_APPEND,
+    TOKEN_HEREDOC,
+    TOKEN_EOF,
+    TOKEN_SEMICOLON
 } t_token_type;
 
 
@@ -25,6 +25,7 @@ typedef struct s_token
         char            *value;
         t_token_type    type;
         int             index;
+        int fd;
         struct s_token  *next;
 } t_token;
 
@@ -37,6 +38,8 @@ t_token     *get_tokens(char *input, t_shell *shell);
 t_token_type get_token_type(char *token_str);
 t_token     *ft_get_next_token(char *str, const char *delim, char **saveptr, t_shell *shell);
 char        *extract_next_token(char **saveptr, const char *delim);
+t_token *create_token_with_fd(char *value, t_token_type type, int fd_val);
+
 
 /*quotes*/
 t_token *handle_quotes(char **saveptr, char quote_char, t_shell *shell);

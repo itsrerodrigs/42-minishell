@@ -14,7 +14,6 @@
 #include "../inc/tokens.h"
 #include "../inc/parser.h"
 
-
 /*
  * @brief Appends a dynamically allocated segment to a dynamically built token string.
  * It takes ownership of `segment` (will free it).
@@ -89,6 +88,11 @@ static int s_process_quoted_segment(char **token_builder_ptr, char **current_pos
     return (1);
 }
 
+static int is_token_operator(char c) 
+{
+    return (c == '|' || c == '<' || c == '>');
+}
+
 /*
  * @brief Processes an unquoted segment within a word token.
  * Appends characters until a quote or delimiter is found.
@@ -103,7 +107,9 @@ static int s_process_unquoted_segment(char **token_builder_ptr, char **current_p
     char *segment_end = *current_pos_ptr;
     char *unquoted_part;
 
-    while (*segment_end && !ft_strchr(delim, *segment_end) && *segment_end != '\'' && *segment_end != '"')
+    while (*segment_end && !ft_strchr(delim, *segment_end) && 
+        *segment_end != '\'' && *segment_end != '"' &&
+        !is_token_operator(*segment_end))
     {
         segment_end++;
     }
@@ -112,11 +118,11 @@ static int s_process_unquoted_segment(char **token_builder_ptr, char **current_p
     if (segment_end > start_of_segment)
     {
         unquoted_part = ft_strndup(start_of_segment, segment_end - start_of_segment);
-        if (!unquoted_part) {
+        if (!unquoted_part)
+        {
             perror("minishell: ft_strndup failed");
             return (0);
         }
-
         if (!s_append_to_builder(token_builder_ptr, unquoted_part)) // s_append_to_builder will free unquoted_part
         {
             return (0); // Allocation error
@@ -142,18 +148,18 @@ char *extract_next_token(char **saveptr, const char *delim)
     }
     current_pos = *saveptr;
 
-    while (*current_pos) //
+    while (*current_pos)
     {
         if (*current_pos == '\'' || *current_pos == '"') //
         {
             if (!s_process_quoted_segment(&token_builder, &current_pos)) //
             {
-                free(token_builder); 
+                free(token_builder);
                 *saveptr = NULL; // Propagate unmatched quote or allocation error
                 return (NULL); //
             }
         }
-        else if (ft_strchr(delim, *current_pos)) //
+        else if (ft_strchr(delim, *current_pos) || is_token_operator (*current_pos)) //
         {
             break; // Delimiter found, end of token
         }
@@ -200,8 +206,6 @@ static void skip_delim(char **saveptr, const char *delim)
     while (**saveptr && ft_strchr(delim, **saveptr))
         (*saveptr)++;
 }
-
-
 
 static t_token *s_extract_operator_token(char **saveptr)
 {
@@ -254,14 +258,12 @@ t_token *ft_get_next_token(char *str, const char *delim, char **saveptr, t_shell
     char quote_char;
     const char *whitespace_delim;
     
-    whitespace_delim = " \t\n"; 
-
-    if (!saveptr || !delim) 
+    whitespace_delim = " \t\n";
+    if (!saveptr || !delim)
         return (NULL);
     if (str)
         *saveptr = str;
-    skip_delim(saveptr, whitespace_delim); 
-
+    skip_delim(saveptr, whitespace_delim);
     if (**saveptr == '\0')
         return (NULL);
     new_token = s_extract_operator_token(saveptr);
@@ -279,6 +281,6 @@ t_token *ft_get_next_token(char *str, const char *delim, char **saveptr, t_shell
     if (!token_str_value)
         return (NULL);
 
-    new_token = create_token(token_str_value, get_token_type(token_str_value));
+    new_token = create_token_with_fd(token_str_value, TOKEN_WORD, -1);
     return (new_token);
 }
