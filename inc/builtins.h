@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 19:49:10 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/09 17:03:51 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/09 19:03:53 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,12 @@ int          builtin_unset(t_shell *shell, char **args);
 int          builtin_pwd(t_shell *shell, char **args);
 int          builtin_printenv(t_shell *shell, char **args);
 builtin_func find_builtin(char *cmd);
-void	     add_or_update_env(char ***envp, const char *var);
+// void	     add_or_update_env(char ***envp, const char *var);
 char    *get_cd_path_expanded(t_shell *shell, char **args);
+
+int          is_valid_env_name(const char *name, size_t name_len);
+int          try_update_existing_var(char ***envp_ptr, const char *var, size_t key_len, int var_has_value);
+int          add_or_update_env(char ***envp, const char *var); 
+int          builtin_export(t_shell *shell, char **args);
 
 #endif
