@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 14:53:25 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/09 17:07:27 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/09 17:17:37 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ int     execute_chdir(const char *path)
 // In file: 42-minishell/src/builtins/builtins_utils.c
 
 // Auxiliary function to handle 'cd' or 'cd ~'
-static char *s_get_home_path(t_shell *shell)
+static char *get_home_path(t_shell *shell)
 {
     char *home_val = get_env_value(shell->envp, "HOME");
     if (!home_val)
@@ -90,7 +90,7 @@ static char *s_get_home_path(t_shell *shell)
 }
 
 // Auxiliary function to handle 'cd -'
-static char *s_get_oldpwd_path(t_shell *shell)
+static char *get_oldpwd_path(t_shell *shell)
 {
     char *oldpwd_val = get_env_value(shell->envp, "OLDPWD");
     if (!oldpwd_val)
@@ -103,7 +103,7 @@ static char *s_get_oldpwd_path(t_shell *shell)
 }
 
 // Auxiliary function to handle 'cd ~/path'
-static char *s_get_tilde_expanded_path(t_shell *shell, char *arg)
+static char *get_expanded_path(t_shell *shell, char *arg)
 {
     char *home_val = get_env_value(shell->envp, "HOME");
     if (!home_val)
@@ -121,11 +121,11 @@ static char *s_get_tilde_expanded_path(t_shell *shell, char *arg)
 char *get_cd_path(t_shell *shell, char **args)
 {
     if (!args[1] || ft_strcmp(args[1], "~") == 0)
-        return (s_get_home_path(shell));
+        return (get_home_path(shell));
     else if (ft_strcmp(args[1], "-") == 0)
-        return (s_get_oldpwd_path(shell));
+        return (get_oldpwd_path(shell));
     else if (ft_strncmp(args[1], "~/", 2) == 0)
-        return (s_get_tilde_expanded_path(shell, args[1]));
+        return (get_expanded_path(shell, args[1]));
     else
         return (ft_strdup(args[1])); // Direct path, duplicate for consistent freeing
 }
