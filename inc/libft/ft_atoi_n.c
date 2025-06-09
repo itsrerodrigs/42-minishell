@@ -3,23 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atoi_n.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 18:52:33 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/09 19:20:38 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/09 19:55:42 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int	ft_atoi_n(const char *str, size_t n)
-{
-	int	res;
+// int	ft_atoi_n(const char *str, size_t n)
+// {
+// 	int	res;
 
-	res = 0;
-	n = 0;
-	while (n < n && ft_isdigit(str[i]))
-	{
-		res = res * 10 + (str[n] - '0');
-		n++;
-	}
-	return (res);
-}
+// 	res = 0;
+// 	n = 0;
+// 	while (n < n && ft_isdigit(str[i]))
+// 	{
+// 		res = res * 10 + (str[n] - '0');
+// 		n++;
+// 	}
+// 	return (res);
+// }

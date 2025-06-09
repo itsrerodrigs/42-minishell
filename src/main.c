@@ -13,7 +13,6 @@
 #include "minishell.h"
 #include "tokens.h"
 #include "parser.h"
-#include "debug.h"
 #include "sig.h"
 
 
@@ -69,9 +68,6 @@ static void s_process_loop(t_shell *shell)
 
 int main(int argc, char **argv, char **envp)
 {
-    // char debug_msg[100];
-    // snprintf(debug_msg, sizeof(debug_msg), "Minishell: Main started. PID: %d\n", getpid());
-    // write(STDERR_FILENO, debug_msg, strlen(debug_msg));
     t_shell shell;
     
     (void)argc;

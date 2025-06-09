@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 15:56:49 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/09 19:26:56 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/09 20:26:18 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ static int s_add_new_env_entry(char ***envp_ptr, const char *var, int i)
     }
     *envp_ptr = new_envp_array; 
     (*envp_ptr)[i] = ft_strdup(var);
+
 	if (!(*envp_ptr)[i])
     {
 		if (errno == 0 || errno == EINTR)
@@ -86,19 +87,18 @@ static int s_add_new_env_entry(char ***envp_ptr, const char *var, int i)
  */
 int add_or_update_env(char ***envp_ptr, const char *var)
 {
-    int     i = 0;
+    int     i;
     char    *equals_pos;
     size_t  key_len;
     int     var_has_value;
 
-
+    i = 0;
     equals_pos = ft_strchr(var, '=');
     var_has_value = (equals_pos != NULL);
     if (var_has_value)
         key_len = equals_pos - var;
     else
-        key_len = ft_strlen(var);
-
+        key_len = ft_strlen(var);    
     if (!is_valid_env_name(var, key_len))
         return (1);
     while ((*envp_ptr)[i])

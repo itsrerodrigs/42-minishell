@@ -90,16 +90,16 @@ char *extract_quoted(char **saveptr, char quote_char)
         return (NULL);
     }
 
-    len = end_content - start_content; // Length is now correctly calculated for content only
-    extracted_copy = ft_strndup(start_content, len); // Duplicates content only
+    len = end_content - start_content; 
+    extracted_copy = ft_strndup(start_content, len);
     if (!extracted_copy)
     {
         perror("minishell: ft_strndup failed");
-        *saveptr = NULL; // Signal allocation error
+        *saveptr = NULL; 
         return (NULL);
     }
 
-    *saveptr = end_content + 1; // Move saveptr past the closing quote
+    *saveptr = end_content + 1;
     return(extracted_copy);
 }
 

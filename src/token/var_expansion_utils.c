@@ -79,10 +79,9 @@
 // }
 
 
-// Helper to check if a character is valid for a variable name (alphanumeric or underscore)
 static int s_is_var_char(char c)
 {
-    return (ft_isalnum(c) || c == '_'); // Assuming ft_isalnum is available
+    return (ft_isalnum(c) || c == '_'); 
 }
 
 static void extract_var_name(const char *input, size_t *index_ptr, char *var_name)
@@ -90,14 +89,12 @@ static void extract_var_name(const char *input, size_t *index_ptr, char *var_nam
     size_t var_length;
 
     var_length = 0;
-    // Special handling for $? and $$
     if (input[*index_ptr] == '?' || input[*index_ptr] == '$')
     {
         var_name[var_length] = input[*index_ptr];
         var_length++;
         (*index_ptr)++;
     }
-    // Standard variable name characters: alphanumeric or underscore
     else
     {
         while (input[*index_ptr] && s_is_var_char(input[*index_ptr]))
@@ -113,10 +110,9 @@ char *extract_variable(const char *input, size_t *index_ptr, char **envp, int ex
 {
     char var_name[BUFFER_SIZE];
     char *value;
-    pid_t pid_val; // For $$
+    pid_t pid_val;
 
     value = NULL;
-    // Handle braced parameters first
     if (input[*index_ptr] == '{')
     {
         (*index_ptr)++;
@@ -126,25 +122,17 @@ char *extract_variable(const char *input, size_t *index_ptr, char **envp, int ex
     }
     else
         extract_var_name(input, index_ptr, var_name);
-
-    // Handle special shell variables: $? and $$
-    if (ft_strcmp(var_name, "?") == 0) // Assuming ft_strcmp is available
-        return (ft_itoa(exit_status)); // Assuming ft_itoa converts int to string
-    if (ft_strcmp(var_name, "$") == 0) // For $$
+    if (ft_strcmp(var_name, "?") == 0) 
+        return (ft_itoa(exit_status)); 
+    if (ft_strcmp(var_name, "$") == 0) 
     {
         pid_val = getpid();
         return (ft_itoa(pid_val));
     }
-    // Handle $ followed by non-variable char or end of string (e.g., "$ " or "$")
     if (var_name[0] == '\0')
-        return (ft_strdup("")); // Bash prints nothing for $ followed by space, or $ at end of string
-
-    // Lookup in environment
-    value = get_env_value(envp, var_name); // Your existing helper
-
+        return (ft_strdup("")); 
+    value = get_env_value(envp, var_name); 
     if (!value)
-        return (ft_strdup("")); // Return empty string for unset variables
-    return (ft_strdup(value)); // get_env_value returns a pointer into envp, so strdup it.
+        return (ft_strdup("")); 
+    return (ft_strdup(value));
 }
-
-

@@ -65,18 +65,11 @@ static int s_process_quoted_segment(char **token_builder_ptr, char **current_pos
     char *quoted_content_from_extractor;
     char *temp_saveptr_for_quote;
     char *content_without_quotes;
-    size_t content_len_with_quotes;
 
     quote_char = **current_pos_ptr; 
     temp_saveptr_for_quote = *current_pos_ptr;
     quoted_content_from_extractor = extract_quoted(&temp_saveptr_for_quote, quote_char);
-    if (!quoted_content_from_extractor && temp_saveptr_for_quote == NULL) 
-        return (0);
-    content_len_with_quotes = ft_strlen(quoted_content_from_extractor);
-    if (content_len_with_quotes >= 2) 
-        content_without_quotes = ft_strndup(quoted_content_from_extractor + 1, content_len_with_quotes - 2);
-    else 
-        content_without_quotes = ft_strdup("");
+    content_without_quotes = ft_strdup(quoted_content_from_extractor);
     free(quoted_content_from_extractor);
     if (!content_without_quotes) 
     { 
