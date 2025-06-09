@@ -6,7 +6,7 @@
 /*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 10:03:13 by marielidias       #+#    #+#             */
-/*   Updated: 2025/06/09 18:53:30 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/09 19:34:10 by renrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,8 +92,9 @@ long				ft_atol(const char *nptr);
 int					ft_putptr(unsigned long ptr);
 int					ft_putstr(char *str);
 int					ft_isspace(int c);
-int 				ft_strcmp(const char *s1, const char *s2);
+int					ft_strcmp(const char *s1, const char *s2);
 // char				*ft_strtok(char *str, const char *delim, char **saveptr);
-char *ft_strndup(const char *s1, size_t n);
-int ft_atoi_n(const char *str, size_t n);
+char				*ft_strndup(const char *s1, size_t n);
+int					ft_atoi_n(const char *str, size_t n);
+
 #endif

@@ -6,7 +6,7 @@
 /*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 17:54:06 by marieli           #+#    #+#             */
-/*   Updated: 2025/05/22 17:16:22 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/09 19:14:51 by renrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,3 @@ int	ft_putnbr(int n)
 	count += ft_putchar('0' + (num % 10));
 	return (count);
 }
-
-
-
