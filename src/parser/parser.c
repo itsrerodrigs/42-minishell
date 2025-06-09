@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 16:12:34 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/05 16:44:42 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/09 14:07:54 by renrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int parse_redir(t_command *cmd, t_token **token_ptr)
     else if (token->type == TOKEN_HEREDOC)
         add_redir(cmd, REDIR_HEREDOC, next->value);
 
-    *token_ptr = token->next->next; // Avança dois nós: redir + filename
+    *token_ptr = token->next->next;
     return (1);
 }
 
@@ -75,6 +75,7 @@ int handle_special_tokens(t_command **current, t_token **tokens)
     }
     return 0;
 }
+
 static int s_handle_word_token(t_command *current_cmd, t_token *token, t_shell *shell)
 {
     char *equals_pos;
@@ -159,21 +160,24 @@ t_command *parse_tokens(t_token *tokens, t_shell *shell)
         { 
             if (!s_handle_word_token(current, tokens, shell))
                 return (NULL);
+            tokens = tokens->next; 
         }
         else if (tokens->type == TOKEN_PIPE || tokens->type == TOKEN_SEMICOLON) {
             error = handle_special_tokens(&current, &tokens);
             if (error != 0) return (NULL);
+            tokens = tokens->next;
         }
         else if (is_token_redir(tokens)) 
         {
             if (!tokens->next || tokens->next->type != TOKEN_WORD)
                 return syntax_error("newline"), NULL;
-            if (!parse_redir(current, &tokens)) return (NULL);
-            tokens = tokens->next;
+            if (!parse_redir(current, &tokens))
+                return (NULL);
+            //tokens = tokens->next;
         }
         else 
             return syntax_error(tokens->value), NULL;
-        tokens = tokens->next;
+        //tokens = tokens->next;
     }
     return (cmd_list);
 }

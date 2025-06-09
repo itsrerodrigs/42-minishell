@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 16:04:57 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/04 13:52:39 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/09 14:46:13 by renrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,15 @@ int     add_arg(t_command *cmd, char *arg)
         new_args[i] = cmd->args[i];
         i++;
     }
-    new_args[i++] = ft_strdup(arg);
-    new_args[i] = NULL;
-    free(cmd->args);
+    new_args[i] = ft_strdup(arg);
+    if (!new_args[i])
+    {
+        free(new_args);
+        return (0);
+    }
+    new_args[i + 1] = NULL;
+    if (cmd->args)
+        free(cmd->args);
     cmd->args = new_args;
     return (1);
 }
@@ -97,15 +103,20 @@ int     add_redir(t_command *cmd, t_redir_type type, char *filename)
 */
 int     handle_cmd_or_arg(t_command *cmd, t_token *token)
 {
+    if (!add_arg(cmd, token->value))
+        return (0);
     if (!cmd->cmd)
     {
-        cmd->cmd = ft_strdup(token->value);
-        return (add_arg(cmd, token->value));
+        cmd->cmd = cmd->args[0];
     }
-    else
-        return (add_arg(cmd, token->value));
-    //return (1);
+    return (1);
 }
+        //cmd->cmd = ft_strdup(token->value);
+        //return (add_arg(cmd, token->value));
+   // }
+    //else
+      //  return (add_arg(cmd, token->value));
+    //return (1);
 
 /*
 * @brief handle a direction token and its following filename token
@@ -116,7 +127,7 @@ int handle_redir(t_command *cmd, t_token *token)
     t_redir_type redir_type;
 
     if (!token || !token->next || !token->next->value)
-        return 0;
+        return (0);
 
     if (token->type == TOKEN_REDIR_IN)
         redir_type = REDIR_IN;
@@ -127,10 +138,10 @@ int handle_redir(t_command *cmd, t_token *token)
     else if (token->type == TOKEN_HEREDOC)
         redir_type = REDIR_HEREDOC;
     else
-        return 0;
+        return (0);
 
     if (!add_redir(cmd, redir_type, token->next->value))
-        return 0;
+        return (0);
 
-    return 1;
+    return (1);
 }

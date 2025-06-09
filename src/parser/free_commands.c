@@ -34,8 +34,8 @@ void free_commands(t_command *cmd)
     while (cmd)
     {
         tmp = cmd->next;
-        if (cmd->cmd)
-            free(cmd->cmd);
+        //if (cmd->cmd)
+        //    free(cmd->cmd);
         if (cmd->args)
         {
             free(cmd->args);
@@ -58,8 +58,8 @@ void free_parser_tokens(t_token *tokens)
     while (cur)
     {
         next = cur->next;
-        //if (cur->value)
-           // free(cur->value);
+        if (cur->value)
+           free(cur->value);
         free(cur);
         cur = next;
     }
