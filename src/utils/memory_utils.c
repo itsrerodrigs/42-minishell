@@ -37,21 +37,6 @@ void *ft_malloc(size_t size)
 ** @param: size - size of memory to allocate, in bytes
 ** @return: pointer to reallocated memory
 */
-// void	*ft_realloc(void *ptr, size_t size)
-// {
-// 	void *new_ptr;
-
-//     if (size == 0)
-//     {
-//         free(ptr);
-//         return (NULL);
-//     }
-// 	new_ptr =  realloc(ptr, size);
-// 	if (!new_ptr)
-// 		perror(RED "ft_realloc: reallocation failed" RST);
-// 	return(new_ptr);
-// }
-
 void    *ft_realloc(void *ptr, size_t size)
 {
     void *new_ptr;
@@ -66,7 +51,5 @@ void    *ft_realloc(void *ptr, size_t size)
     new_ptr =  realloc(ptr, size);
     if (!new_ptr)
         perror(RED "ft_realloc: reallocation failed" RST);
-    if (new_ptr !=ptr)
-        free(ptr);
     return(new_ptr);
 }

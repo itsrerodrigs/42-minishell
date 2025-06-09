@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strlcat.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 11:30:48 by marielidias       #+#    #+#             */
-/*   Updated: 2025/06/09 19:26:04 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/09 19:42:29 by renrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
