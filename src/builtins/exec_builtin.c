@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 16:36:07 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/09 19:33:58 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/10 15:27:02 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,27 +55,76 @@ bool is_builtin_parent_executable(t_command *cmd)
 		ft_strncmp(cmd->args[0], "export", ft_strlen(cmd->args[0]) + 1) ||
 		ft_strncmp(cmd->args[0], "unset", ft_strlen(cmd->args[0]) + 1))
 		{
-			//export logic here!
 			return (!cmd->is_pipe && cmd->prev_pipe_read_fd == -1);
 		}
 		return (false);
 }
 
-int	exec_builtin(t_shell *shell)
-{
-	char		*cmd;
-	int		builtin_return_status;
-	builtin_func	func;
+// int	exec_builtin(t_shell *shell)
+// {
+// 	char		*cmd;
+// 	int		builtin_return_status;
+// 	builtin_func	func;
 
-	if (!shell || !shell->current_cmd || !shell->current_cmd->args[0])
-		return (0);
-	cmd = shell->current_cmd->args[0];
-	func = find_builtin(cmd);
-	if (func)
+// 	if (!shell || !shell->current_cmd || !shell->current_cmd->args[0])
+// 		return (0);
+// 	cmd = shell->current_cmd->args[0];
+// 	func = find_builtin(cmd);
+// 	if (func)
+// 	{
+// 		builtin_return_status = func(shell, shell->current_cmd->args);
+// 		shell->exit_status = builtin_return_status;
+// 		return (1);
+// 	}
+// 	return (0);
+// }
+
+
+int exec_builtin(t_shell *shell)
+{
+    char            *cmd;
+    builtin_func    func;
+    int             builtin_return_status;
+    int             original_stdin = dup(STDIN_FILENO);  
+    int             original_stdout = dup(STDOUT_FILENO);
+
+    if (original_stdin == -1 || original_stdout == -1) 
 	{
-		builtin_return_status = func(shell, shell->current_cmd->args);
-		shell->exit_status = builtin_return_status;
-		return (1);
-	}
-	return (0);
+        perror("minishell: dup failed in builtin redirection setup");
+        if (original_stdin != -1) close(original_stdin);
+        if (original_stdout != -1) close(original_stdout);
+        return (0); 
+    }
+
+    if (!shell || !shell->current_cmd || !shell->current_cmd->args || !shell->current_cmd->args[0])
+    {
+        close(original_stdin);
+        close(original_stdout);
+        return (0);
+    }
+	
+    cmd = shell->current_cmd->args[0];
+    func = find_builtin(cmd);
+    if (func)
+    {
+        if (apply_redirections(shell->current_cmd) != 0) 
+		{
+            dup2(original_stdin, STDIN_FILENO);
+            dup2(original_stdout, STDOUT_FILENO);
+            close(original_stdin);
+            close(original_stdout);
+            shell->exit_status = 1; 
+            return (1);
+        }
+        builtin_return_status = func(shell, shell->current_cmd->args);
+        shell->exit_status = builtin_return_status;
+        dup2(original_stdin, STDIN_FILENO);
+        dup2(original_stdout, STDOUT_FILENO);
+        close(original_stdin);
+        close(original_stdout);
+        return (1); 
+    }
+    close(original_stdin);
+    close(original_stdout);
+    return (0);
 }

@@ -18,6 +18,7 @@
 #include "parser.h"
 #include "executor.h"
 #include "sig.h"
+#include <fcntl.h>
 
 #define Y		"\033[1;33m"
 #define G		"\033[1;32m"

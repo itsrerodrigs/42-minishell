@@ -2,6 +2,7 @@
     "files.associations": {
         "minishell.h": "c",
         "tokens.h": "c",
-        "signal.h": "c"
+        "signal.h": "c",
+        "fcntl.h": "c"
     }
 }
