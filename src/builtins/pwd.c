@@ -6,12 +6,11 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 16:22:13 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/09 15:50:45 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/10 14:49:49 by renrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
 
 /*
 * @brief prints the current working directory
@@ -23,9 +22,8 @@ int	builtin_pwd(t_shell *shell, char **args)
 {
 	char	cwd[PATH_MAX];
 
-	(void)shell; // `shell` não é usado nesta função
-	(void)args;  // Ignora os argumentos
-
+	(void)shell;
+	(void)args;
 	if (getcwd(cwd, sizeof(cwd)) != NULL)
 	{
 		ft_putendl_fd(cwd, STDOUT_FILENO);
@@ -34,6 +32,6 @@ int	builtin_pwd(t_shell *shell, char **args)
 	else
 	{
 		perror("pwd");
-		return (1); 
+		return (1);
 	}
 }
