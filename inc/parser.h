@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 23:03:48 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/11 10:27:53 by marieli          ###   ########.fr       */
+/*   Updated: 2025/06/11 14:46:35 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ typedef struct s_command
 }       t_command;
 
 
-t_command       *new_command(t_command *current);
+/* t_command       *new_command(t_command *current);
 int             handle_special_tokens(t_command **current, t_token **tokens);
 t_command       *parse_tokens(t_token *tokens, t_shell *shell);
 int	        parse_redir(t_command *cmd, t_token **token_ptr);
@@ -68,5 +68,33 @@ int             syntax_error(const char *token);
 int             is_token_cmd(t_token *token);
 int             is_token_redir(t_token *token);
 void            expand_token_list(t_token *tokens, t_shell *shell);
+ */
 
+
+/* parser.c */
+t_command	*parse_tokens(t_token *tokens, t_shell *shell);
+
+/* parser_utils.c */
+t_command	*init_command(void);
+int			add_arg(t_command *cmd, char *arg);
+int			add_redir(t_command *cmd, t_redir_type type, char *filename);
+int			handle_cmd_or_arg(t_command *cmd, t_token *token);
+t_command	*new_command(t_command *current);
+
+/* parser_logic.c */
+int			handle_word_token(t_command *cmd, t_token *tok, t_shell *shell);
+int			parse_redirection(t_command *cmd, t_token **token_ptr);
+int			handle_special_token(t_command **cmd, t_token *tok);
+
+/* parser_syntax.c */
+int			syntax_error(const char *token);
+int			is_token_cmd(t_token *token);
+int			is_token_redir(t_token *token);
+void		expand_token_list(t_token *tokens, t_shell *shell);
+
+/* free_commands.c */
+void		free_commands(t_command *cmd);
+void		free_redirs(t_redirect *redir);
+
+ 
 #endif
