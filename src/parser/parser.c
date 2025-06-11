@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 16:12:34 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/09 18:45:27 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/11 09:58:46 by marieli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ int handle_special_tokens(t_command **current, t_token **tokens)
 
 
 
-static int s_handle_word_token(t_command *current_cmd, t_token *token, t_shell *shell)
+/* static int s_handle_word_token(t_command *current_cmd, t_token *token, t_shell *shell)
 {
     char *equals_pos;
     char *c;
@@ -135,6 +135,39 @@ static int s_handle_word_token(t_command *current_cmd, t_token *token, t_shell *
     }
     result = handle_cmd_or_arg(current_cmd, token);
     return (result);
+} */
+
+// In: src/parser/parser.c
+
+static int s_handle_word_token(t_command *current_cmd, t_token *token, t_shell *shell)
+{
+    char *equals_pos;
+    char *c;
+    int is_valid_name;
+
+    equals_pos = ft_strchr(token->value, '=');
+    if (equals_pos && equals_pos != token->value && (ft_isalpha(token->value[0]) || token->value[0] == '_'))
+    {
+        is_valid_name = 1;
+        c = token->value;
+        while (c < equals_pos)
+        {
+            if (!ft_isalnum(*c) && *c != '_')
+            {
+                is_valid_name = 0;
+                break;
+            }
+            ++c;
+        }
+        if (is_valid_name)
+        {
+            if (add_or_update_env(&shell->envp, token->value) != 0)
+                return (0); 
+            if (current_cmd->cmd == NULL)
+                return (1);
+        }
+    }
+    return (handle_cmd_or_arg(current_cmd, token));
 }
 
     
