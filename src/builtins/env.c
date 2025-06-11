@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 19:55:56 by renrodri          #+#    #+#             */
-/*   Updated: 2025/05/02 17:19:16 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/11 15:23:15 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
-#include <stdlib.h>
-#include <string.h>
+#include "minishell.h"
+
 /*
 * @brief duplicates the environment array
 */

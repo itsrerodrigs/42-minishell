@@ -3,98 +3,95 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 17:15:11 by renrodri          #+#    #+#             */
-/*   Updated: 2025/05/02 17:16:28 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/11 16:02:39 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
-#include <stdlib.h>
+#include "minishell.h"
 
-static void	ft_handle_error(const char *msg)
-{
-	perror(msg);
-	exit(EXIT_FAILURE);
-}
 
-static void	ft_free_str_array(char **arr)
-{
-	int	i;
+/* ************************************************************************** */
+/* */
+/* :::      ::::::::   */
+/* unset.c                                            :+:      :+:    :+:   */
+/* +:+ +:+         +:+     */
+/* By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
+/*<y_bin_115>   +#+           */
+/* Created: 2025/05/02 17:15:11 by renrodri          #+#    #+#             */
+/* Updated: 2025/06/11 16:00:00 by marieli          ###   ########.fr       */
+/* */
+/* ************************************************************************** */
 
-	if (!arr)
-		return ;
-	i = 0;
-	while (arr[i])
-	{
-		free(arr[i]);
-		i++;
-	}
-	free(arr);
-}
+#include "minishell.h"
 
-static int	ft_count_vars_to_keep(char **envp, const char *key)
+/**
+ * @brief Copies variables to a new env array, skipping the one to be unset.
+ */
+static char	**build_new_env(char **old, char **new_env, const char *key)
 {
 	int	i;
-	int	count;
+	int	j;
+	int	key_len;
 
 	i = 0;
-	count = 0;
-	while (envp[i])
+	j = 0;
+	key_len = ft_strlen(key);
+	while (old[i])
 	{
-		if (!(ft_strncmp(envp[i], key, ft_strlen(key)) == 0 && \
-			envp[i][ft_strlen(key)] == '='))
-			count++;
+		if (!(ft_strncmp(old[i], key, key_len) == 0 && old[i][key_len] == '='))
+		{
+			new_env[j] = ft_strdup(old[i]);
+			if (!new_env[j])
+			{
+				free_envp(new_env);
+				perror("strdup");
+				return (NULL);
+			}
+			j++;
+		}
 		i++;
 	}
-	return (count);
+	new_env[j] = NULL;
+	return (new_env);
 }
 
-static int	ft_copy_and_check_var(char **new_envp, int j, const char *str)
-{
-	new_envp[j] = ft_strdup(str);
-	if (!new_envp[j])
-	{
-		ft_free_str_array(new_envp);
-		ft_handle_error("strdup");
-		return (0);
-	}
-	return (1);
-}
-
+/**
+ * @brief Removes an environment variable.
+ */
 static void	remove_env_var(char ***envp_ptr, const char *key)
 {
 	char	**old_envp;
 	char	**new_envp;
-	int		i;
-	int		j;
 	int		count;
+	int		i;
 
 	old_envp = *envp_ptr;
+	count = 0;
 	i = 0;
-	j = 0;
-	count = ft_count_vars_to_keep(old_envp, key);
-	new_envp = (char **)malloc(sizeof(char *) * (count + 1));
-	if (!new_envp)
-		ft_handle_error("malloc");
 	while (old_envp[i])
 	{
 		if (!(ft_strncmp(old_envp[i], key, ft_strlen(key)) == 0 && \
 			old_envp[i][ft_strlen(key)] == '='))
-		{
-			if (!ft_copy_and_check_var(new_envp, j, old_envp[i]))
-				return ;
-			j++;
-		}
-		free(old_envp[i]);
+			count++;
 		i++;
 	}
-	new_envp[j] = NULL;
-	free(old_envp);
+	new_envp = (char **)ft_calloc(count + 1, sizeof(char *));
+	if (!new_envp)
+	{
+		perror("malloc");
+		return ;
+	}
+	new_envp = build_new_env(old_envp, new_envp, key);
+	free_envp(old_envp);
 	*envp_ptr = new_envp;
 }
 
+/**
+ * @brief Removes one or more environment variables.
+ */
 int	builtin_unset(t_shell *shell, char **args)
 {
 	int	i;

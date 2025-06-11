@@ -3,16 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 16:34:22 by mmariano          #+#    #+#             */
-/*   Updated: 2025/06/11 10:25:59 by marieli          ###   ########.fr       */
+/*   Updated: 2025/06/11 16:02:20 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "minishell.h"
 
-
+/**
+ * @brief Checks if an argument string contains only digits (and an optional sign).
+ */
 static int is_valid_exit_arg(const char *str)
 {
     int i;
@@ -33,19 +35,27 @@ static int is_valid_exit_arg(const char *str)
     return (1);
 }
 
+
 static int handle_too_many_exit_args(void)
 {
     ft_putendl_fd("exit: too many arguments", STDERR_FILENO);
     return (1);
 }
 
+/**
+ * @brief Prints an error and exits if the argument for exit is not numeric.
+ */
 static void handle_non_numeric_exit_arg(const char *arg)
 {
     ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
     ft_putstr_fd((char *)arg, STDERR_FILENO);
     ft_putendl_fd(": numeric argument required", STDERR_FILENO);
-    exit(255);}
+    exit(255);
+}
 
+/**
+ * @brief Exits the shell, optionally with a specific exit code.
+ */
 int builtin_exit(t_shell *shell, char **args)
 {
     int exit_code;
@@ -65,9 +75,7 @@ int builtin_exit(t_shell *shell, char **args)
             handle_non_numeric_exit_arg(args[1]);
         exit_code = ft_atoi(args[1]);
     }
-    // printf(RED "Shutting down...\n" RST); 
     ft_putendl_fd("exit", STDERR_FILENO);
     fflush(stdout);
-    // usleep(421337);
     exit(exit_code);
 }

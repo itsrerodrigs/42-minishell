@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 16:22:13 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/11 10:20:40 by marieli          ###   ########.fr       */
+/*   Updated: 2025/06/11 15:53:29 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,9 @@ void	update_pwd_vars(t_shell *shell, char *oldpwd)
     char    *oldpwd_var;
     char    *pwd_var;
 
-	// Update OLDPWD
     oldpwd_var = ft_strjoin(ft_strdup("OLDPWD="), oldpwd);
     add_or_update_env(&shell->envp, oldpwd_var);
     free(oldpwd_var);
-
-	// Update PWD
 	if (getcwd(cwd, sizeof(cwd)))
     {
 		pwd_var = ft_strjoin(ft_strdup("PWD="), cwd);
@@ -58,3 +55,4 @@ int	builtin_pwd(t_shell *shell, char **args)
 		return (1);
 	}
 }
+

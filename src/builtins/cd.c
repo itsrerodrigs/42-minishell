@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 17:24:13 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/10 14:50:17 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/11 15:25:48 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 * @param args arguments in the second index args[1] is the target path
 * @note if doesn't have any arguments, it should change to $HOME directory
 */
-
 int	builtin_cd(t_shell *shell, char **args)
 {
 	char	*path;

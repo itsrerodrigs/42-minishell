@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:47:37 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/10 14:47:24 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/11 15:23:28 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,3 +34,4 @@ char	*get_env_value(char **envp, const char *key)
 	}
 	return (NULL);
 }
+

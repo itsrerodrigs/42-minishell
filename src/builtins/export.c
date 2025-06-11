@@ -6,78 +6,68 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 15:56:49 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/09 20:26:18 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/11 15:57:55 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-
-/*
- * @brief Sorts the environment variables alphabetically using bubble sort.
- * This remains static to this file.
- * @param envp The environment array to sort.
+/**
+ * @brief Sorts an array of strings in place using bubble sort.
  */
-static void sort_env(char **envp)
+static void	sort_env_array(char **envp, int len)
 {
-    int     i;
-    int     j;
-    char    *temp;
-    int     len;
+	int		i;
+	int		j;
+	char	*temp;
 
-    len = 0;
-    while (envp[len])
-        len++;
-
-    i = 0;
-    while (i < len - 1)
-    {
-        j = i + 1;
-        while (j < len)
-        {
-            if (ft_strcmp(envp[i], envp[j]) > 0)
-            {
-                temp = envp[i];
-                envp[i] = envp[j];
-                envp[j] = temp;
-            }
-            j++;
-        }
-        i++;
-    }
+	i = 0;
+	while (i < len - 1)
+	{
+		j = i + 1;
+		while (j < len)
+		{
+			if (ft_strcmp(envp[i], envp[j]) > 0)
+			{
+				temp = envp[i];
+				envp[i] = envp[j];
+				envp[j] = temp;
+			}
+			j++;
+		}
+		i++;
+	}
 }
 
-/*
- * @brief Handles the reallocation and addition of a new environment entry.
- * This function is static to this file, called only by add_or_update_env.
- * @param envp_ptr Pointer to the shell's environment array.
- * @param var The variable string to add (e.g., "KEY=VALUE" or "KEY").
- * @param i The index where the new variable should be added.
- * @return 1 on successful addition, 0 on memory allocation failure.
+/**
+ * @brief Prints the sorted environment variables in 'declare -x' format.
  */
-static int s_add_new_env_entry(char ***envp_ptr, const char *var, int i)
+static void	print_exported_env(char **envp)
 {
-    char **new_envp_array;
+	int	i;
 
-    new_envp_array = (char **)ft_realloc(*envp_ptr, sizeof(char *) * (i + 2));
-    if (!new_envp_array)
-    {
-        perror("minishell: realloc failed in export");
-        return (0); 
-    }
-    *envp_ptr = new_envp_array; 
-    (*envp_ptr)[i] = ft_strdup(var);
-
-	if (!(*envp_ptr)[i])
-    {
-		if (errno == 0 || errno == EINTR)
-				errno = ENOMEM;
-        perror("minishell: strdup failed in export");
-        return (0); 
-    }
-    (*envp_ptr)[i + 1] = NULL; 
-    return (1);
+	i = 0;
+	while (envp[i])
+	{
+		ft_printf("declare -x %s\n", envp[i]);
+		i++;
+	}
 }
+
+/**
+ * @brief Sorts and prints all environment variables for 'export' with no args.
+ */
+static void	print_sorted_env_for_export(char **envp)
+{
+	int	len;
+
+	len = 0;
+	while (envp[len])
+		len++;
+	sort_env_array(envp, len);
+	print_exported_env(envp);
+}
+
 
 /*
  * @brief Adds or updates an environment variable in the shell's environment.
@@ -108,46 +98,33 @@ int add_or_update_env(char ***envp_ptr, const char *var)
         i++;
     }
 
-    if (!s_add_new_env_entry(envp_ptr, var, i))
+    if (!add_new_env_entry(envp_ptr, var, i))
         return (1); 
     return (0); 
 }
 
-/*
- * @brief Built-in 'export' command.
- * @param shell The shell context.
- * @param args The arguments array.
- * @return 0 on success, 1 on error.
+/**
+ * @brief Adds variables to the environment or prints all environment variables.
  */
-int builtin_export(t_shell *shell, char **args)
+int	builtin_export(t_shell *shell, char **args)
 {
-    int i;
-    int return_status;
+	int	i;
+	int	return_status;
 
 	return_status = 0;
-    if (!shell || !shell->envp)
-        return (1);
-
-    if (!args[1]) 
-    {
-        sort_env(shell->envp);
-        i = 0;
-        while (shell->envp[i])
-        {
-            ft_putendl_fd(shell->envp[i], STDOUT_FILENO);
-            i++;
-        }
-        return (0);
-    }
-    else 
-    {
-        i = 1;
-        while (args[i])
-        {
-            if (add_or_update_env(&shell->envp, args[i]) != 0)
-                return_status = 1;
-            i++;
-        }
-    }
-    return (return_status);
+	if (!shell || !shell->envp)
+		return (1);
+	if (!args[1])
+		print_sorted_env_for_export(shell->envp);
+	else
+	{
+		i = 1;
+		while (args[i])
+		{
+			if (add_or_update_env(&shell->envp, args[i]) != 0)
+				return_status = 1;
+			i++;
+		}
+	}
+	return (return_status);
 }

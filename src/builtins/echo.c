@@ -6,11 +6,11 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 17:56:24 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/05 16:03:22 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/11 15:23:09 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "minishell.h"
 
 /*
 * @brief prints the given args to standard output
