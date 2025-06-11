@@ -91,30 +91,3 @@ char *read_input(void)
     return (buf);
 }
 
-/*
- ** @brief: Reads user input, tokenizes it, and prepares for execution.
- **         Continuously prompts for input, processes commands, and cleans up memory.
- ** @return: Always returns NULL, as the function is structured for continuous input processing.
- */
-t_token *process_input(t_shell *shell)
-{
-    char *input;
-    t_token *tokens;
-
-    input = read_input();
-    while (input)
-    {
-        if (!*input)
-        {
-            free(input);
-            input = read_input();
-            continue;
-        }
-        tokens = get_tokens(input, shell); 
-        if (tokens)
-            free_tokens(tokens);
-        free(input);
-        input = read_input();
-    }
-    return (NULL);
-}

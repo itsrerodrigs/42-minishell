@@ -40,7 +40,6 @@ extern volatile sig_atomic_t g_child_running;
 /*memory*/
 void        *ft_malloc(size_t size);
 void	    *ft_realloc(void *ptr, size_t size);
-void    free_str_array(char **array);
 
 
 #endif

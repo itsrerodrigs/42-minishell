@@ -26,8 +26,8 @@ static void init_shell_job_control(t_shell *shell)
         setpgid(0, 0);
         shell->shell_pgid = getpgrp();
         set_foreground_process(shell->shell_terminal_fd, shell->shell_pgid);
-        signal(SIGTTIN, SIG_IGN); // TTY input signal
-        signal(SIGTTOU, SIG_IGN); // TTY output signal
+        signal(SIGTTIN, SIG_IGN); 
+        signal(SIGTTOU, SIG_IGN);
     }    
 }
 
@@ -44,22 +44,20 @@ static void s_process_loop(t_shell *shell)
     t_token *tokens;
     t_command *commands;
 
-    while (1) // Main loop: read input, tokenize, parse, and execute
+    while (1)
     {
         input = read_input();
-        if (!input) // Handle EOF (Ctrl+D)
+        if (!input)
             break;
         tokens = get_tokens(input, shell);
-        if (!tokens) // Handle tokenization errors or empty input after trimming
+        if (!tokens) 
         {
-            free(input); // Free the raw input line
+            free(input); 
             continue;
         }
         commands = parse_tokens(tokens, shell);
-        shell->current_cmd = commands; // Store parsed commands in shell context
-        ft_exec(shell); // Execute the command(s)
-
-        // Cleanup after execution
+        shell->current_cmd = commands; 
+        ft_exec(shell); 
         free_tokens(tokens);
         free_commands(commands);
         free(input);

@@ -14,8 +14,6 @@
 #include "builtins.h"
 #include "executor.h"
 
-// You can add this function to src/executor/executor.c
-
 /*
  * @brief Processes all heredoc redirections for a list of commands before execution.
  * @param commands The first command in the list.
@@ -85,16 +83,5 @@ void ft_exec(t_shell *shell)
     exec_external(shell, args);
 }
 
-/*
- * @brief Handles the "command not found" error.
- * @param shell Shell context to update exit_status.
- * @param cmd Command that failed to execute.
- */
-void handle_cmd_not_found(t_shell *shell, char *cmd)
-{
-    ft_putstr_fd("minishell: command not found: ", STDERR_FILENO);
-    ft_putendl_fd(cmd, STDERR_FILENO);
-    shell->exit_status = 127;
-}
 
 

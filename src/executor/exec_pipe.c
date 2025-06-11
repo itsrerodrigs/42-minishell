@@ -6,7 +6,7 @@
 /*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 14:39:44 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/11 09:42:48 by marieli          ###   ########.fr       */
+/*   Updated: 2025/06/11 10:25:29 by marieli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,21 +82,6 @@ static void exec_pipe_child(t_shell *shell, t_command *cmd,
     }
 }
 
-// static void close_parent_pipe_fds(int pipefd[2], int *prev_fd, int is_pipe)
-// {
-//     if (*prev_fd != -1)
-//     {
-//         close(*prev_fd);
-//         *prev_fd = -1;
-//     }        
-//     if (is_pipe)
-//     {
-//         close(pipefd[0]);
-//         *prev_fd = pipefd[0];
-//     }
-//     else
-//         *prev_fd = -1;
-// }
 
 static void handle_parent_pipe_fds(int pipefd[2], int *prev_pipe_read_fd_ptr, int is_pipe)
 {
@@ -123,40 +108,6 @@ static void handle_parent_process_in_loop(t_shell *shell, pid_t pid, int pipefd[
     *last_executed_pid_ptr = pid;
 }
 
-// static void exec_pipe_loop(t_shell *shell, t_command *first_cmd,
-//                                          int pipe_fds[2], int *pid_tracker_ptr, int *last_executed_pid_ptr)
-// {
-//     t_command   *current_cmd;
-//     int         prev_pipe_read_fd;
-
-//     current_cmd = first_cmd;
-//     prev_pipe_read_fd = -1;
-
-//     while (current_cmd)
-//     {
-//         *pid_tracker_ptr = fork_and_pipe(pipe_fds, pid_tracker_ptr, current_cmd->is_pipe);
-//         if (*pid_tracker_ptr < 0)
-//         {
-//             perror("minishell: fork or pipe failed");
-//             shell->exit_status = 1;
-//             break;
-//         }
-//         if (*pid_tracker_ptr == 0)
-//         {
-//             set_child_signals();
-//             exec_pipe_child(shell, current_cmd, pid_tracker_ptr, pipe_fds, current_cmd->is_pipe);
-//         }
-//         else
-//         {
-//             if (shell->shell_is_interactive)
-//                 set_foreground_process(shell->shell_terminal_fd, *pid_tracker_ptr);
-
-//             close_parent_pipe_fds(pipe_fds, pid_tracker_ptr, current_cmd->is_pipe);
-//             *last_executed_pid_ptr = *pid_tracker_ptr;
-//         }
-//         current_cmd = current_cmd->next;
-//     }
-// }
 static void exec_pipe_loop(t_shell *shell, t_command *first_cmd,
                                          int *last_executed_pid_ptr) 
 {

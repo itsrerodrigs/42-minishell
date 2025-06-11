@@ -6,7 +6,7 @@
 /*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 16:04:57 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/11 09:35:23 by marieli          ###   ########.fr       */
+/*   Updated: 2025/06/11 10:13:29 by marieli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,30 +118,3 @@ int     handle_cmd_or_arg(t_command *cmd, t_token *token)
     // return (1);
 }
 
-/*
-* @brief handle a direction token and its following filename token
-* WORKING
-*/
-int handle_redir(t_command *cmd, t_token *token)
-{
-    t_redir_type redir_type;
-
-    if (!token || !token->next || !token->next->value)
-        return 0;
-
-    if (token->type == TOKEN_REDIR_IN)
-        redir_type = REDIR_IN;
-    else if (token->type == TOKEN_REDIR_OUT)
-        redir_type = REDIR_OUT;
-    else if (token->type == TOKEN_APPEND)
-        redir_type = REDIR_APPEND;
-    else if (token->type == TOKEN_HEREDOC)
-        redir_type = REDIR_HEREDOC;
-    else
-        return 0;
-
-    if (!add_redir(cmd, redir_type, token->next->value))
-        return 0;
-
-    return 1;
-}

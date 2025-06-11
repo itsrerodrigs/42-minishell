@@ -47,20 +47,3 @@ void free_commands(t_command *cmd)
     }
 }
 
-void free_parser_tokens(t_token *tokens)
-{
-    t_token *cur;
-    t_token *next;
-
-    if (!tokens)
-        return;
-    cur = tokens;
-    while (cur)
-    {
-        next = cur->next;
-        if (cur->value)
-           free(cur->value);
-        free(cur);
-        cur = next;
-    }
-}

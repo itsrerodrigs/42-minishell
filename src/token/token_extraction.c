@@ -33,28 +33,6 @@ void free_tokens(t_token *head)
 }
 
 /*
- ** @brief: Determines the type of a token based on its content.
- ** @param: token_str - String representing a token.
- ** @return: Token type as `t_id` (e.g., TOKEN_PIPE, TOKEN_WORD, etc.).
- */
-t_token_type get_token_type(char *token_str)
-{
-    if (!token_str) 
-        return (TOKEN_WORD);
-    if (!strcmp(token_str, "|")) 
-        return (TOKEN_PIPE);
-    if (!strcmp(token_str, "<"))   
-        return (TOKEN_REDIR_IN);
-    if (!strcmp(token_str, ">")) 
-        return (TOKEN_REDIR_OUT);
-    if (!strcmp(token_str, ">>")) 
-        return (TOKEN_APPEND);
-    if (!strcmp(token_str, "<<")) 
-        return (TOKEN_HEREDOC);
-    return (TOKEN_WORD);
-}
-
-/*
  ** @brief: Creates a new token with the given value and type.
  ** @param: buf - Token value string.
  ** @param: type - Type of token (command, pipe, redirection, etc.).
@@ -79,34 +57,6 @@ t_token *create_token(char *buf, t_token_type type)
 
     return (new_token);
 }
-
-/*
- ** @brief: Extracts tokens from the input string and stores them in a linked list.
- ** @param: saveptr - Pointer to the current tokenizer state.
- ** @return: Pointer to the first token in the linked list.
- */
-// static t_token *extract_tokens(char **saveptr, t_shell *shell)
-// {
-//     t_token     *head;
-//     t_token     *current;
-//     t_token     *new_token;
-//     char        *token_str;
-
-//     head = NULL;
-//     current = NULL;    
-//     while ((token_str = ft_strtok(NULL, DELIM, saveptr, shell)))
-//     {
-//         new_token = create_token(token_str, get_token_type(token_str));
-//         if (!new_token) 
-//             return (free_tokens(head), NULL);
-//         if (!head) 
-//             head = new_token;
-//         else 
-//             current->next = new_token;
-//         current = new_token;
-//     }
-//     return (head);
-// }
 
 static t_token *extract_tokens(char **saveptr, t_shell *shell) {
     t_token *head;

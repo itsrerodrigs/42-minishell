@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd_utils.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 14:53:25 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/09 17:37:35 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/11 10:26:21 by marieli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,6 @@ int     execute_chdir(const char *path)
     }
     return (0);
 }
-
-// In file: 42-minishell/src/builtins/builtins_utils.c
 
 // Auxiliary function to handle 'cd' or 'cd ~'
 static char *get_home_path(t_shell *shell)

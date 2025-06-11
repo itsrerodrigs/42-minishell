@@ -41,33 +41,6 @@ static char *resize_expanded(char *expanded, size_t *new_size, const char *value
 }
 
 /*
- ** @brief: Expands an encountered variable.
- ** @param: input - source string
- **		    index_ptr - pointer to index, 
- **		    expanded - current expanded string,
- **         new_size - pointer to current allocated size.
- ** @return: pointer to updated expanded string.
- */
-// static char *need_expansion(const char *input, size_t *index_ptr, char *expanded, size_t *new_size, char **envp)
-// {
-//     char *value;
-
-//     (*index_ptr)++;
-//     value = extract_variable(input, index_ptr, envp);
-//     if (!value)
-//         value = ft_strdup("");
-//     expanded = resize_expanded(expanded, new_size, value);
-//     if (!expanded)
-//     {
-//         free(value);
-//         return (NULL);
-//     }
-//     ft_strlcat(expanded, value, *new_size + 1);
-//     free(value);
-//     return (expanded);
-// }
-
-/*
  ** @brief: Appends a regular (non-variable) character to the expanded string.
  ** @param: input - source string, 
  **         index_ptr - current index pointer, 
