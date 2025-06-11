@@ -29,7 +29,7 @@ static int	process_all_heredocs(t_command *commands, t_shell *shell)
 		{
 			if (redir_node->type == REDIR_HEREDOC)
 			{
-				current_cmd->heredoc_pipe_read_fd = process_heredoc(redir_node->filename);
+				current_cmd->heredoc_pipe_read_fd = process_heredoc(redir_node, shell);
 				if (current_cmd->heredoc_pipe_read_fd == -1)
 				{
 					shell->exit_status = 1;
@@ -42,6 +42,7 @@ static int	process_all_heredocs(t_command *commands, t_shell *shell)
 	}
 	return (0);
 }
+
 
 /**
  * @brief Executes the current command or pipeline from the shell state.

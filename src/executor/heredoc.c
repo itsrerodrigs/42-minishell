@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 20:12:22 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/11 15:13:43 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/11 18:25:39 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,26 +24,31 @@ static void	set_child_heredoc_sig(void)
 /**
  * @brief The child process logic for reading heredoc input until a delimiter.
  */
-static void	child_heredoc_logic(int pipe_write_fd, const char *delimiter)
+static void	child_heredoc_logic(int p_fd, t_redirect *redir, t_shell *shell)
 {
 	char	*line;
+	char	*expanded;
 
 	set_child_heredoc_sig();
 	while (1)
 	{
 		line = readline("> ");
-		if (!line)
-			break ;
-		if (ft_strncmp(line, delimiter, ft_strlen(delimiter) + 1) == 0)
+		if (!line || ft_strcmp(line, redir->filename) == 0)
 		{
 			free(line);
 			break ;
 		}
-		ft_putstr_fd(line, pipe_write_fd);
-		ft_putstr_fd("\n", pipe_write_fd);
+		if (redir->expand_heredoc)
+		{
+			expanded = expand_variables(line, shell->envp, shell->exit_status);
+			ft_putendl_fd(expanded, p_fd);
+			free(expanded);
+		}
+		else
+			ft_putendl_fd(line, p_fd);
 		free(line);
 	}
-	close(pipe_write_fd);
+	close(p_fd);
 	exit(EXIT_SUCCESS);
 }
 
@@ -67,7 +72,7 @@ static int	parent_heredoc_logic(pid_t pid, int pipe_fds[2])
 /**
  * @brief Creates a pipe and forks to read heredoc input from the user.
  */
-int	process_heredoc(const char *delimiter)
+int	process_heredoc(t_redirect *redir, t_shell *shell)
 {
 	int		pipe_fds[2];
 	pid_t	pid;
@@ -88,7 +93,7 @@ int	process_heredoc(const char *delimiter)
 	else if (pid == 0)
 	{
 		close(pipe_fds[0]);
-		child_heredoc_logic(pipe_fds[1], delimiter);
+		child_heredoc_logic(pipe_fds[1], redir, shell);
 	}
 	else
 		return (parent_heredoc_logic(pid, pipe_fds));

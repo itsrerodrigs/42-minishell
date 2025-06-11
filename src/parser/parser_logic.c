@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 14:47:31 by mmariano          #+#    #+#             */
-/*   Updated: 2025/06/11 14:47:32 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/11 18:25:47 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ int	parse_redirection(t_command *cmd, t_token **token_ptr)
 	t_token			*token;
 	t_token			*next;
 	t_redir_type	type;
+	int				expand;
 
 	token = *token_ptr;
 	next = token->next;
@@ -77,11 +78,13 @@ int	parse_redirection(t_command *cmd, t_token **token_ptr)
 		type = REDIR_APPEND;
 	else
 		type = REDIR_HEREDOC;
-	if (!add_redir(cmd, type, next->value))
+	expand = (next->type == TOKEN_WORD); // Expand if delimiter is an unquoted word
+	if (!add_redir(cmd, type, next->value, expand))
 		return (0);
 	*token_ptr = next;
 	return (1);
 }
+
 
 /**
  * @brief Handles special tokens like pipes and semicolons.

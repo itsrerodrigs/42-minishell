@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 23:03:48 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/11 14:58:05 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/11 18:15:01 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,10 @@ typedef enum e_redir_type
 */
 typedef struct s_redirect
 {
-    t_redir_type type;  /*type REDIR_IN, REDIR_OUT...*/
-    char *filename; /*target filename or limiter for redirection*/
-    struct s_redirect *next; /*pointer to the next redirection in the list*/
+    t_redir_type        type;  
+    char                *filename; 
+    struct s_redirect   *next;
+    int		        expand_heredoc;
 } t_redirect;
 
 /*
@@ -59,7 +60,8 @@ t_command	*parse_tokens(t_token *tokens, t_shell *shell);
 /* parser_utils.c */
 t_command	*init_command(void);
 int			add_arg(t_command *cmd, char *arg);
-int			add_redir(t_command *cmd, t_redir_type type, char *filename);
+// int	add_redir(t_command *cmd, t_redir_type type, char *fname, int expand)
+int	add_redir(t_command *cmd, t_redir_type type, char *fname, int expand);
 int			handle_cmd_or_arg(t_command *cmd, t_token *token);
 t_command	*new_command(t_command *current);
 

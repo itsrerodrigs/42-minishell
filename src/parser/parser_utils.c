@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 16:04:57 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/11 14:50:11 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/11 18:25:53 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int	add_arg(t_command *cmd, char *arg)
 /**
  * @brief Adds a new redirection to the command's redirection list.
  */
-int	add_redir(t_command *cmd, t_redir_type type, char *filename)
+int	add_redir(t_command *cmd, t_redir_type type, char *fname, int expand)
 {
 	t_redirect	*new_redir;
 	t_redirect	*last;
@@ -74,7 +74,8 @@ int	add_redir(t_command *cmd, t_redir_type type, char *filename)
 	if (!new_redir)
 		return (0);
 	new_redir->type = type;
-	new_redir->filename = ft_strdup(filename);
+	new_redir->filename = ft_strdup(fname);
+	new_redir->expand_heredoc = expand;
 	new_redir->next = NULL;
 	if (!cmd->redirs)
 		cmd->redirs = new_redir;

@@ -24,7 +24,8 @@ void		exec_command(t_shell *shell, t_command *cmd, char *caller_cmd_path);
 /* Path & Redirection */
 char		*find_executable(char *cmd, t_shell *shell);
 int			apply_redirections(t_command *cmd);
-int			process_heredoc(const char *delimiter);
+// int			process_heredoc(const char *delimiter);
+int			process_heredoc(t_redirect *redir, t_shell *shell);
 
 /* Execution Utilities */
 char		*getenv_from_envp(char **envp, const char *name);
