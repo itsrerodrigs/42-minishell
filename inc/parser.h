@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 23:03:48 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/11 14:46:35 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/11 14:58:05 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,24 +52,6 @@ typedef struct s_command
         pid_t pid;
         int prev_pipe_read_fd;
 }       t_command;
-
-
-/* t_command       *new_command(t_command *current);
-int             handle_special_tokens(t_command **current, t_token **tokens);
-t_command       *parse_tokens(t_token *tokens, t_shell *shell);
-int	        parse_redir(t_command *cmd, t_token **token_ptr);
-t_command       *init_command(void);
-int             add_arg(t_command *cmd, char *arg);
-int             add_redir(t_command *cmd, t_redir_type type, char *filename);
-int	        handle_cmd_or_arg(t_command *cmd, t_token *token);
-void            free_commands(t_command *cmd);
-void            free_redirs(t_redirect *redir);
-int             syntax_error(const char *token);
-int             is_token_cmd(t_token *token);
-int             is_token_redir(t_token *token);
-void            expand_token_list(t_token *tokens, t_shell *shell);
- */
-
 
 /* parser.c */
 t_command	*parse_tokens(t_token *tokens, t_shell *shell);

@@ -3,18 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 12:23:49 by renrodri          #+#    #+#             */
-/*   Updated: 2025/05/30 12:23:49 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/11 15:12:35 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "executor.h"
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
 
 /*
  * @brief Gets the value of an environment variable from envp.

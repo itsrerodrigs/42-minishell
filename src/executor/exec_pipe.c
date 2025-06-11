@@ -3,230 +3,134 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipe.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 14:39:44 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/11 10:25:29 by marieli          ###   ########.fr       */
+/*   Updated: 2025/06/11 15:10:14 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "executor.h"
 #include "minishell.h"
-#include "sig.h"
-#include "builtins.h"
 
-extern volatile sig_atomic_t g_child_running;
-
-/*
- * @brief Sets up input/output redirections for the child process.
- * @param cmd Pointer to the current command.
- * @param prev_fd Pointer to previous read end of pipe.
- * @param pipefd Array of two integers for pipe file descriptors.
- * @param is_pipe Flag indicating if the current command is piped.
+/**
+ * @brief Executes a single command that is a builtin in the parent process.
  */
-static void setup_redirections(t_command *cmd, int prev_pipe_read_fd, int pipefd[2],
-        int is_pipe)
+static int	exec_parent_builtin(t_shell *shell, t_command *cmd)
 {
-    if (prev_pipe_read_fd != -1)
-    {
-        if (dup2(prev_pipe_read_fd, STDIN_FILENO) == -1)
-        {
-            perror("dup2 error for previous pipe input");
-            exit(1);
-        }
-        close(prev_pipe_read_fd);
-    }
-    if (is_pipe)
-    {
-        close(pipefd[0]);
-        if (dup2(pipefd[1], STDOUT_FILENO) == -1)
-        {
-            perror("dup2 error for current pipe output");
-            exit(1);
-        }
-        close(pipefd[1]);
-    }
-    if (apply_redirections(cmd) != 0)
-        exit(1);
+	int				saved_stdin;
+	int				saved_stdout;
+	int				exit_code;
+	builtin_func	func;
+
+	saved_stdin = dup(STDIN_FILENO);
+	saved_stdout = dup(STDOUT_FILENO);
+	exit_code = 1;
+	if (apply_redirections(cmd) == 0)
+	{
+		func = find_builtin(cmd->args[0]);
+		if (func)
+			exit_code = func(shell, cmd->args);
+	}
+	shell->exit_status = exit_code;
+	if (dup2(saved_stdin, STDIN_FILENO) == -1)
+		perror("dup2 restore stdin failed");
+	if (dup2(saved_stdout, STDOUT_FILENO) == -1)
+		perror("dup2 restore stdout failed");
+	close(saved_stdin);
+	close(saved_stdout);
+	return (1);
 }
 
-static void exec_pipe_child(t_shell *shell, t_command *cmd,
-    int prev_pipe_read_fd, int pipefd[2], int is_pipe)
-{    
-    char            *cmd_path;
-    builtin_func    func;
+/**
+ * @brief Forks the process and executes the child logic.
+ */
+static pid_t	fork_and_run_child(t_shell *shell, t_command *cmd, int *p,
+		int *pfd)
+{
+	pid_t	pid;
 
-    set_child_signals();
-    //setpgid(0, 0);
-    setup_redirections(cmd, prev_pipe_read_fd, pipefd, is_pipe);
-
-    func = find_builtin(cmd->args[0]);
-    if (func)
-    {
-        shell->exit_status = func(shell, cmd->args);
-        exit(shell->exit_status);
-    }
-    else
-    {
-        cmd_path = find_executable(cmd->cmd, shell);
-        if (!cmd_path)
-        {
-            ft_putstr_fd(cmd->cmd, STDERR_FILENO);
-            ft_putendl_fd(": command not found", STDERR_FILENO);
-            exit(127);
-        }
-        execve(cmd_path, cmd->args, shell->envp);
-        perror("minishell: execve failed");
-        free(cmd_path); 
-        exit(EXIT_FAILURE);
-    }
+	if (cmd->is_pipe)
+		if (pipe(p) == -1)
+		{
+			perror("minishell: pipe failed");
+			return (-1);
+		}
+	pid = fork();
+	if (pid < 0)
+	{
+		perror("minishell: fork failed");
+		if (p[0] != -1)
+		{
+			close(p[0]);
+			close(p[1]);
+		}
+		return (-1);
+	}
+	if (pid == 0)
+		exec_pipe_child(shell, cmd, *pfd, p);
+	return (pid);
 }
 
-
-static void handle_parent_pipe_fds(int pipefd[2], int *prev_pipe_read_fd_ptr, int is_pipe)
+/**
+ * @brief Handles forking and parent-side logic for a single piped command.
+ */
+static int	run_forked_cmd(t_shell *shell, t_command *cmd, int *p_fd, int *l_pid)
 {
-    if (*prev_pipe_read_fd_ptr != -1)
-    {
-        close(*prev_pipe_read_fd_ptr);
-        *prev_pipe_read_fd_ptr = -1; // Mark as closed
-    }
-    if (is_pipe)
-    {
-        close(pipefd[1]);
-        *prev_pipe_read_fd_ptr = pipefd[0];
-    }
-    else
-        *prev_pipe_read_fd_ptr = -1;
-}
-static void handle_parent_process_in_loop(t_shell *shell, pid_t pid, int pipefd[2],
-                                          int *prev_pipe_read_fd_ptr, int is_pipe, int *last_executed_pid_ptr)
-{
-    if (shell->shell_is_interactive)
-        set_foreground_process(shell->shell_terminal_fd, pid); // Set foreground to the child's PGID
+	pid_t	pid;
+	int		pipe_fds[2];
 
-    handle_parent_pipe_fds(pipefd, prev_pipe_read_fd_ptr, is_pipe);
-    *last_executed_pid_ptr = pid;
+	pipe_fds[0] = -1;
+	pipe_fds[1] = -1;
+	pid = fork_and_run_child(shell, cmd, pipe_fds, p_fd);
+	if (pid < 0)
+		return (-1);
+	handle_parent_fds(pipe_fds, p_fd, cmd->is_pipe);
+	*l_pid = pid;
+	return (0);
 }
 
-static void exec_pipe_loop(t_shell *shell, t_command *first_cmd,
-                                         int *last_executed_pid_ptr) 
+/**
+ * @brief The main loop for executing a pipeline of one or more commands.
+ */
+static int	exec_pipe_loop(t_shell *shell, t_command *cmd_list)
 {
-    t_command   *current_cmd;
-    int         pipe_fds[2]; 
-    int         prev_pipe_read_fd;
-    pid_t       pid;
+	t_command	*current_cmd;
+	int			prev_pipe_read_fd;
+	int			last_pid;
 
-    current_cmd = first_cmd;
-    prev_pipe_read_fd = -1;
-
-    while (current_cmd)
-    {
-        if (is_builtin_parent_executable(current_cmd))
-        {
-            int saved_stdin = dup(STDIN_FILENO);
-            int saved_stdout = dup(STDOUT_FILENO);
-            int exit_code = 1;
-            if (saved_stdin == -1 || saved_stdout == -1)
-            {
-                perror("dup failed for builtin redirection");
-                shell->exit_status = 1;
-                if (current_cmd->heredoc_pipe_read_fd != 1)
-                {
-                    close(current_cmd->heredoc_pipe_read_fd);
-                    current_cmd->heredoc_pipe_read_fd = -1;
-                }
-                break;
-            }
-            if (apply_redirections(current_cmd) == 0)
-            {
-                builtin_func func = find_builtin(current_cmd->args[0]);
-                if (func)
-                {
-                    exit_code = func(shell, current_cmd->args);
-                }
-            } 
-            else
-            {
-                exit_code = 1;
-            }
-            shell->exit_status = exit_code;
-
-            if (dup2(saved_stdin, STDERR_FILENO) == -1)
-            {
-                perror("dup2 restore stdin failed");
-                exit(1);
-            }
-            close(saved_stdin);
-            if (dup2(saved_stdout, STDOUT_FILENO) == -1)
-            {
-                perror("dup2 restore stdout failed");
-                exit(1);
-            }
-            close(saved_stdout);
-            if (current_cmd->heredoc_pipe_read_fd != -1)
-            {
-                close(current_cmd->heredoc_pipe_read_fd);
-                current_cmd->heredoc_pipe_read_fd = -1;
-            }
-            current_cmd = current_cmd->next;
-            continue;
-        }
-        pipe_fds[0] = -1;
-        pipe_fds[1] = -1;
-        if (current_cmd->is_pipe)
-        {
-            if (pipe(pipe_fds) == -1)
-            {
-                perror("minishell: pipe failed");
-                shell->exit_status = 1;
-                if (prev_pipe_read_fd != -1)
-                    close(prev_pipe_read_fd);
-                if (current_cmd->heredoc_pipe_read_fd != 1)
-                    close(current_cmd->heredoc_pipe_read_fd);
-                break;
-            }
-        }
-        pid = fork();
-        if (pid < 0)
-        {
-            perror("minishell: fork failed");
-            shell->exit_status = 1;
-            if (pipe_fds[0] != -1) { close(pipe_fds[0]); close(pipe_fds[1]); }
-            if (prev_pipe_read_fd != -1) close(prev_pipe_read_fd);
-            break;
-        }
-        if (pid == 0) 
-            exec_pipe_child(shell, current_cmd, prev_pipe_read_fd, pipe_fds, current_cmd->is_pipe);
-        else 
-            handle_parent_process_in_loop(shell, pid, pipe_fds, &prev_pipe_read_fd,
-                                          current_cmd->is_pipe, last_executed_pid_ptr);
-        current_cmd = current_cmd->next;
-    }
-    if (prev_pipe_read_fd != -1)
-        close(prev_pipe_read_fd);
+	current_cmd = cmd_list;
+	prev_pipe_read_fd = -1;
+	last_pid = -1;
+	while (current_cmd)
+	{
+		if (is_builtin_parent_executable(current_cmd))
+			exec_parent_builtin(shell, current_cmd);
+		else
+		{
+			if (run_forked_cmd(shell, current_cmd, &prev_pipe_read_fd, &last_pid) < 0)
+				break ;
+		}
+		current_cmd = current_cmd->next;
+	}
+	if (prev_pipe_read_fd != -1)
+		close(prev_pipe_read_fd);
+	return (last_pid);
 }
 
-
-static void pipe_cleanup(t_shell *shell, int last_executed_pid, t_old_signals *old_sa)
+/**
+ * @brief Sets up signals and executes a command pipeline.
+ */
+void	exec_pipeline(t_shell *shell, t_command *first_cmd)
 {
-    if (shell->shell_is_interactive)
-        set_foreground_process(shell->shell_terminal_fd, shell->shell_pgid);
+	t_old_signals	old_sa;
+	int				last_executed_pid;
 
-    pipe_wait_children(shell, last_executed_pid);
-    restore_signals(&old_sa->int_sa, &old_sa->quit_sa);
-    g_child_running = 0;
-}
-
-void exec_pipeline(t_shell *shell, t_command *first_cmd)
-{
-    t_command       *current_cmd_start;
-    t_old_signals   old_sa;
-    int             last_executed_pid;
-
-    current_cmd_start = first_cmd;
-    last_executed_pid = -1;
-
-    save_and_ignore_signals(&old_sa.int_sa, &old_sa.quit_sa);
-    exec_pipe_loop(shell, current_cmd_start, &last_executed_pid);
-    pipe_cleanup(shell, last_executed_pid, &old_sa);
+	g_child_running = 1;
+	save_and_ignore_signals(&old_sa.int_sa, &old_sa.quit_sa);
+	last_executed_pid = exec_pipe_loop(shell, first_cmd);
+	if (shell->shell_is_interactive)
+		set_foreground_process(shell->shell_terminal_fd, shell->shell_pgid);
+	wait_for_children(shell, last_executed_pid);
+	restore_signals(&old_sa.int_sa, &old_sa.quit_sa);
+	g_child_running = 0;
 }
