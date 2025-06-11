@@ -10,127 +10,123 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
-#include "../inc/tokens.h"
-#include "../inc/parser.h"
+#include "minishell.h"
 
-/*
- ** @brief: Resizes the expanded string buffer based on the inserted value.
- ** @param: expanded - current expanded string, 
- **          new_size - pointer to buffer size, 
- **          value - string to add.
- ** @return: pointer to resized expanded string.
+/**
+ * @brief Appends a regular (non-variable) character to the expanded string.
  */
-static char *resize_expanded(char *expanded, size_t *new_size, const char *value)
+static char	*append_char(char *expanded, char c, size_t *new_size)
 {
-    char *temp;
-    char *old_expanded;
+	char	*temp;
 
-    old_expanded = expanded;
-    *new_size += ft_strlen(value);
-    temp = ft_realloc(expanded, *new_size + 1);
-    if (!temp)
-    {
-        if (old_expanded)
-            free(old_expanded);
-        return (NULL);
-    }
-    if (temp != old_expanded && old_expanded != NULL)
-        free(old_expanded);
-    return (temp);
+	temp = ft_realloc(expanded, *new_size + 2);
+	if (!temp)
+	{
+		free(expanded);
+		return (NULL);
+	}
+	expanded = temp;
+	expanded[*new_size] = c;
+	expanded[*new_size + 1] = '\0';
+	(*new_size)++;
+	return (expanded);
 }
 
-/*
- ** @brief: Appends a regular (non-variable) character to the expanded string.
- ** @param: input - source string, 
- **         index_ptr - current index pointer, 
- **         expanded - the built string,
- **         new_size - pointer to current size.
- ** @return: pointer to updated expanded string.
+/**
+ * @brief Expands an encountered variable and appends its value.
  */
-static char *regular_char(const char *input, size_t *index_ptr, char *expanded, size_t *new_size)
+static char	*append_expanded_var(char *expanded, size_t *n_size, const char *in,
+	size_t *idx, t_shell *shell)
 {
-    char *temp;
-    
-    temp = ft_realloc(expanded, *new_size + 2);
-    if (!temp)
-    {
-        free(expanded);
-        return (NULL);
-    }
-    expanded = temp;
-    expanded[*new_size] = input[*index_ptr];
-    expanded[*new_size + 1] = '\0';
-    (*new_size)++;
-    (*index_ptr)++;
-    return (expanded);
+	char	*value;
+	char	*temp;
+	char	*old_expanded;
+
+	(*idx)++;
+	value = extract_variable(in, idx, shell->envp, shell->exit_status);
+	if (!value)
+		return (expanded);
+	old_expanded = expanded;
+	*n_size += ft_strlen(value);
+	temp = ft_realloc(expanded, *n_size + 1);
+	if (!temp)
+	{
+		free(old_expanded);
+		free(value);
+		return (NULL);
+	}
+	expanded = temp;
+	ft_strlcat(expanded, value, *n_size + 1);
+	free(value);
+	return (expanded);
 }
 
-static char *need_expansion(const char *input, size_t *index_ptr, char *expanded, size_t *new_size, char **envp, int exit_status) // Added exit_status
+/**
+ * @brief Checks if the current character signals the start of a variable.
+ */
+static int	is_var_start(const char *input, size_t index)
 {
-    char *value;
+	char	next_char;
 
-    (*index_ptr)++;
-    value = extract_variable(input, index_ptr, envp, exit_status);
-    expanded = resize_expanded(expanded, new_size, value);
-    if (!expanded)
-    {
-        free(value);
-        return (NULL);
-    }
-    ft_strlcat(expanded, value, *new_size + 1);
-    free(value);
-    return (expanded);
+	if (input[index] != '$')
+		return (0);
+	next_char = input[index + 1];
+	if (ft_isalpha(next_char) || next_char == '_' || next_char == '?'
+		|| next_char == '$' || next_char == '{')
+		return (1);
+	return (0);
 }
 
-char *expand_variables(const char *input, char **envp, int exit_status)
+/**
+ * @brief Expands all variables in a string (e.g., $VAR or ${VAR}).
+ */
+char	*expand_variables(const char *input, char **envp, int exit_status)
 {
-    char    *expanded;
-    size_t  new_size;
-    size_t  index_ptr;
+	char	*expanded;
+	size_t	new_size;
+	size_t	i;
+	t_shell	dummy_shell;
 
-    if (!input)
-        return (NULL);
-    new_size = 0;
-    index_ptr = 0;
-    expanded = malloc(ft_strlen(input) + 1);
-    if (!expanded)
-        return (NULL);
-    expanded[0] = '\0';
-    while (input[index_ptr])
-    {
-        if (input[index_ptr] == '$' && input[index_ptr + 1] != '\0' &&
-            (ft_isalpha(input[index_ptr + 1]) || input[index_ptr + 1] == '_' ||
-             input[index_ptr + 1] == '?' || input[index_ptr + 1] == '$' ||
-             input[index_ptr + 1] == '{')) // Check for valid start of var name
-            expanded = need_expansion(input, &index_ptr, expanded, &new_size, envp, exit_status); // Pass exit_status
-        else if (input[index_ptr] == '$' && input[index_ptr + 1] == '\0') // Case: "echo $"
-            expanded = regular_char(input, &index_ptr, expanded, &new_size); // Treat as regular char '$'
-        else if (input[index_ptr] == '$' && ft_isspace(input[index_ptr + 1])) // Case: "echo $ "
-            expanded = regular_char(input, &index_ptr, expanded, &new_size);
-        else
-            expanded = regular_char(input, &index_ptr, expanded, &new_size);
-        if (!expanded)
-            return (NULL);  
-    }
-    return (expanded);
+	if (!input)
+		return (NULL);
+	new_size = 0;
+	i = 0;
+	dummy_shell.envp = envp;
+	dummy_shell.exit_status = exit_status;
+	expanded = ft_strdup("");
+	if (!expanded)
+		return (NULL);
+	while (input[i])
+	{
+		if (is_var_start(input, i))
+			expanded = append_expanded_var(expanded, &new_size, input, &i, &dummy_shell);
+		else
+			expanded = append_char(expanded, input[i++], &new_size);
+		if (!expanded)
+			return (NULL);
+	}
+	return (expanded);
 }
 
-void expand_token_list(t_token *tokens, t_shell *shell)
+/**
+ * @brief Iterates through a token list and expands variables in WORD tokens.
+ */
+void	expand_token_list(t_token *tokens, t_shell *shell)
 {
-    while (tokens)
-    {
-        if (tokens->type == TOKEN_SINGLE_QUOTED)
-        {
-            tokens = tokens->next;
-            continue;
-        }
-        char *expanded = expand_variables(tokens->value, shell->envp, shell->exit_status);
-        if (expanded)
-        {
-            free(tokens->value);
-            tokens->value = expanded;
-        }
-        tokens = tokens->next;
-    }
+	char	*expanded_value;
+
+	while (tokens)
+	{
+		if (tokens->type != TOKEN_SINGLE_QUOTED)
+		{
+			expanded_value = expand_variables(tokens->value, shell->envp,
+					shell->exit_status);
+			if (expanded_value)
+			{
+				free(tokens->value);
+				tokens->value = expanded_value;
+			}
+		}
+		tokens = tokens->next;
+	}
 }
