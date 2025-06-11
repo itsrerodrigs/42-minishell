@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipe.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 14:39:44 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/09 17:54:59 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/11 09:42:48 by marieli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,30 +16,6 @@
 #include "builtins.h"
 
 extern volatile sig_atomic_t g_child_running;
-
-/*
- * @brief Creates a pipe if needed and forks a new process.
- * @param pipefd Array of two integers for pipe file descriptors.
- * @param prev_fd Pointer to previous read end of pipe.
- * @param is_pipe Flag indicating if the current command is piped.
- * @return PID of the forked process, or -1 on error.
- */
-// static pid_t	fork_and_pipe(int pipefd[2], int *prev_fd, int is_pipe)
-// {
-// 	pid_t	pid;
-
-// 	(void)prev_fd;
-// 	if (is_pipe)
-// 		if (pipe(pipefd) == -1)
-// 		{
-// 			perror("pipe");
-// 			return (-1);
-// 		}
-// 	pid = fork();
-// 	if (pid < 0)
-// 		perror("fork");
-// 	return (pid);
-// }
 
 /*
  * @brief Sets up input/output redirections for the child process.
@@ -194,32 +170,6 @@ static void exec_pipe_loop(t_shell *shell, t_command *first_cmd,
 
     while (current_cmd)
     {
-        if (current_cmd->redirs)
-        {
-            t_redirect *redir_node = current_cmd->redirs;
-            while (redir_node)
-            {
-                if (redir_node->type == REDIR_HEREDOC)
-                {
-                    current_cmd->heredoc_pipe_read_fd = process_heredoc(redir_node->filename);
-                    if (current_cmd->heredoc_pipe_read_fd == -1)
-                    {
-                        shell->exit_status = 1;
-                        if (prev_pipe_read_fd != 1)
-                            close(prev_pipe_read_fd);
-                        if (pipe_fds[0] != -1)
-                        {
-                            close(pipe_fds[0]);
-                            close(pipe_fds[1]);
-                        }
-                        return ;
-                    }
-                }
-                redir_node = redir_node->next;
-            }
-        } else {
-            current_cmd->heredoc_pipe_read_fd = -1;
-        }
         if (is_builtin_parent_executable(current_cmd))
         {
             int saved_stdin = dup(STDIN_FILENO);

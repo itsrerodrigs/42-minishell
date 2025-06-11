@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 16:04:57 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/09 16:16:19 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/11 09:35:23 by marieli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ t_command *init_command(void)
     cmd->redirs = NULL;
     cmd->next = NULL;
     cmd->is_pipe = 0;
+    cmd->heredoc_pipe_read_fd = -1; // Initialize to -1 to indicate no pipe is set
     return (cmd);
      
 }
