@@ -40,23 +40,112 @@ static char	*display_prompt(void)
 	return (ft_strdup("minishell:~$ "));
 }
 
-/**
- * @brief Reads user input from stdin using the readline library.
- */
-char	*read_input(void)
-{
-	char *buf;
-	char *prompt;
+// /**
+//  * @brief Reads user input from stdin using the readline library.
+//  */
+// char	*read_input(void)
+// {
+// 	char *buf;
+// 	char *prompt;
 
-	prompt = display_prompt();
-	buf = readline(prompt);
-	free(prompt);
+// 	prompt = display_prompt();
+// 	buf = readline(prompt);
+// 	free(prompt);
+// 	if (!buf)
+// 	{
+// 		// p(RED "[EOF]: Exiting minishell.\n" RST);
+// 		return (NULL);
+// 	}
+// 	if (*buf)
+// 		add_history(buf);
+// 	return (buf);
+// }
+
+/**
+ * @brief Reads a line of input, using readline for interactive mode.
+ */
+static char	*read_a_line(t_shell *shell)
+{
+	char	*buf;
+	char	*prompt;
+
+	if (shell->shell_is_interactive)
+	{
+		prompt = display_prompt();
+		buf = readline(prompt);
+		free(prompt);
+		if (buf && *buf)
+			add_history(buf);
+		return (buf);
+	}
+	buf = get_next_line(STDIN_FILENO);
+	if (buf && ft_strlen(buf) > 0 && buf[ft_strlen(buf) - 1] == '\n')
+		buf[ft_strlen(buf) - 1] = '\0';
+	return (buf);
+}
+
+/**
+ * @brief Reads user input from stdin.
+ */
+char	*read_input(t_shell *shell)
+{
+	char	*buf;
+
+	buf = read_a_line(shell);
 	if (!buf)
 	{
-		p(RED "[EOF]: Exiting minishell.\n" RST);
+		if (shell->shell_is_interactive)
+			ft_putendl_fd("exit", STDOUT_FILENO);
 		return (NULL);
 	}
-	if (*buf)
-		add_history(buf);
 	return (buf);
+}
+
+void	init_shell_job_control(t_shell *shell)
+{
+	shell->shell_is_interactive = isatty(STDIN_FILENO);
+	if (shell->shell_is_interactive)
+	{
+		shell->shell_terminal_fd = STDIN_FILENO;
+		while (tcgetpgrp(shell->shell_terminal_fd) != (shell->shell_pgid = getpgrp()))
+			kill(-shell->shell_pgid, SIGTTIN);
+		setpgid(0, 0);
+		shell->shell_pgid = getpgrp();
+		set_foreground_process(shell->shell_terminal_fd, shell->shell_pgid);
+		signal(SIGTTIN, SIG_IGN);
+		signal(SIGTTOU, SIG_IGN);
+	}
+}
+
+void	init_shell_struct(t_shell *shell)
+{
+	shell->envp = NULL;
+	shell->exit_status = 0;
+	shell->current_cmd = NULL;
+}
+
+void	s_process_loop(t_shell *shell)
+{
+	char *input;
+	t_token *tokens;
+	t_command *commands;
+
+	while (1)
+	{
+		input = read_input(shell);
+		if (!input)
+			break ;
+		tokens = get_tokens(input, shell);
+		if (!tokens)
+		{
+			free(input);
+			continue ;
+		}
+		commands = parse_tokens(tokens, shell);
+		shell->current_cmd = commands;
+		ft_exec(shell);
+		free_tokens(tokens);
+		free_commands(commands);
+		free(input);
+	}
 }

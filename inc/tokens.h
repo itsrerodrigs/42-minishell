@@ -31,7 +31,10 @@ typedef struct s_token
 
 
 /* input.c */
-char *read_input(void);
+void	s_process_loop(t_shell *shell);
+void	init_shell_job_control(t_shell *shell);
+void	init_shell_struct(t_shell *shell);
+char	*read_input(t_shell *shell);
 
 /* tokenizer.c */
 t_token		*ft_get_next_token(char *str, const char *d, char **s, t_shell *sh);
