@@ -40,27 +40,6 @@ static char	*display_prompt(void)
 	return (ft_strdup("minishell:~$ "));
 }
 
-// /**
-//  * @brief Reads user input from stdin using the readline library.
-//  */
-// char	*read_input(void)
-// {
-// 	char *buf;
-// 	char *prompt;
-
-// 	prompt = display_prompt();
-// 	buf = readline(prompt);
-// 	free(prompt);
-// 	if (!buf)
-// 	{
-// 		// p(RED "[EOF]: Exiting minishell.\n" RST);
-// 		return (NULL);
-// 	}
-// 	if (*buf)
-// 		add_history(buf);
-// 	return (buf);
-// }
-
 /**
  * @brief Reads a line of input, using readline for interactive mode.
  */

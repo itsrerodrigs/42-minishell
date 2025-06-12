@@ -43,27 +43,49 @@ static int	process_all_heredocs(t_command *commands, t_shell *shell)
 	return (0);
 }
 
+/**
+ * @brief Executes a single, non-piped command. This can be a builtin or
+ * an external program. This function is blocking and waits for the command
+ * to complete.
+ * @param shell The main shell struct.
+ * @param cmd The single command to execute.
+ */
+static void	execute_simple_command(t_shell *shell, t_command *cmd)
+{
+	shell->current_cmd = cmd;
+
+	if (cmd->args && cmd->args[0] && ft_strcmp(cmd->args[0], "exit") == 0)
+		builtin_exit(shell, cmd->args);
+	else if (!exec_builtin(shell))
+		exec_external(shell, cmd->args);
+}
 
 /**
- * @brief Executes the current command or pipeline from the shell state.
+ * @brief The main execution controller. It iterates through the command list
+ * and decides whether to execute commands sequentially (for ';') or
+ * concurrently in a pipeline (for '|').
  */
 void	ft_exec(t_shell *shell)
 {
-	char **args;
+	t_command	*cmd;
 
 	if (!shell || !shell->current_cmd)
 		return ;
 	if (process_all_heredocs(shell->current_cmd, shell) != 0)
 		return ;
-	args = shell->current_cmd->args;
-	if (!args || !args[0])
-		return ;
-	if (ft_strcmp(args[0], "exit") == 0)
-		builtin_exit(shell, args);
-	if (shell->current_cmd->is_pipe || shell->current_cmd->next)
-		exec_pipeline(shell, shell->current_cmd);
-	else if (exec_builtin(shell))
-		return ;
-	else
-		exec_external(shell, args);
+
+	cmd = shell->current_cmd;
+	while (cmd)
+	{
+		if (cmd->is_pipe)
+		{
+			exec_pipeline(shell, cmd);
+			while (cmd && cmd->is_pipe)
+				cmd = cmd->next;
+		}
+		else
+			execute_simple_command(shell, cmd);
+		if (cmd)
+			cmd = cmd->next;
+	}
 }

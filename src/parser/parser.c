@@ -6,7 +6,7 @@
 /*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 16:12:34 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/12 13:43:37 by marieli          ###   ########.fr       */
+/*   Updated: 2025/06/12 14:33:34 by marieli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 #include "parser.h"
 #include "tokens.h"
 
-// Helper to check if a string contains only digits.
 static int	is_all_digits(const char *str)
 {
 	if (!str || !*str)
@@ -29,7 +28,6 @@ static int	is_all_digits(const char *str)
 	return (1);
 }
 
-// Helper to get the redirection type from a token.
 static t_redir_type	get_redir_type(t_token *token)
 {
 	if (token->type == TOKEN_REDIR_IN)
@@ -55,13 +53,12 @@ t_command	*parse_tokens(t_token *tokens, t_shell *shell)
 	tok = tokens;
 	while (tok)
 	{
-		// Case 1: Handle redirections, including those with explicit FDs like 2>
 		if (is_token_redir(tok) || (tok->next && is_token_redir(tok->next) && is_all_digits(tok->value)))
 		{
 			t_token *redir_op = tok;
 			int source_fd = -1;
 
-			if (tok->type == TOKEN_WORD) // This means we have an FD, e.g., "2"
+			if (tok->type == TOKEN_WORD)
 			{
 				source_fd = ft_atoi(tok->value);
 				redir_op = tok->next;
@@ -77,17 +74,17 @@ t_command	*parse_tokens(t_token *tokens, t_shell *shell)
 				return (free_commands(cmd_list), NULL);
 			tok = filename->next;
 		}
-		// Case 2: Handle pipes
-		else if (tok->type == TOKEN_PIPE)
+		else if (tok->type == TOKEN_PIPE || tok->type == TOKEN_SEMICOLON)
 		{
-			current_cmd->is_pipe = 1;
+			if (tok->type == TOKEN_PIPE)
+				current_cmd->is_pipe = 1;
 			current_cmd = new_command(current_cmd);
+			if (!current_cmd)
+				return(free_commands(cmd_list), NULL);
 			tok = tok->next;
 		}
-		// Case 3: Handle commands, arguments, and variable assignments
 		else if (is_token_cmd(tok))
 		{
-			// This call correctly handles assignments vs. commands
 			handle_word_token(current_cmd, tok, shell);
 			tok = tok->next;
 		}
@@ -97,7 +94,6 @@ t_command	*parse_tokens(t_token *tokens, t_shell *shell)
 			return (free_commands(cmd_list), NULL);
 		}
 	}
-	// If the line was empty or only contained assignments, don't execute.
 	if (cmd_list->cmd == NULL && cmd_list->redirs == NULL)
 		return (free_commands(cmd_list), NULL);
 	return (cmd_list);
