@@ -3,19 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   redirs.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 14:49:31 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/11 15:14:20 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/12 13:42:31 by marieli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /**
- * @brief Opens a file for input redirection and dups it to STDIN.
+ * @brief Opens a file for input redirection and dups it to the specified
+ * source_fd.
  */
-static int	apply_input_redir(char *filename)
+static int	apply_input_redir(int source_fd, char *filename)
 {
 	int	fd;
 
@@ -25,9 +26,9 @@ static int	apply_input_redir(char *filename)
 		perror(filename);
 		return (1);
 	}
-	if (dup2(fd, STDIN_FILENO) == -1)
+	if (dup2(fd, source_fd) == -1)
 	{
-		perror("dup2 error (input STDIN)");
+		perror("dup2 error (input)");
 		close(fd);
 		return (1);
 	}
@@ -36,9 +37,10 @@ static int	apply_input_redir(char *filename)
 }
 
 /**
- * @brief Opens a file for output/append redirection and dups it to STDOUT.
+ * @brief Opens a file for output/append redirection and dups it to the
+ * specified source_fd.
  */
-static int	apply_output_redir(char *filename, int oflag)
+static int	apply_output_redir(int source_fd, char *filename, int oflag)
 {
 	int	fd;
 
@@ -48,9 +50,9 @@ static int	apply_output_redir(char *filename, int oflag)
 		perror(filename);
 		return (1);
 	}
-	if (dup2(fd, STDOUT_FILENO) == -1)
+	if (dup2(fd, source_fd) == -1)
 	{
-		perror("dup2 error (output STDOUT)");
+		perror("dup2 error (output)");
 		close(fd);
 		return (1);
 	}
@@ -59,7 +61,7 @@ static int	apply_output_redir(char *filename, int oflag)
 }
 
 /**
- * @brief Dups the heredoc pipe to STDIN.
+ * @brief Dups the heredoc pipe to STDIN. This function is unchanged.
  */
 static int	apply_heredoc_redir(t_command *cmd)
 {
@@ -85,18 +87,15 @@ static int	apply_heredoc_redir(t_command *cmd)
  */
 static int	apply_one_redir(t_redirect *redir, t_command *cmd)
 {
-	int	status;
-
-	status = 0;
 	if (redir->type == REDIR_IN)
-		status = apply_input_redir(redir->filename);
+		return (apply_input_redir(redir->source_fd, redir->filename));
 	else if (redir->type == REDIR_OUT)
-		status = apply_output_redir(redir->filename, O_TRUNC);
+		return (apply_output_redir(redir->source_fd, redir->filename, O_TRUNC));
 	else if (redir->type == REDIR_APPEND)
-		status = apply_output_redir(redir->filename, O_APPEND);
+		return (apply_output_redir(redir->source_fd, redir->filename, O_APPEND));
 	else if (redir->type == REDIR_HEREDOC)
-		status = apply_heredoc_redir(cmd);
-	return (status);
+		return (apply_heredoc_redir(cmd)); 
+	return (0);
 }
 
 /**
