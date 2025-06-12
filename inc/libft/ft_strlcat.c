@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strlcat.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 11:30:48 by marielidias       #+#    #+#             */
-/*   Updated: 2025/06/09 19:42:29 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/12 10:56:24 by marieli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-// Common ft_strlcat bug example leading to 'est'
 size_t	ft_strlcat(char *dst, const char *src, size_t size)
 {
 	size_t	dlen;

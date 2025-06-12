@@ -3,106 +3,70 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 17:15:11 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/11 16:02:39 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/12 11:01:52 by marieli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-
-
-/* ************************************************************************** */
-/* */
-/* :::      ::::::::   */
-/* unset.c                                            :+:      :+:    :+:   */
-/* +:+ +:+         +:+     */
-/* By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
-/*<y_bin_115>   +#+           */
-/* Created: 2025/05/02 17:15:11 by renrodri          #+#    #+#             */
-/* Updated: 2025/06/11 16:00:00 by marieli          ###   ########.fr       */
-/* */
-/* ************************************************************************** */
 
 #include "minishell.h"
+#include "builtins.h"
 
 /**
- * @brief Copies variables to a new env array, skipping the one to be unset.
+ * @brief Checks if an environment variable's key matches any of the arguments
+ * provided to the unset command.
+ * @param env_var The environment variable string (e.g., "USER=marieli").
+ * @param args_to_unset The arguments array from the unset command, starting
+ * with "unset".
+ * @return 1 if a match is found (should be unset), 0 otherwise.
  */
-static char	**build_new_env(char **old, char **new_env, const char *key)
+static int	should_be_unset(const char *env_var, char **args_to_unset)
 {
-	int	i;
-	int	j;
-	int	key_len;
+	size_t	key_len;
+	int		i;
 
-	i = 0;
-	j = 0;
-	key_len = ft_strlen(key);
-	while (old[i])
+	key_len = 0;
+	while (env_var[key_len] && env_var[key_len] != '=')
+		key_len++;
+	i = 1;
+	while (args_to_unset[i])
 	{
-		if (!(ft_strncmp(old[i], key, key_len) == 0 && old[i][key_len] == '='))
+		if (ft_strlen(args_to_unset[i]) == key_len
+			&& ft_strncmp(env_var, args_to_unset[i], key_len) == 0)
 		{
-			new_env[j] = ft_strdup(old[i]);
-			if (!new_env[j])
-			{
-				free_envp(new_env);
-				perror("strdup");
-				return (NULL);
-			}
-			j++;
+			return (1);
 		}
 		i++;
 	}
-	new_env[j] = NULL;
-	return (new_env);
+	return (0);
 }
 
 /**
- * @brief Removes an environment variable.
- */
-static void	remove_env_var(char ***envp_ptr, const char *key)
-{
-	char	**old_envp;
-	char	**new_envp;
-	int		count;
-	int		i;
-
-	old_envp = *envp_ptr;
-	count = 0;
-	i = 0;
-	while (old_envp[i])
-	{
-		if (!(ft_strncmp(old_envp[i], key, ft_strlen(key)) == 0 && \
-			old_envp[i][ft_strlen(key)] == '='))
-			count++;
-		i++;
-	}
-	new_envp = (char **)ft_calloc(count + 1, sizeof(char *));
-	if (!new_envp)
-	{
-		perror("malloc");
-		return ;
-	}
-	new_envp = build_new_env(old_envp, new_envp, key);
-	free_envp(old_envp);
-	*envp_ptr = new_envp;
-}
-
-/**
- * @brief Removes one or more environment variables.
+ * @brief Removes one or more environment variables in an efficient,
+ * single-pass operation.
  */
 int	builtin_unset(t_shell *shell, char **args)
 {
-	int	i;
+	int	read_idx;
+	int	write_idx;
 
-	if (!shell || !shell->envp)
-		return (1);
-	i = 1;
-	while (args[i])
+	if (!shell || !shell->envp || !args[1])
+		return (0);
+	read_idx = 0;
+	write_idx = 0;
+	while (shell->envp[read_idx])
 	{
-		remove_env_var(&shell->envp, args[i]);
-		i++;
+		if (should_be_unset(shell->envp[read_idx], args))
+			free(shell->envp[read_idx]);
+		else
+		{
+			shell->envp[write_idx] = shell->envp[read_idx];
+			write_idx++;
+		}
+		read_idx++;
 	}
+	shell->envp[write_idx] = NULL;
 	return (0);
 }
