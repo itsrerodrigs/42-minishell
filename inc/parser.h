@@ -6,7 +6,7 @@
 /*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 23:03:48 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/12 13:36:05 by marieli          ###   ########.fr       */
+/*   Updated: 2025/06/12 14:33:03 by marieli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,6 @@ t_command	*parse_tokens(t_token *tokens, t_shell *shell);
 /* parser_utils.c */
 t_command	*init_command(void);
 int			add_arg(t_command *cmd, char *arg);
-// int	add_redir(t_command *cmd, t_redir_type type, char *fname, int expand)
-// int	add_redir(t_command *cmd, int source_fd, t_redir_type type, char *fname, int expand)
 int	add_redir(t_command *cmd, int source_fd, t_redir_type type, char *fname, int expand);
 int			handle_cmd_or_arg(t_command *cmd, t_token *token);
 t_command	*new_command(t_command *current);
@@ -83,6 +81,7 @@ void		expand_token_list(t_token *tokens, t_shell *shell);
 /* free_commands.c */
 void		free_commands(t_command *cmd);
 void		free_redirs(t_redirect *redir);
+void        print_commands(t_command *cmd);
 
  
 #endif

@@ -6,7 +6,7 @@
 /*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 18:48:50 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/11 11:07:35 by marieli          ###   ########.fr       */
+/*   Updated: 2025/06/12 14:35:00 by marieli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,26 +63,34 @@ static t_token_type	get_multichar_op(const char *op_start, size_t *len)
 }
 
 /**
- * @brief Extracts an operator token (e.g., |, >>, <) from the input string.
+ * @brief Identifies single-character operators like '|', '<', '>', or ';'.
+ * @param c The character to check.
+ * @return The corresponding token type or TOKEN_WORD if no match.
  */
+static t_token_type	get_single_char_op_type(char c)
+{
+	if (c == '|')
+		return (TOKEN_PIPE);
+	if (c == '<')
+		return (TOKEN_REDIR_IN);
+	if (c == '>')
+		return (TOKEN_REDIR_OUT);
+	if (c == ';')
+		return (TOKEN_SEMICOLON);
+	return (TOKEN_WORD);
+}
+
 t_token	*extract_operator_token(char **saveptr)
 {
 	size_t			len;
 	t_token_type	type;
 	char			*op_value;
-	char			op_char;
 
 	type = get_multichar_op(*saveptr, &len);
 	if (type == TOKEN_WORD)
 	{
-		op_char = **saveptr;
-		if (op_char == '|')
-			type = TOKEN_PIPE;
-		else if (op_char == '<')
-			type = TOKEN_REDIR_IN;
-		else if (op_char == '>')
-			type = TOKEN_REDIR_OUT;
-		else
+		type = get_single_char_op_type(**saveptr);
+		if (type == TOKEN_WORD)
 			return (NULL);
 		len = 1;
 	}
@@ -90,12 +98,11 @@ t_token	*extract_operator_token(char **saveptr)
 	if (!op_value)
 		return (NULL);
 	*saveptr += len;
-	return (create_token(op_value, type));
+	return (create_token_with_fd(op_value, type, -1));
 }
 
 /**
-
-	* @brief Builds a token by processing one segment at a time (quoted or unquoted).
+ * @brief Builds a token by processing one segment at a time (quoted or unquoted).
  */
 static int	build_token_segment(char **builder, char **pos, const char *delim)
 {

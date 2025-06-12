@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 15:56:49 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/11 15:57:55 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/12 14:02:32 by marieli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,12 @@ int	builtin_export(t_shell *shell, char **args)
 		while (args[i])
 		{
 			if (add_or_update_env(&shell->envp, args[i]) != 0)
+			{
+				ft_putstr_fd("minishell: export: `", STDERR_FILENO);
+				ft_putstr_fd(args[i], STDERR_FILENO);
+				ft_putendl_fd("': not a valid identifier", STDERR_FILENO);
 				return_status = 1;
+			}
 			i++;
 		}
 	}
