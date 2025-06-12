@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 16:34:22 by mmariano          #+#    #+#             */
-/*   Updated: 2025/06/11 16:43:34 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/12 11:44:52 by marieli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
 
 /**
  * @brief Checks if an argument string contains only digits (and an optional sign).

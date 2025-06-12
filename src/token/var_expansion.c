@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "tokens.h"
 
 /**
  * @brief Appends a regular (non-variable) character to the expanded string.
@@ -76,9 +77,28 @@ static int	is_var_start(const char *input, size_t index)
 		return (1);
 	return (0);
 }
+/**
+ * @brief main loop of expand_variable.
+ */
+static char	*process_expansion_segment(char *expanded, size_t *n_size,
+	const char *in, size_t *i, t_shell *shell)
+{
+	if (in[*i] == '\\' && in[*i + 1] == '$')
+	{
+		expanded = append_char(expanded, '$', n_size);
+		*i += 2;
+	}
+	else if (is_var_start(in, *i))
+		expanded = append_expanded_var(expanded, n_size, in, i, shell);
+	else
+		expanded = append_char(expanded, in[(*i)++], n_size);
+	return (expanded);
+}
 
 /**
  * @brief Expands all variables in a string (e.g., $VAR or ${VAR}).
+ * This version handles the \$ escape sequence specifically and treats
+ * other backslashes as literal characters.
  */
 char	*expand_variables(const char *input, char **envp, int exit_status)
 {
@@ -98,10 +118,8 @@ char	*expand_variables(const char *input, char **envp, int exit_status)
 		return (NULL);
 	while (input[i])
 	{
-		if (is_var_start(input, i))
-			expanded = append_expanded_var(expanded, &new_size, input, &i, &dummy_shell);
-		else
-			expanded = append_char(expanded, input[i++], &new_size);
+		expanded = process_expansion_segment(expanded, &new_size, input, &i,
+				&dummy_shell);
 		if (!expanded)
 			return (NULL);
 	}
