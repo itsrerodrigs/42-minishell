@@ -33,6 +33,7 @@ int	main(int argc, char **argv, char **envp)
 	init_shell_job_control(&shell);
 	p(C "Initializing Minishell..\n" RST);
 	s_process_loop(&shell);
+	rl_clear_history();
 	free_envp(shell.envp);
 
 	return (EXIT_SUCCESS);

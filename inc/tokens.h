@@ -75,10 +75,6 @@ t_token		*get_tokens(char *input, t_shell *shell);
 /* token_utils.c */
 t_token		*create_token_with_fd(char *value, t_token_type type, int fd_val);
 
-/* quotes.c */
-t_token		*handle_quotes(char **saveptr, char quote_char, t_shell *shell);
-char		*extract_quoted(char **saveptr, char quote_char);
-
 /* var_expansion.c */
 char        *extract_variable(const char *input, size_t *index_ptr, char **envp);
 char		*expand_variables(const char *input, char **envp, int exit_status);

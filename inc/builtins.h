@@ -6,7 +6,7 @@
 /*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 19:49:10 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/12 12:02:18 by marieli          ###   ########.fr       */
+/*   Updated: 2025/06/12 18:01:49 by marieli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,13 @@
 
 typedef struct s_shell 
 {
-        t_command *current_cmd; 
-        char **envp;
-        int exit_status;
-        pid_t shell_pgid;
-        int shell_is_interactive;
-        int shell_terminal_fd;
+        t_command       *current_cmd; 
+        char            **envp;
+        int             exit_status;
+        pid_t           shell_pgid;
+        int             shell_is_interactive;
+        int             shell_terminal_fd;
+        bool		should_exit;
 }       t_shell;
 
 typedef int (*builtin_func)(t_shell *shell, char **args);

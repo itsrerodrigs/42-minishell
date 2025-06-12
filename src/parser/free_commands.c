@@ -35,13 +35,24 @@ void	free_redirs(t_redirect *redir)
  */
 void	free_commands(t_command *cmd)
 {
-	t_command *tmp;
+	t_command	*tmp;
+	int			i;
 
 	while (cmd)
 	{
 		tmp = cmd->next;
+		if (cmd->cmd)
+			free(cmd->cmd);
 		if (cmd->args)
+		{
+			i = 0;
+			while (cmd->args[i])
+			{
+				free(cmd->args[i]);
+				i++;
+			}
 			free(cmd->args);
+		}
 		if (cmd->redirs)
 			free_redirs(cmd->redirs);
 		free(cmd);

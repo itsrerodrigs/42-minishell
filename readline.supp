@@ -1,0 +1,27 @@
+{
+   <readline_leaks>
+   Memcheck:Leak
+   fun:readline
+   ...
+}
+{
+   <add_history_leaks>
+   Memcheck:Leak
+   fun:add_history
+   ...
+}
+{
+   <readline_malloc_hook>
+   Memcheck:Leak
+   fun:malloc
+   fun:_rl_malloc
+   ...
+}
+{
+   <history_base_malloc>
+   Memcheck:Leak
+   fun:malloc
+   fun:xmalloc
+   fun:history_base_create
+   ...
+}

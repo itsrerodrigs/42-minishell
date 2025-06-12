@@ -137,14 +137,15 @@ t_token	*handle_quotes(char **saveptr, char quote_char, t_shell *shell)
 	{
 		expanded = expand_variables(start, shell->envp, shell->exit_status);
 		if (!expanded)
-		{
-			ft_putendl_fd("Error: expansion failed", STDERR_FILENO);
 			return (NULL);
-		}
 		new_token = create_token(expanded, TOKEN_WORD);
 		free(start);
+		free(expanded); 
 	}
 	else
+	{
 		new_token = create_token(start, TOKEN_SINGLE_QUOTED);
+		free(start);
+	}
 	return (new_token);
 }

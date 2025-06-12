@@ -101,6 +101,7 @@ void	init_shell_struct(t_shell *shell)
 	shell->envp = NULL;
 	shell->exit_status = 0;
 	shell->current_cmd = NULL;
+	shell->should_exit = false;
 }
 
 void	s_process_loop(t_shell *shell)
@@ -122,9 +123,12 @@ void	s_process_loop(t_shell *shell)
 		}
 		commands = parse_tokens(tokens, shell);
 		shell->current_cmd = commands;
-		ft_exec(shell);
+		if (commands)
+			ft_exec(shell);
 		free_tokens(tokens);
 		free_commands(commands);
 		free(input);
+		if (shell->should_exit)
+			break;
 	}
 }
