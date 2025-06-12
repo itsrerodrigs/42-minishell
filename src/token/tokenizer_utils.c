@@ -70,7 +70,43 @@ int	is_token_operator(char c)
 }
 
 /**
+ * @brief Creates a new string from a segment, correctly handling and
+ * removing backslash escape characters.
+ * @param start The beginning of the raw string segment.
+ * @param len The length of the raw string segment.
+ * @return A new, malloc'd string with escapes resolved.
+ */
+static char *build_unescaped_word(const char *start, size_t len)
+{
+	char	*result;
+	size_t	i;
+	size_t	j;
+
+	result = malloc(len + 1);
+	if (!result)
+		return (NULL);
+	i = 0;
+	j = 0;
+	while (i < len)
+	{
+		if (start[i] == '\\' && i + 1 < len)
+		{
+			result[j++] = start[i + 1];
+			i += 2;
+		}
+		else
+		{
+			result[j++] = start[i++];
+		}
+	}
+	result[j] = '\0';
+	return (result);
+}
+
+/**
  * @brief Processes an unquoted segment, appending it to the builder.
+ * This version correctly handles backslash escapes, ensuring that characters
+ * like spaces can be included in a token if they are escaped.
  */
 int	process_unquoted_segment(char **builder, char **pos, const char *delim)
 {
@@ -80,17 +116,29 @@ int	process_unquoted_segment(char **builder, char **pos, const char *delim)
 
 	start = *pos;
 	end = *pos;
-	while (*end && !ft_strchr(delim, *end) && *end != '\'' && *end != '"'
-		&& !is_token_operator(*end))
+	while (*end)
 	{
+		// If a backslash is found, skip it and the character that follows
+		if (*end == '\\' && *(end + 1))
+		{
+			end += 2;
+			continue ;
+		}
+		// Stop at delimiters, quotes, or operators
+		if (ft_strchr(delim, *end) || *end == '\'' || *end == '"'
+			|| is_token_operator(*end))
+		{
+			break ;
+		}
 		end++;
 	}
 	if (end > start)
 	{
-		part = ft_strndup(start, end - start);
+		// Create the final part by processing escapes
+		part = build_unescaped_word(start, end - start);
 		if (!part)
 		{
-			perror("minishell: ft_strndup failed");
+			perror("minishell: malloc failed in unquoted segment");
 			return (0);
 		}
 		if (!append_to_builder(builder, part))
@@ -99,3 +147,4 @@ int	process_unquoted_segment(char **builder, char **pos, const char *delim)
 	*pos = end;
 	return (1);
 }
+

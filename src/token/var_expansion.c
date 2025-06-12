@@ -44,7 +44,7 @@ static char	*append_expanded_var(char *expanded, size_t *n_size, const char *in,
 	char	*old_expanded;
 
 	(*idx)++;
-	value = extract_variable(in, idx, shell->envp, shell->exit_status);
+	value = extract_variable(in, idx, shell->envp);
 	if (!value)
 		return (expanded);
 	old_expanded = expanded;

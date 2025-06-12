@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 12:23:49 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/11 15:12:35 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/12 14:48:05 by marieli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,4 +70,37 @@ void free_split(char **arr)
         i++;
     }
     free(arr);
+}
+
+/**
+ * @brief Scans a command's arguments just before execution, replacing any
+ * exit status markers with the current exit status.
+ * @param cmd The command whose args will be scanned.
+ * @param shell The shell struct containing the current exit status.
+ */
+void	late_expand_exit_status(t_command *cmd, t_shell *shell)
+{
+	int		i;
+	char	*exit_str;
+	char	*arg;
+	char	*marker_pos;
+
+	if (!cmd || !cmd->args)
+		return ;
+	exit_str = ft_itoa(shell->exit_status);
+	if (!exit_str)
+		return ;
+	i = 0;
+	while (cmd->args[i])
+	{
+		arg = cmd->args[i];
+		marker_pos = ft_strnstr(arg, EXIT_STATUS_MARKER, ft_strlen(arg));
+		if (marker_pos)
+		{
+			free(cmd->args[i]);
+			cmd->args[i] = ft_strdup(exit_str);
+		}
+		i++;
+	}
+	free(exit_str);
 }

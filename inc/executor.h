@@ -6,7 +6,7 @@
 /*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 10:55:27 by marieli           #+#    #+#             */
-/*   Updated: 2025/06/12 10:55:28 by marieli          ###   ########.fr       */
+/*   Updated: 2025/06/12 14:51:43 by marieli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ int			process_heredoc(t_redirect *redir, t_shell *shell);
 char		*getenv_from_envp(char **envp, const char *name);
 char		*join_path(const char *dir, const char *cmd);
 void		free_split(char **arr);
+void	    late_expand_exit_status(t_command *cmd, t_shell *shell);
 
 /* Piping Utilities from exec_pipe_utils.c  */
 void		setup_child_redirections(t_command *cmd, int p_fd, int p[2], int is_p);

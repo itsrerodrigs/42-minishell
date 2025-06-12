@@ -10,106 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
-
-#include "minishell.h"
-
-
-// /**
-//  * @brief Iterates through the string to find the matching closing quote.
-//  */
-// static char	*find_closing_quote(char *start, char quote_char)
-// {
-// 	char *end;
-
-// 	end = start;
-// 	while (*end)
-// 	{
-// 		if (*end == '\\' && (*(end + 1) == quote_char))
-// 		{
-// 			end += 2;
-// 			continue ;
-// 		}
-// 		if (*end == quote_char)
-// 			break ;
-// 		end++;
-// 	}
-// 	return (end);
-// }
-
-// /**
-//  * @brief Extracts a quoted substring from the input.
-//  */
-// char	*extract_quoted(char **saveptr, char quote_char)
-// {
-// 	char *start_content;
-// 	char *end_content;
-// 	char *extracted_copy;
-// 	size_t len;
-
-// 	(*saveptr)++;
-// 	start_content = *saveptr;
-// 	end_content = find_closing_quote(start_content, quote_char);
-// 	if (*end_content == '\0')
-// 	{
-// 		ft_putendl_fd("minishell: error: unmatched quote", STDERR_FILENO);
-// 		*saveptr = NULL;
-// 		return (NULL);
-// 	}
-// 	len = end_content - start_content;
-// 	extracted_copy = ft_strndup(start_content, len);
-// 	if (!extracted_copy)
-// 	{
-// 		perror("minishell: ft_strndup failed");
-// 		*saveptr = NULL;
-// 		return (NULL);
-// 	}
-// 	*saveptr = end_content + 1;
-// 	return (extracted_copy);
-// }
-
-// /**
-//  * @brief Handles a quote token, creating a WORD or SINGLE_QUOTED token.
-//  */
-// t_token	*handle_quotes(char **saveptr, char quote_char, t_shell *shell)
-// {
-// 	char *start;
-// 	char *expanded;
-// 	t_token *new_token;
-
-// 	if (!saveptr || !*saveptr || **saveptr != quote_char)
-// 		return (NULL);
-// 	start = extract_quoted(saveptr, quote_char);
-// 	if (!start)
-// 		return (NULL);
-// 	if (quote_char == '"')
-// 	{
-// 		expanded = expand_variables(start, shell->envp, shell->exit_status);
-// 		if (!expanded)
-// 		{
-// 			p("Error: Memory allocation failed during variable expansion.\n");
-// 			return (NULL);
-// 		}
-// 		new_token = create_token(expanded, TOKEN_WORD);
-// 	}
-// 	else
-// 		new_token = create_token(start, TOKEN_SINGLE_QUOTED);
-// 	return (new_token);
-// }
-
-
-/* ************************************************************************** */
-/* */
-/* :::      ::::::::   */
-/* quotes.c                                           :+:      :+:    :+:   */
-/* +:+ +:+         +:+     */
-/* By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
-/* +#+#+#+#+#+   +#+           */
-/* Created: 2025/05/09 13:15:45 by mmariano          #+#    #+#             */
-/* Updated: 2025/06/11 17:30:00 by marieli          ###   ########.fr       */
-/* */
-/* ************************************************************************** */
-
 #include "minishell.h"
 
 /**
@@ -154,24 +54,38 @@ static char	*build_unescaped_string(const char *start, size_t len, char q_type)
 
 /**
  * @brief Finds the matching closing quote for a given opening quote.
+ *
+ * For single quotes, it finds the next single quote without any special
+ * character handling. For double quotes, it correctly handles backslash
+ * escapes for any character that follows.
  */
-static char	*find_closing_quote(char *start, char quote_char)
+static char *find_closing_quote(char *start, char quote_char)
 {
-	char	*end;
+	char *ptr;
 
-	end = start;
-	while (*end)
+	ptr = start;
+	while (*ptr)
 	{
-		if (*end == '\\' && (*(end + 1) == quote_char))
+		if (quote_char == '"' && *ptr == '\\')
 		{
-			end += 2;
-			continue ;
+			if (*(ptr + 1))
+				ptr += 2; // Skip the backslash and the escaped character
+			else
+				ptr++; // Dangling backslash at the end of the string
 		}
-		if (*end == quote_char)
-			break ;
-		end++;
+		// If we find the closing quote, return its position
+		else if (*ptr == quote_char)
+		{
+			return (ptr);
+		}
+		// Move to the next character
+		else
+		{
+			ptr++;
+		}
 	}
-	return (end);
+	// Return a pointer to the null terminator if the quote is not closed
+	return (ptr);
 }
 
 /**

@@ -6,7 +6,7 @@
 /*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 10:55:32 by marieli           #+#    #+#             */
-/*   Updated: 2025/06/12 10:55:33 by marieli          ###   ########.fr       */
+/*   Updated: 2025/06/12 14:47:20 by marieli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@
 #endif
 
 #define INITIAL_TOKENS_CAPACITY 16
+
+#define EXIT_STATUS_MARKER "\x1A\x01"
 
 extern volatile sig_atomic_t g_child_running;
 

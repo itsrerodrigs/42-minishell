@@ -17,6 +17,8 @@
 
 typedef struct s_shell t_shell;
 
+
+
 typedef enum e_token_type
 {
     TOKEN_WORD,
@@ -78,7 +80,7 @@ t_token		*handle_quotes(char **saveptr, char quote_char, t_shell *shell);
 char		*extract_quoted(char **saveptr, char quote_char);
 
 /* var_expansion.c */
-char        *extract_variable(const char *input, size_t *index_ptr, char **envp, int exit_status);
+char        *extract_variable(const char *input, size_t *index_ptr, char **envp);
 char		*expand_variables(const char *input, char **envp, int exit_status);
 void		expand_token_list(t_token *tokens, t_shell *shell);
 char	    *expand_tilde(const char *original_value, t_shell *shell);
