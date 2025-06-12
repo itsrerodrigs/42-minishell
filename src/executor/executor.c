@@ -58,6 +58,8 @@ void	ft_exec(t_shell *shell)
 	args = shell->current_cmd->args;
 	if (!args || !args[0])
 		return ;
+	if (ft_strcmp(args[0], "exit") == 0)
+		builtin_exit(shell, args);
 	if (shell->current_cmd->is_pipe || shell->current_cmd->next)
 		exec_pipeline(shell, shell->current_cmd);
 	else if (exec_builtin(shell))
