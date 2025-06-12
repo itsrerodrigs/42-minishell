@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parser_logic.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 14:47:31 by mmariano          #+#    #+#             */
-/*   Updated: 2025/06/11 18:25:47 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/12 13:30:36 by marieli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "minishell.h"
-
+#include "parser.h" 
 /**
  * @brief Checks if a token value represents a valid variable assignment name.
  */
@@ -59,32 +59,69 @@ int	handle_word_token(t_command *current_cmd, t_token *token, t_shell *shell)
 /**
  * @brief Parses a redirection token and its following filename.
  */
-int	parse_redirection(t_command *cmd, t_token **token_ptr)
+// int	parse_redirection(t_command *cmd, t_token **token_ptr)
+// {
+// 	t_token			*token;
+// 	t_token			*next;
+// 	t_redir_type	type;
+// 	int				expand;
+
+// 	token = *token_ptr;
+// 	next = token->next;
+// 	if (!next || !is_token_cmd(next))
+// 		return (syntax_error("newline"));
+// 	if (token->type == TOKEN_REDIR_IN)
+// 		type = REDIR_IN;
+// 	else if (token->type == TOKEN_REDIR_OUT)
+// 		type = REDIR_OUT;
+// 	else if (token->type == TOKEN_APPEND)
+// 		type = REDIR_APPEND;
+// 	else
+// 		type = REDIR_HEREDOC;
+// 	expand = (next->type == TOKEN_WORD);
+// 	if (!add_redir(cmd, type, next->value, expand))
+// 		return (0);
+// 	*token_ptr = next;
+// 	return (1);
+// }
+// src/parser/parser_logic.c
+
+t_token	*parse_redirection(t_command *cmd, t_token *token)
 {
-	t_token			*token;
-	t_token			*next;
+	t_token			*filename_token;
 	t_redir_type	type;
 	int				expand;
+	int				source_fd;
 
-	token = *token_ptr;
-	next = token->next;
-	if (!next || !is_token_cmd(next))
-		return (syntax_error("newline"));
+	filename_token = token->next;
+	if (!filename_token || !is_token_cmd(filename_token))
+	{
+		syntax_error("newline");
+		return (NULL); // Signal a syntax error
+	}
 	if (token->type == TOKEN_REDIR_IN)
 		type = REDIR_IN;
 	else if (token->type == TOKEN_REDIR_OUT)
 		type = REDIR_OUT;
 	else if (token->type == TOKEN_APPEND)
 		type = REDIR_APPEND;
-	else
+	else // TOKEN_HEREDOC
 		type = REDIR_HEREDOC;
-	expand = (next->type == TOKEN_WORD); // Expand if delimiter is an unquoted word
-	if (!add_redir(cmd, type, next->value, expand))
-		return (0);
-	*token_ptr = next;
-	return (1);
-}
+	
+	// Set the default source FD for simple redirections
+	if (type == REDIR_IN || type == REDIR_HEREDOC)
+		source_fd = STDIN_FILENO; // Default for < and << is 0
+	else
+		source_fd = STDOUT_FILENO; // Default for > and >> is 1
 
+	expand = (filename_token->type != TOKEN_SINGLE_QUOTED);
+	
+	// This is the corrected call with all 5 arguments
+	if (!add_redir(cmd, source_fd, type, filename_token->value, expand))
+		return (NULL); // Signal an allocation error
+		
+	return (filename_token->next);
+}
 
 /**
  * @brief Handles special tokens like pipes and semicolons.

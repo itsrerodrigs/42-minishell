@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 23:03:48 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/11 18:15:01 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/12 13:36:05 by marieli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,12 @@ typedef enum e_redir_type
 */
 typedef struct s_redirect
 {
-    t_redir_type        type;  
-    char                *filename; 
-    struct s_redirect   *next;
-    int		        expand_heredoc;
+        int                     source_fd;
+        t_redir_type            type;  
+        char                    *filename;
+        struct s_redirect       *next;
+        int     	        expand_heredoc;
+
 } t_redirect;
 
 /*
@@ -43,15 +45,15 @@ typedef struct s_redirect
 */
 typedef struct s_command
 {
-        char *cmd;  
-        char **args;      
-        t_redirect *redirs; 
-        struct s_command *next; 
-        int is_pipe;
-        int heredoc_pipe_read_fd;
-        int pipe_fds[2];
-        pid_t pid;
-        int prev_pipe_read_fd;
+        char                    *cmd;  
+        char                    **args;      
+        t_redirect              *redirs; 
+        struct s_command        *next; 
+        int                     is_pipe;
+        int                     heredoc_pipe_read_fd;
+        int                     pipe_fds[2];
+        pid_t                   pid;
+        int                     prev_pipe_read_fd;
 }       t_command;
 
 /* parser.c */
@@ -61,14 +63,16 @@ t_command	*parse_tokens(t_token *tokens, t_shell *shell);
 t_command	*init_command(void);
 int			add_arg(t_command *cmd, char *arg);
 // int	add_redir(t_command *cmd, t_redir_type type, char *fname, int expand)
-int	add_redir(t_command *cmd, t_redir_type type, char *fname, int expand);
+// int	add_redir(t_command *cmd, int source_fd, t_redir_type type, char *fname, int expand)
+int	add_redir(t_command *cmd, int source_fd, t_redir_type type, char *fname, int expand);
 int			handle_cmd_or_arg(t_command *cmd, t_token *token);
 t_command	*new_command(t_command *current);
 
 /* parser_logic.c */
 int			handle_word_token(t_command *cmd, t_token *tok, t_shell *shell);
-int			parse_redirection(t_command *cmd, t_token **token_ptr);
+// int			parse_redirection(t_command *cmd, t_token **token_ptr);
 int			handle_special_token(t_command **cmd, t_token *tok);
+t_token		*parse_redirection(t_command *cmd, t_token *token);
 
 /* parser_syntax.c */
 int			syntax_error(const char *token);
