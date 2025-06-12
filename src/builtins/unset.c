@@ -6,10 +6,9 @@
 /*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 17:15:11 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/12 11:01:52 by marieli          ###   ########.fr       */
+/*   Updated: 2025/06/12 11:05:35 by marieli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "minishell.h"
 #include "builtins.h"
