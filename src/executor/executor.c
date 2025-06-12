@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "executor.h"
 
 
 /**
@@ -52,8 +53,9 @@ static int	process_all_heredocs(t_command *commands, t_shell *shell)
  */
 static void	execute_simple_command(t_shell *shell, t_command *cmd)
 {
+	
+	late_expand_exit_status(cmd, shell);
 	shell->current_cmd = cmd;
-
 	if (cmd->args && cmd->args[0] && ft_strcmp(cmd->args[0], "exit") == 0)
 		builtin_exit(shell, cmd->args);
 	else if (!exec_builtin(shell))

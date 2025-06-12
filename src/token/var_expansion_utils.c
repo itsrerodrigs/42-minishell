@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "tokens.h"
 
 /**
  * @brief Checks if a character is a valid character for a variable name.
@@ -49,12 +50,12 @@ static void	extract_var_name(const char *input, size_t *idx, char *var_name)
 /**
  * @brief Handles special shell variables like $? and $$.
  */
-static char	*handle_special_var(const char *var_name, int status)
+static char	*handle_special_var(const char *var_name)
 {
 	pid_t	pid_val;
 
 	if (ft_strcmp(var_name, "?") == 0)
-		return (ft_itoa(status));
+		return (ft_strdup(EXIT_STATUS_MARKER));
 	if (ft_strcmp(var_name, "$") == 0)
 	{
 		pid_val = getpid();
@@ -66,7 +67,7 @@ static char	*handle_special_var(const char *var_name, int status)
 /**
  * @brief Extracts a variable name and retrieves its value from the environment.
  */
-char	*extract_variable(const char *input, size_t *idx, char **envp, int status)
+char	*extract_variable(const char *input, size_t *idx, char **envp)
 {
 	char	var_name[BUFFER_SIZE];
 	char	*value;
@@ -80,7 +81,7 @@ char	*extract_variable(const char *input, size_t *idx, char **envp, int status)
 	}
 	else
 		extract_var_name(input, idx, var_name);
-	value = handle_special_var(var_name, status);
+	value = handle_special_var(var_name);
 	if (value)
 		return (value);
 	if (var_name[0] == '\0')
