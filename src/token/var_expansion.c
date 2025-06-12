@@ -131,18 +131,26 @@ char	*expand_variables(const char *input, char **envp, int exit_status)
  */
 void	expand_token_list(t_token *tokens, t_shell *shell)
 {
-	char	*expanded_value;
+	char	*temp_val;
+	char	*final_val;
 
 	while (tokens)
 	{
 		if (tokens->type != TOKEN_SINGLE_QUOTED)
 		{
-			expanded_value = expand_variables(tokens->value, shell->envp,
+			temp_val = expand_tilde(tokens->value, shell);
+			if (!temp_val)
+			{
+				tokens = tokens->next;
+				continue ;
+			}
+			final_val = expand_variables(temp_val, shell->envp,
 					shell->exit_status);
-			if (expanded_value)
+			free(temp_val);
+			if (final_val)
 			{
 				free(tokens->value);
-				tokens->value = expanded_value;
+				tokens->value = final_val;
 			}
 		}
 		tokens = tokens->next;
