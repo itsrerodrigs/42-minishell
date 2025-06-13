@@ -6,14 +6,13 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 14:41:47 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/11 15:02:13 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/12 23:09:18 by renrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/**
- * @brief Logic for the child process to set up signals and execute a command.
+/* @brief Logic for the child process to set up signals and execute a command.
  */
 static void	handle_child_process(t_shell *shell, char *cmd_path, char **args)
 {
@@ -27,9 +26,7 @@ static void	handle_child_process(t_shell *shell, char *cmd_path, char **args)
 	exit(EXIT_FAILURE);
 }
 
-/**
-
-	* @brief Logic for the parent process to wait for the child and set exit status.
+/* @brief Logic for the parent process to wait for the child and set exit status.
  */
 static void	handle_parent_process(t_shell *s, pid_t pid, char *path,
 		t_old_signals *sa)
@@ -47,7 +44,7 @@ static void	handle_parent_process(t_shell *s, pid_t pid, char *path,
 	free(path);
 }
 
-/**
+/*
  * @brief Sets up signals, forks the process, and handles fork errors.
  */
 static pid_t	fork_and_prep_signals(t_old_signals *sa, char *cmd_path)
@@ -67,7 +64,7 @@ static pid_t	fork_and_prep_signals(t_old_signals *sa, char *cmd_path)
 	return (pid);
 }
 
-/**
+/*
  * @brief Executes external (non-builtin) commands.
  */
 int	exec_external(t_shell *shell, char **args)

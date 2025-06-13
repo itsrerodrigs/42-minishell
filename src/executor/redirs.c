@@ -6,14 +6,13 @@
 /*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 14:49:31 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/12 13:42:31 by marieli          ###   ########.fr       */
+/*   Updated: 2025/06/12 23:17:46 by renrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/**
- * @brief Opens a file for input redirection and dups it to the specified
+/* @brief Opens a file for input redirection and dups it to the specified
  * source_fd.
  */
 static int	apply_input_redir(int source_fd, char *filename)
@@ -36,8 +35,7 @@ static int	apply_input_redir(int source_fd, char *filename)
 	return (0);
 }
 
-/**
- * @brief Opens a file for output/append redirection and dups it to the
+/* @brief Opens a file for output/append redirection and dups it to the
  * specified source_fd.
  */
 static int	apply_output_redir(int source_fd, char *filename, int oflag)
@@ -60,8 +58,7 @@ static int	apply_output_redir(int source_fd, char *filename, int oflag)
 	return (0);
 }
 
-/**
- * @brief Dups the heredoc pipe to STDIN. This function is unchanged.
+/* @brief Dups the heredoc pipe to STDIN. This function is unchanged.
  */
 static int	apply_heredoc_redir(t_command *cmd)
 {
@@ -82,24 +79,24 @@ static int	apply_heredoc_redir(t_command *cmd)
 	return (0);
 }
 
-/**
- * @brief Applies a single redirection based on its type.
+/* @brief Applies a single redirection based on its type.
  */
 static int	apply_one_redir(t_redirect *redir, t_command *cmd)
 {
 	if (redir->type == REDIR_IN)
 		return (apply_input_redir(redir->source_fd, redir->filename));
 	else if (redir->type == REDIR_OUT)
-		return (apply_output_redir(redir->source_fd, redir->filename, O_TRUNC));
+		return (apply_output_redir(redir->source_fd, redir->filename,
+				O_TRUNC));
 	else if (redir->type == REDIR_APPEND)
-		return (apply_output_redir(redir->source_fd, redir->filename, O_APPEND));
+		return (apply_output_redir(redir->source_fd, redir->filename,
+				O_APPEND));
 	else if (redir->type == REDIR_HEREDOC)
-		return (apply_heredoc_redir(cmd)); 
+		return (apply_heredoc_redir(cmd));
 	return (0);
 }
 
-/**
- * @brief Applies all redirections for a given command.
+/* @brief Applies all redirections for a given command.
  */
 int	apply_redirections(t_command *cmd)
 {
