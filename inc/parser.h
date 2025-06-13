@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 23:03:48 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/13 19:29:56 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/13 19:57:33 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,35 +63,37 @@ typedef struct s_command
 }	t_command;
 
 /* parser.c */
-t_command	*parse_tokens(t_token *tokens, t_shell *shell);
-int			is_all_digits(const char *str);
+t_command		*parse_tokens(t_token *tokens, t_shell *shell);
+int				is_all_digits(const char *str);
 
 /* parser handlers */
-t_token		*s_handle_redirection_token(t_command *current_cmd, t_token *tok);
-t_token		*s_parse_loop_iteration(t_command **current_cmd_ptr, t_token *tok,
-				t_shell *shell, t_command *cmd_list);
+t_token			*s_handle_redirection_token(t_command *current_cmd,
+					t_token *tok);
+t_token			*s_parse_loop_iteration(t_command **current_cmd_ptr,
+					t_token *tok, t_shell *shell, t_command *cmd_list);
+
 /* parser_utils.c */
-t_command	*init_command(void);
-int			add_arg(t_command *cmd, char *arg);
-int			add_redir(t_command *cmd, t_redir_data *data);
-int			handle_cmd_or_arg(t_command *cmd, t_token *token);
-t_command	*new_command(t_command *current);
+int				add_arg(t_command *cmd, char *arg);
+int				add_redir(t_command *cmd, t_redir_data *data);
+int				handle_cmd_or_arg(t_command *cmd, t_token *token);
+t_command		*new_command(t_command *current);
+t_command		*init_command(void);
 t_redir_type	get_redir_type(t_token *token);
 
 /* parser_logic.c */
-int			handle_word_token(t_command *cmd, t_token *tok, t_shell *shell);
-int			handle_special_token(t_command **cmd, t_token *tok);
-t_token		*parse_redirection(t_command *cmd, t_token *token);
+int				handle_word_token(t_command *cmd, t_token *tok, t_shell *shell);
+int				handle_special_token(t_command **cmd, t_token *tok);
+t_token			*parse_redirection(t_command *cmd, t_token *token);
 
 /* parser_syntax.c */
-int			syntax_error(const char *token);
-int			is_token_cmd(t_token *token);
-int			is_token_redir(t_token *token);
-void		expand_token_list(t_token *tokens, t_shell *shell);
+int				syntax_error(const char *token);
+int				is_token_cmd(t_token *token);
+int				is_token_redir(t_token *token);
+void			expand_token_list(t_token *tokens, t_shell *shell);
 
 /* free_commands.c */
-void		free_commands(t_command *cmd);
-void		free_redirs(t_redirect *redir);
-void		print_commands(t_command *cmd);
+void			free_commands(t_command *cmd);
+void			free_redirs(t_redirect *redir);
+void			print_commands(t_command *cmd);
 
 #endif
