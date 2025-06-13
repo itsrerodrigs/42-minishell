@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
+/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 23:03:48 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/12 14:33:03 by marieli          ###   ########.fr       */
+/*   Updated: 2025/06/13 13:01:22 by renrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,14 @@ typedef enum e_redir_type
         REDIR_APPEND, 
         REDIR_HEREDOC 
 }       t_redir_type;
+
+typedef struct s_redir_data
+{
+        int     source_fd;
+        t_redir_type    type;
+        char    *fname;
+        int     expand;
+} t_redir_data;
 
 /*
 * @brief represents a redirection tied to a command
@@ -62,7 +70,7 @@ t_command	*parse_tokens(t_token *tokens, t_shell *shell);
 /* parser_utils.c */
 t_command	*init_command(void);
 int			add_arg(t_command *cmd, char *arg);
-int	add_redir(t_command *cmd, int source_fd, t_redir_type type, char *fname, int expand);
+int	add_redir(t_command *cmd, t_redir_data *data);
 int			handle_cmd_or_arg(t_command *cmd, t_token *token);
 t_command	*new_command(t_command *current);
 

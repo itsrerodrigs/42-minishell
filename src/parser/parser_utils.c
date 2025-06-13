@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
+/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 16:04:57 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/12 13:27:12 by marieli          ###   ########.fr       */
+/*   Updated: 2025/06/13 12:58:43 by renrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,35 +64,7 @@ int	add_arg(t_command *cmd, char *arg)
 	return (1);
 }
 
-/**
- * @brief Adds a new redirection to the command's redirection list.
- */
-// int	add_redir(t_command *cmd, t_redir_type type, char *fname, int expand)
-// {
-// 	t_redirect	*new_redir;
-// 	t_redirect	*last;
-
-// 	new_redir = malloc(sizeof(t_redirect));
-// 	if (!new_redir)
-// 		return (0);
-// 	new_redir->type = type;
-// 	new_redir->filename = ft_strdup(fname);
-// 	new_redir->expand_heredoc = expand;
-// 	new_redir->next = NULL;
-// 	if (!cmd->redirs)
-// 		cmd->redirs = new_redir;
-// 	else
-// 	{
-// 		last = cmd->redirs;
-// 		while (last->next)
-// 			last = last->next;
-// 		last->next = new_redir;
-// 	}
-// 	return (1);
-// }
-
-int	add_redir(t_command *cmd, int source_fd, t_redir_type type, char *fname,
-	int expand)
+int	add_redir(t_command *cmd, t_redir_data *data)
 {
 	t_redirect	*new_redir;
 	t_redirect	*last;
@@ -100,10 +72,10 @@ int	add_redir(t_command *cmd, int source_fd, t_redir_type type, char *fname,
 	new_redir = malloc(sizeof(t_redirect));
 	if (!new_redir)
 		return (0);
-	new_redir->source_fd = source_fd; // Set the new field
-	new_redir->type = type;
-	new_redir->filename = ft_strdup(fname);
-	new_redir->expand_heredoc = expand;
+	new_redir->source_fd = data->source_fd;
+	new_redir->type = data->type;
+	new_redir->filename = ft_strdup(data->fname);
+	new_redir->expand_heredoc = data->expand;
 	new_redir->next = NULL;
 	if (!cmd->redirs)
 		cmd->redirs = new_redir;
@@ -116,7 +88,6 @@ int	add_redir(t_command *cmd, int source_fd, t_redir_type type, char *fname,
 	}
 	return (1);
 }
-
 
 /**
  * @brief Handles a token as either the main command or a subsequent argument.

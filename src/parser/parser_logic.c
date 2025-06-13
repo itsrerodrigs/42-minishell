@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_logic.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
+/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 14:47:31 by mmariano          #+#    #+#             */
-/*   Updated: 2025/06/12 13:30:36 by marieli          ###   ########.fr       */
+/*   Updated: 2025/06/13 13:01:13 by renrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,42 +56,13 @@ int	handle_word_token(t_command *current_cmd, t_token *token, t_shell *shell)
 	return (result);
 }
 
-/**
- * @brief Parses a redirection token and its following filename.
- */
-// int	parse_redirection(t_command *cmd, t_token **token_ptr)
-// {
-// 	t_token			*token;
-// 	t_token			*next;
-// 	t_redir_type	type;
-// 	int				expand;
-
-// 	token = *token_ptr;
-// 	next = token->next;
-// 	if (!next || !is_token_cmd(next))
-// 		return (syntax_error("newline"));
-// 	if (token->type == TOKEN_REDIR_IN)
-// 		type = REDIR_IN;
-// 	else if (token->type == TOKEN_REDIR_OUT)
-// 		type = REDIR_OUT;
-// 	else if (token->type == TOKEN_APPEND)
-// 		type = REDIR_APPEND;
-// 	else
-// 		type = REDIR_HEREDOC;
-// 	expand = (next->type == TOKEN_WORD);
-// 	if (!add_redir(cmd, type, next->value, expand))
-// 		return (0);
-// 	*token_ptr = next;
-// 	return (1);
-// }
-// src/parser/parser_logic.c
-
 t_token	*parse_redirection(t_command *cmd, t_token *token)
 {
 	t_token			*filename_token;
 	t_redir_type	type;
 	int				expand;
 	int				source_fd;
+	t_redir_data	redir_info;
 
 	filename_token = token->next;
 	if (!filename_token || !is_token_cmd(filename_token))
@@ -116,8 +87,12 @@ t_token	*parse_redirection(t_command *cmd, t_token *token)
 
 	expand = (filename_token->type != TOKEN_SINGLE_QUOTED);
 	
+	redir_info.source_fd = source_fd;
+	redir_info.type = type;
+	redir_info.fname = filename_token->value;
+	redir_info.expand = expand;
 	// This is the corrected call with all 5 arguments
-	if (!add_redir(cmd, source_fd, type, filename_token->value, expand))
+	if (!add_redir(cmd, &redir_info))
 		return (NULL); // Signal an allocation error
 		
 	return (filename_token->next);
