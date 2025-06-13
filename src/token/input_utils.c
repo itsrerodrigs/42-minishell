@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 16:16:56 by mmariano          #+#    #+#             */
-/*   Updated: 2025/06/13 19:35:27 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/13 19:42:38 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	init_shell_job_control(t_shell *shell)
 		signal(SIGTSTP, SIG_IGN);
 		pid = getpid();
 		if (setpgid(pid, pid) < 0)
-			perror("minishell: Couldn't put the shell in its own process group");
+			perror("minishell: setpgid failed");
 		if (tcsetpgrp(shell->shell_terminal_fd, pid) < 0)
 			perror("minishell: tcsetpgrp failed");
 		shell->shell_pgid = pid;

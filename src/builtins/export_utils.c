@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 18:52:47 by mmariano          #+#    #+#             */
-/*   Updated: 2025/06/13 19:16:14 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/13 19:43:47 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ int	is_valid_env_name(const char *name, size_t name_len)
 	}
 	return (1);
 }
-
 
 int	try_update_existing_var(char ***envp, const char *var,
 				size_t len, int has_val)

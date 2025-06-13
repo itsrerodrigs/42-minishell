@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 15:56:49 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/13 18:48:54 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/13 19:43:31 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ static void	sort_env_array(char **envp, int len)
 		i++;
 	}
 }
-
 
 static void	print_exported_env(char **envp)
 {

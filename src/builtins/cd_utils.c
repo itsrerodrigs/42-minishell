@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd_utils.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 14:53:25 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/13 18:49:01 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/13 19:43:02 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ static char	*get_home_path(t_shell *shell)
 	}
 	return (ft_strdup(home_val));
 }
-
 
 static char	*get_oldpwd_path(t_shell *shell)
 {

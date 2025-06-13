@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 12:16:51 by mmariano          #+#    #+#             */
-/*   Updated: 2025/06/13 18:39:38 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/13 19:40:55 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 void	set_foreground_process(int fd, pid_t pgid)
 {
 	int	ret;
+
 	ret = ioctl(fd, TIOCSPGRP, &pgid);
 	while (ret == -1 && errno == EINTR)
 	{
