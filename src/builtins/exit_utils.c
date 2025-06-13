@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 11:48:28 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/13 17:16:53 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/13 17:49:48 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,9 @@ int	is_valid_exit_arg(const char *str)
 	return (1);
 }
 
-int	handle_non_numeric_exit_arg(const char *arg)
+void	handle_non_numeric_exit_arg(const char *arg)
 {
 	ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
 	ft_putstr_fd((char *)arg, STDERR_FILENO);
 	ft_putendl_fd(": numeric argument required", STDERR_FILENO);
-	return (1);
 }

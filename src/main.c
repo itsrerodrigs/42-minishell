@@ -29,7 +29,7 @@ int	main(int argc, char **argv, char **envp)
 	}
 	setup_signal_handling();
 	init_shell_job_control(&shell);
-	p(C "Initializing Minishell..\n" RST);
+	printf(C "Initializing Minishell..\n" RST);
 	s_process_loop(&shell);
 	rl_clear_history();
 	free_envp(shell.envp);

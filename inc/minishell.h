@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 10:55:32 by marieli           #+#    #+#             */
-/*   Updated: 2025/06/13 17:10:37 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/13 17:30:57 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,5 @@ extern volatile sig_atomic_t g_child_running;
 /*memory*/
 void        *ft_malloc(size_t size);
 void	    *ft_realloc(void *ptr, size_t size);
-
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 19:49:10 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/13 11:48:57 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/13 17:50:22 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ char            *get_env_value(char **envp, const char *key);
 int             add_or_update_env(char ***envp, const char *var);
 int             is_valid_env_name(const char *name, size_t name_len);
 int             try_update_existing_var(char ***envp_ptr, const char *var, size_t key_len, int var_has_value);
-int				add_new_env_entry(char ***envp_ptr, const char *var, int i);
+int		add_new_env_entry(char ***envp_ptr, const char *var, int i);
 
 /* CD Builtin Utilities */
 char            *get_cd_path(t_shell *shell, char **args);
@@ -65,6 +65,6 @@ void            update_pwd_vars(t_shell *shell, char *oldpwd);
 
 /* exit utils */
 int  is_valid_exit_arg(const char *str);
-int  handle_non_numeric_exit_arg(const char *arg);
+void	handle_non_numeric_exit_arg(const char *arg);
 
 #endif

@@ -53,13 +53,10 @@ void	set_child_signals(void)
 {
 	struct sigaction	sa_dfl;
 
+	ft_bzero(&sa_dfl, sizeof(sa_dfl));
 	sa_dfl.sa_handler = SIG_DFL;
-	sigemptyset(&sa_dfl.sa_mask);
-	if (sa_dfl.sa_flags == 0)
-	{
-		sigaction(SIGINT, &sa_dfl, NULL);
-		sigaction(SIGQUIT, &sa_dfl, NULL);
-	}
+	sigaction(SIGINT, &sa_dfl, NULL);
+	sigaction(SIGQUIT, &sa_dfl, NULL);
 }
 
 /*
