@@ -6,7 +6,7 @@
 /*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 17:24:13 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/12 17:42:44 by marieli          ###   ########.fr       */
+/*   Updated: 2025/06/12 21:46:02 by renrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ static int	cd_error(char *path, char *oldpwd, const char *perror_arg)
 	return (1);
 }
 
-
 /* current directory 
 * @brief changes the current working directory of the shell process
 * @param shell shows shell in the context structure
@@ -47,12 +46,12 @@ int	builtin_cd(t_shell *shell, char **args)
 	path = get_cd_path(shell, args);
 	if (!path)
 		return (1);
-	oldpwd = NULL; 
+	oldpwd = NULL;
 	if (!getcwd(cwd, sizeof(cwd)))
-		return (cd_error(path, NULL, "getcwd")); 
+		return (cd_error(path, NULL, "getcwd"));
 	oldpwd = ft_strdup(cwd);
 	if (!oldpwd)
-		return (cd_error(path, NULL, "strdup")); 
+		return (cd_error(path, NULL, "strdup"));
 	if (chdir(path) != 0)
 		return (cd_error(path, oldpwd, path));
 	update_pwd_vars(shell, oldpwd);
