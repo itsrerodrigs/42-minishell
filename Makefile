@@ -22,7 +22,7 @@ OBJS        = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
 # Default target
 all: $(NAME)
 
-valgrind: re
+valgrind:
 	valgrind --leak-check=full --show-leak-kinds=all --suppressions=readline.supp ./$(NAME)
 
 # Link the final executable

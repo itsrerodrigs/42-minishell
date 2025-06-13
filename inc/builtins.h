@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 19:49:10 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/13 19:31:59 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/13 19:37:53 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void		update_pwd_vars(t_shell *shell, char *oldpwd);
 char		*get_cd_path(t_shell *shell, char **args);
 
 /* exit utils */
-int	is_valid_exit_arg(const char *str);
-int	handle_non_numeric_exit_arg(const char *arg);
+int		is_valid_exit_arg(const char *str);
+void	handle_non_numeric_exit_arg(const char *arg);
 
 #endif

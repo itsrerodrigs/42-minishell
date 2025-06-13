@@ -15,10 +15,10 @@
 int	main(int argc, char **argv, char **envp)
 {
 	t_shell shell;
+	int		final_exit_status;
 
 	(void)argc;
 	(void)argv;
-
 	init_shell_struct(&shell);
 	shell.envp = dup_envp(envp);
 	if (!shell.envp)
@@ -31,8 +31,8 @@ int	main(int argc, char **argv, char **envp)
 	init_shell_job_control(&shell);
 	printf(C "Initializing Minishell..\n" RST);
 	s_process_loop(&shell);
+	final_exit_status = shell.exit_status;
 	rl_clear_history();
 	free_envp(shell.envp);
-
-	return (EXIT_SUCCESS);
+	return (final_exit_status);
 }

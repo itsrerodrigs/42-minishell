@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 10:55:32 by marieli           #+#    #+#             */
-/*   Updated: 2025/06/13 18:10:48 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/13 19:19:39 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@
 # define RED		"\033[1;31m"
 # define RST		"\033[0m"
 
-//# define P(...) PRINTF(__VA_ARGS__)
 # define DELIM " \t\n|<>&;()"
 
 # ifndef BUFFER_SIZE

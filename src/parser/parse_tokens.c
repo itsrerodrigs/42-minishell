@@ -6,12 +6,13 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 15:36:16 by mmariano          #+#    #+#             */
-/*   Updated: 2025/06/13 17:08:12 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/13 19:23:23 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "parser.h"
+#include "tokens.h"
 
 static int	build_and_add_redir(t_command *cmd, t_token *redir_op, int source_fd)
 {
