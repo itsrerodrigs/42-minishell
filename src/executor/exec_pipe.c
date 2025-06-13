@@ -6,13 +6,13 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 14:39:44 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/11 15:10:14 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/12 23:05:19 by renrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/**
+/*
  * @brief Executes a single command that is a builtin in the parent process.
  */
 static int	exec_parent_builtin(t_shell *shell, t_command *cmd)
@@ -41,7 +41,7 @@ static int	exec_parent_builtin(t_shell *shell, t_command *cmd)
 	return (1);
 }
 
-/**
+/*
  * @brief Forks the process and executes the child logic.
  */
 static pid_t	fork_and_run_child(t_shell *shell, t_command *cmd, int *p,
@@ -74,7 +74,8 @@ static pid_t	fork_and_run_child(t_shell *shell, t_command *cmd, int *p,
 /**
  * @brief Handles forking and parent-side logic for a single piped command.
  */
-static int	run_forked_cmd(t_shell *shell, t_command *cmd, int *p_fd, int *l_pid)
+static int	run_forked_cmd(t_shell *shell, t_command *cmd,
+				int *p_fd, int *l_pid)
 {
 	pid_t	pid;
 	int		pipe_fds[2];
@@ -107,7 +108,8 @@ static int	exec_pipe_loop(t_shell *shell, t_command *cmd_list)
 			exec_parent_builtin(shell, current_cmd);
 		else
 		{
-			if (run_forked_cmd(shell, current_cmd, &prev_pipe_read_fd, &last_pid) < 0)
+			if (run_forked_cmd(shell, current_cmd,
+					&prev_pipe_read_fd, &last_pid) < 0)
 				break ;
 		}
 		current_cmd = current_cmd->next;

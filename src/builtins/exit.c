@@ -6,54 +6,53 @@
 /*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 16:34:22 by mmariano          #+#    #+#             */
-/*   Updated: 2025/06/12 18:13:37 by marieli          ###   ########.fr       */
+/*   Updated: 2025/06/12 22:47:57 by renrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-
-/**
- * @brief Checks if an argument string contains only digits (and an optional sign).
+/* @brief Checks if an argument string contains only 
+ * digits (and an optional sign).
  */
-static int is_valid_exit_arg(const char *str)
+static int	is_valid_exit_arg(const char *str)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    if (!str || !str[i])
-        return (0);
-    if (str[i] == '-' || str[i] == '+')
-        i++;
-    if (!str[i])
-        return (0);
-    while (str[i])
-    {
-        if (!ft_isdigit(str[i])) 
-            return (0);
-        i++;
-    }
-    return (1);
+	i = 0;
+	if (!str || !str[i])
+		return (0);
+	if (str[i] == '-' || str[i] == '+')
+		i++;
+	if (!str[i])
+		return (0);
+	while (str[i])
+	{
+		if (!ft_isdigit(str[i]))
+			return (0);
+		i++;
+	}
+	return (1);
 }
 
-/**
+/*
  * @brief Prints an error and exits if the argument for exit is not numeric.
  */
-static int handle_non_numeric_exit_arg(const char *arg)
+static int	handle_non_numeric_exit_arg(const char *arg)
 {
-    ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
-    ft_putstr_fd((char *)arg, STDERR_FILENO);
-    ft_putendl_fd(": numeric argument required", STDERR_FILENO);
-    return (1);
+	ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
+	ft_putstr_fd((char *)arg, STDERR_FILENO);
+	ft_putendl_fd(": numeric argument required", STDERR_FILENO);
+	return (1);
 }
 
-/**
+/*
  * @brief Exits the shell, optionally with a specific exit code.
  */
 int	builtin_exit(t_shell *shell, char **args)
 {
 	int	arg_count;
-	int final_exit_code;
+	int	final_exit_code;
 
 	final_exit_code = shell->exit_status;
 	arg_count = 0;
@@ -64,7 +63,7 @@ int	builtin_exit(t_shell *shell, char **args)
 	if (arg_count > 2)
 	{
 		ft_putendl_fd("minishell: exit: too many arguments", STDERR_FILENO);
-		shell->exit_status = 1; 
+		shell->exit_status = 1;
 		return (1);
 	}
 	if (args[1])
@@ -83,4 +82,3 @@ int	builtin_exit(t_shell *shell, char **args)
 	shell->should_exit = true;
 	return (0);
 }
-

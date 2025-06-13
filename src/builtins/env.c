@@ -6,20 +6,19 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 19:55:56 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/11 15:23:15 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/12 23:02:50 by renrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
-* @brief duplicates the environment array
+/* @brief duplicates the environment array
 */
 char	**dup_envp(char **envp)
 {
-	int	count;
-	int	index;
 	char	**new_env;
+	int		count;
+	int		index;
 
 	count = 0;
 	index = 0;
@@ -27,7 +26,7 @@ char	**dup_envp(char **envp)
 		count++;
 	new_env = calloc(count + 1, sizeof(char *));
 	if (!new_env)
-		return NULL;
+		return (NULL);
 	while (envp[index])
 	{
 		new_env[index] = strdup(envp[index]);
@@ -36,15 +35,14 @@ char	**dup_envp(char **envp)
 			while (index > 0)
 				free(new_env[--index]);
 			free(new_env);
-			return NULL;
+			return (NULL);
 		}
 		index++;
 	}
-	return new_env;
+	return (new_env);
 }
 
-/*
- * @brief frees the duplicated environment
+/* @brief frees the duplicated environment
  */
 void	free_envp(char **envp)
 {
@@ -52,7 +50,7 @@ void	free_envp(char **envp)
 
 	i = 0;
 	if (!envp)
-		return;
+		return ;
 	while (envp[i])
 	{
 		free(envp[i]);
