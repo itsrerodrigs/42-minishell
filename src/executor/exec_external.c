@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_external.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 14:41:47 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/12 23:09:18 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/13 12:30:07 by renrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ static void	handle_child_process(t_shell *shell, char *cmd_path, char **args)
 	exit(EXIT_FAILURE);
 }
 
-/* @brief Logic for the parent process to wait for the child and set exit status.
+/* @brief Logic for the parent process to wait for the child
+* and set exit status.
  */
 static void	handle_parent_process(t_shell *s, pid_t pid, char *path,
 		t_old_signals *sa)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipe.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 14:39:44 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/12 23:05:19 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/13 12:40:14 by renrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,30 +14,18 @@
 
 /*
  * @brief Executes a single command that is a builtin in the parent process.
+ * (Agora está bem refatorada e abaixo de 25 linhas)
  */
 static int	exec_parent_builtin(t_shell *shell, t_command *cmd)
 {
-	int				saved_stdin;
-	int				saved_stdout;
-	int				exit_code;
-	builtin_func	func;
+	int	saved_stdin;
+	int	saved_stdout;
+	int	builtin_exec_status;
 
-	saved_stdin = dup(STDIN_FILENO);
-	saved_stdout = dup(STDOUT_FILENO);
-	exit_code = 1;
-	if (apply_redirections(cmd) == 0)
-	{
-		func = find_builtin(cmd->args[0]);
-		if (func)
-			exit_code = func(shell, cmd->args);
-	}
-	shell->exit_status = exit_code;
-	if (dup2(saved_stdin, STDIN_FILENO) == -1)
-		perror("dup2 restore stdin failed");
-	if (dup2(saved_stdout, STDOUT_FILENO) == -1)
-		perror("dup2 restore stdout failed");
-	close(saved_stdin);
-	close(saved_stdout);
+	s_save_fds_for_builtin(&saved_stdin, &saved_stdout);
+	builtin_exec_status = s_execute_and_set_status(shell, cmd);
+	s_restore_and_close_fds(saved_stdin, saved_stdout);
+	(void)builtin_exec_status;
 	return (1);
 }
 
@@ -49,25 +37,19 @@ static pid_t	fork_and_run_child(t_shell *shell, t_command *cmd, int *p,
 {
 	pid_t	pid;
 
-	if (cmd->is_pipe)
-		if (pipe(p) == -1)
-		{
-			perror("minishell: pipe failed");
-			return (-1);
-		}
+	if (s_handle_pipe_creation(p, cmd->is_pipe) == -1)
+	{
+		return (-1);
+	}
 	pid = fork();
 	if (pid < 0)
 	{
-		perror("minishell: fork failed");
-		if (p[0] != -1)
-		{
-			close(p[0]);
-			close(p[1]);
-		}
-		return (-1);
+		return (s_handle_fork_failure(p));
 	}
 	if (pid == 0)
+	{
 		exec_pipe_child(shell, cmd, *pfd, p);
+	}
 	return (pid);
 }
 
