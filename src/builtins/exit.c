@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 16:34:22 by mmariano          #+#    #+#             */
-/*   Updated: 2025/06/13 17:49:32 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/13 18:12:20 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,23 +46,19 @@ static int	process_exit_argument(t_shell *shell, const char *arg)
 int	builtin_exit(t_shell *shell, char **args)
 {
 	int	arg_count;
-	int	builtin_retun_status;
 
 	arg_count = 0;
-	builtin_retun_status = 0;
 	while (args[arg_count])
 		arg_count++;
 	ft_print_exit_message(shell);
 	if (arg_count > 2)
-		builtin_retun_status = handle_too_many_args(shell);
-	else
 	{
-		while (builtin_retun_status == 0)
-			if (arg_count == 2)
-				shell->exit_status = process_exit_argument(shell, args[1]);
-		else
-				shell->exit_status = shell->exit_status;
+		return (handle_too_many_args(shell));
+	}
+	if (arg_count == 2)
+	{
+		shell->exit_status = process_exit_argument(shell, args[1]);
 	}
 	shell->should_exit = true;
-	return (builtin_retun_status);
+	return (shell->exit_status);
 }

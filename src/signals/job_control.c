@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 12:16:51 by mmariano          #+#    #+#             */
-/*   Updated: 2025/06/13 15:33:43 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/13 18:39:38 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,13 @@
  */
 void	set_foreground_process(int fd, pid_t pgid)
 {
-	if (ioctl(fd, TIOCSPGRP, &pgid) == -1)
+	int	ret;
+	ret = ioctl(fd, TIOCSPGRP, &pgid);
+	while (ret == -1 && errno == EINTR)
+	{
+		ret = ioctl(fd, TIOCSPGRP, &pgid);
+	}
+	if (ret == -1)
 		perror("minishell: ioctl TIOCSPGRP failed");
 }
 

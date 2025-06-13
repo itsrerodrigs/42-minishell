@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 16:16:56 by mmariano          #+#    #+#             */
-/*   Updated: 2025/06/13 16:24:56 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/13 18:48:59 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,26 @@
 
 void	init_shell_job_control(t_shell *shell)
 {
+	pid_t	pid;
+
 	shell->shell_is_interactive = isatty(STDIN_FILENO);
 	if (shell->shell_is_interactive)
 	{
-		shell->shell_terminal_fd = STDIN_FILENO;
-		while (1)
-		{
-			shell->shell_pgid = getpgrp();
-			if (tcgetpgrp(shell->shell_terminal_fd) == shell->shell_pgid)
-				break ;
-			kill(-shell->shell_pgid, SIGTTIN);
-		}
-		setpgid(0, 0);
-		shell->shell_pgid = getpgrp();
-		set_foreground_process(shell->shell_terminal_fd, shell->shell_pgid);
 		signal(SIGTTIN, SIG_IGN);
 		signal(SIGTTOU, SIG_IGN);
+		signal(SIGTSTP, SIG_IGN);
+		pid = getpid();
+		if (setpgid(pid, pid) < 0)
+		{
+			perror("minishell: Couldn't put the shell in its own process group");
+			exit(1);
+		}
+		if (tcsetpgrp(STDIN_FILENO, pid) < 0)
+		{
+			perror("minishell: tcsetpgrp failed");
+			exit(1);
+		}
+		shell->shell_pgid = pid;
 	}
 }
 

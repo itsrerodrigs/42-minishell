@@ -1,27 +1,21 @@
+# This is a suppression file for Valgrind.
+# It uses broad rules to suppress all "still reachable" leaks
+# originating from the readline and tinfo libraries.
+
 {
-   <readline_leaks>
+   readline_library_leaks
    Memcheck:Leak
-   fun:readline
+   match-leak-kinds: reachable
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/libreadline.so.8.1
    ...
 }
+
 {
-   <add_history_leaks>
+   tinfo_library_leaks
    Memcheck:Leak
-   fun:add_history
+   match-leak-kinds: reachable
    ...
-}
-{
-   <readline_malloc_hook>
-   Memcheck:Leak
-   fun:malloc
-   fun:_rl_malloc
-   ...
-}
-{
-   <history_base_malloc>
-   Memcheck:Leak
-   fun:malloc
-   fun:xmalloc
-   fun:history_base_create
+   obj:/usr/lib/x86_64-linux-gnu/libtinfo.so.6.3
    ...
 }
