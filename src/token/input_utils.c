@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 16:16:56 by mmariano          #+#    #+#             */
-/*   Updated: 2025/06/13 18:48:59 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/13 18:51:53 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void	init_shell_job_control(t_shell *shell)
 	shell->shell_is_interactive = isatty(STDIN_FILENO);
 	if (shell->shell_is_interactive)
 	{
+		shell->shell_terminal_fd = STDIN_FILENO;
 		signal(SIGTTIN, SIG_IGN);
 		signal(SIGTTOU, SIG_IGN);
 		signal(SIGTSTP, SIG_IGN);
