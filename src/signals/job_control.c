@@ -6,12 +6,11 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 12:16:51 by mmariano          #+#    #+#             */
-/*   Updated: 2025/06/11 14:41:56 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/13 15:33:43 by renrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
 
 /*
  ** @brief: Sets the foreground process group for a given terminal.
@@ -44,11 +43,11 @@ void	update_exit_status_from_wait_status(t_shell *shell, int raw_status)
 	}
 }
 
-/*
- ** @brief: Waits for all child processes in a pipeline to complete.
- ** @param shell: Pointer to the shell's main structure.
- ** @param last_pid: The PID of the last process in the pipeline to track its status.
- ** @return: void
+/* @brief: Waits for all child processes in a pipeline to complete.
+ * @param shell: Pointer to the shell's main structure.
+ * @param last_pid: The PID of the last process in the pipeline to 
+ * track its status.
+ * @return: void
  */
 void	pipe_wait_children(t_shell *shell, pid_t last_pid)
 {
@@ -63,8 +62,11 @@ void	pipe_wait_children(t_shell *shell, pid_t last_pid)
 			update_exit_status_from_wait_status(shell, status);
 		}
 	}
-	while ((waited_pid = waitpid(-1, &status, WNOHANG)) > 0)
+	while (1)
 	{
-		(void)status;
+		waited_pid = waitpid(-1, &status, WNOHANG);
+		if (waited_pid <= 0)
+			break ;
+		(void) status;
 	}
 }
