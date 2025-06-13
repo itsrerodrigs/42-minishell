@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   cd_utils.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 14:53:25 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/12 22:59:48 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/13 17:16:36 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "builtins.h"
 
-/* @brief Gets the path to HOME for 'cd' or 'cd ~'.
- */
 static char	*get_home_path(t_shell *shell)
 {
 	char	*home_val;
@@ -27,13 +26,12 @@ static char	*get_home_path(t_shell *shell)
 	return (ft_strdup(home_val));
 }
 
-/*@brief function to handle 'cd -'.
- */
+
 static char	*get_oldpwd_path(t_shell *shell)
 {
 	char	*oldpwd_val;
 
-	oldowd_val = get_env_value(shell->envp, "OLDPWD");
+	oldpwd_val = get_env_value(shell->envp, "OLDPWD");
 	if (!oldpwd_val)
 	{
 		ft_putendl_fd("cd: OLDPWD not set", STDERR_FILENO);
@@ -43,11 +41,6 @@ static char	*get_oldpwd_path(t_shell *shell)
 	return (ft_strdup(oldpwd_val));
 }
 
-/* @brief Determines the target path for the 'cd' command based on arguments,
- * using helper functions for special cases.
- * NOTE: Tilde expansion (e.g., `~/Documents`) is now handled by the main parser
- * before this function is called.
- */
 char	*get_cd_path(t_shell *shell, char **args)
 {
 	if (!args[1])

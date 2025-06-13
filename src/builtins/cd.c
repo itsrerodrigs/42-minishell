@@ -3,23 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 17:24:13 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/12 21:46:02 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/13 17:16:40 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "builtins.h"
 
-/**
- * @brief Handles errors for the 'cd' builtin by printing a standard error
- * message with perror, freeing any allocated memory, and returning 1.
- * @param path The path string to free, if allocated.
- * @param oldpwd The oldpwd string to free, if allocated.
- * @param perror_arg The string to pass to perror() to identify the error source.
- * @return Always returns 1 to indicate failure.
- */
 static int	cd_error(char *path, char *oldpwd, const char *perror_arg)
 {
 	ft_putstr_fd("minishell: cd: ", STDERR_FILENO);
@@ -31,12 +24,6 @@ static int	cd_error(char *path, char *oldpwd, const char *perror_arg)
 	return (1);
 }
 
-/* current directory 
-* @brief changes the current working directory of the shell process
-* @param shell shows shell in the context structure
-* @param args arguments in the second index args[1] is the target path
-* @note if doesn't have any arguments, it should change to $HOME directory
-*/
 int	builtin_cd(t_shell *shell, char **args)
 {
 	char	*path;

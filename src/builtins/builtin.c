@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 18:29:56 by mmariano          #+#    #+#             */
-/*   Updated: 2025/06/12 22:39:27 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/13 17:16:34 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "builtins.h"
 
 bool	is_builtin_parent_executable(t_command *cmd)
 {

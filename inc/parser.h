@@ -6,11 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 23:03:48 by renrodri          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2025/06/13 16:12:00 by mmariano         ###   ########.fr       */
-=======
-/*   Updated: 2025/06/13 16:32:44 by renrodri         ###   ########.fr       */
->>>>>>> d230d90 (parser done)
+/*   Updated: 2025/06/13 17:25:12 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +17,6 @@
 #include "tokens.h"
 
 typedef struct s_shell t_shell;
-
 
 typedef enum e_redir_type 
 {
@@ -70,6 +65,7 @@ typedef struct s_command
 
 /* parser.c */
 t_command	*parse_tokens(t_token *tokens, t_shell *shell);
+int	is_all_digits(const char *str);
 
 /* parser handlers */
 t_token *s_handle_redirection_token(t_command *current_cmd, t_token *tok);
@@ -77,9 +73,9 @@ t_token *s_parse_loop_iteration(t_command **current_cmd_ptr, t_token *tok, t_she
 
 /* parser_utils.c */
 t_command	*init_command(void);
-int			add_arg(t_command *cmd, char *arg);
-int	add_redir(t_command *cmd, t_redir_data *data);
-int			handle_cmd_or_arg(t_command *cmd, t_token *token);
+int		add_arg(t_command *cmd, char *arg);
+int	        add_redir(t_command *cmd, t_redir_data *data);
+int		handle_cmd_or_arg(t_command *cmd, t_token *token);
 t_command	*new_command(t_command *current);
 t_redir_type	get_redir_type(t_token *token);
 

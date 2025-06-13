@@ -6,14 +6,13 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 19:55:56 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/12 23:02:50 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/13 17:16:48 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "builtins.h"
 
-/* @brief duplicates the environment array
-*/
 char	**dup_envp(char **envp)
 {
 	char	**new_env;
@@ -42,8 +41,6 @@ char	**dup_envp(char **envp)
 	return (new_env);
 }
 
-/* @brief frees the duplicated environment
- */
 void	free_envp(char **envp)
 {
 	int	i;
@@ -58,12 +55,6 @@ void	free_envp(char **envp)
 	}
 	free(envp);
 }
-
-/*
-* @brief prints all environment variables
-* @params shell shows structure containing the current envp
-* @note should only print variables that has a value (i.e. in KEY=VALUE format)
-*/
 
 int	builtin_env(t_shell *shell, char **args)
 {

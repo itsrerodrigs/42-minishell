@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 10:55:32 by marieli           #+#    #+#             */
-/*   Updated: 2025/06/12 14:47:20 by marieli          ###   ########.fr       */
+/*   Updated: 2025/06/13 17:10:37 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@
 #include "executor.h"
 #include "sig.h"
 #include <fcntl.h>
+#include <errno.h>
+
 
 #define Y		"\033[1;33m"
 #define G		"\033[1;32m"

@@ -3,24 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 17:15:11 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/12 11:05:35 by marieli          ###   ########.fr       */
+/*   Updated: 2025/06/13 17:16:09 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "builtins.h"
 
-/**
- * @brief Checks if an environment variable's key matches any of the arguments
- * provided to the unset command.
- * @param env_var The environment variable string (e.g., "USER=marieli").
- * @param args_to_unset The arguments array from the unset command, starting
- * with "unset".
- * @return 1 if a match is found (should be unset), 0 otherwise.
- */
 static int	should_be_unset(const char *env_var, char **args_to_unset)
 {
 	size_t	key_len;
@@ -42,10 +34,6 @@ static int	should_be_unset(const char *env_var, char **args_to_unset)
 	return (0);
 }
 
-/**
- * @brief Removes one or more environment variables in an efficient,
- * single-pass operation.
- */
 int	builtin_unset(t_shell *shell, char **args)
 {
 	int	read_idx;

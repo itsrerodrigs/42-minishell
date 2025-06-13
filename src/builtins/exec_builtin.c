@@ -3,18 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   exec_builtin.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 16:36:07 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/13 12:07:45 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/13 17:12:48 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-/* @brief Saves the original STDIN and STDOUT file descriptors.
- * @param orig_stdin Pointer to store original STDIN FD.
- * @param orig_stdout Pointer to store original STDOUT FD.
- * @return 0 on success, 1 on failure (e.g., dup failed).
-*/
+#include "minishell.h"
+#include "builtins.h"
+
 static int	s_save_original_fds(int *orig_stdin, int *orig_stdout)
 {
 	*orig_stdin = dup(STDIN_FILENO);
@@ -31,11 +29,6 @@ static int	s_save_original_fds(int *orig_stdin, int *orig_stdout)
 	return (0);
 }
 
-/* @brief Restores the original STDIN and STDOUT file
- * descriptors and closes saved FDs.
- * @param orig_stdin Original STDIN FD.
- * @param orig_stdout Original STDOUT FD.
- */
 static void	s_restore_fds(int orig_stdin, int orig_stdout)
 {
 	dup2(orig_stdin, STDIN_FILENO);
@@ -44,15 +37,6 @@ static void	s_restore_fds(int orig_stdin, int orig_stdout)
 	close(orig_stdout);
 }
 
-/*
- * @brief Applies redirections and executes the built-in function.
- * Sets shell->exit_status based on builtin's return.
- * @param shell The shell context.
- * @param func The builtin function pointer to execute.
- * @return 1 if builtin successfully executed (regardless of 
- * its internal exit status).-1 if redirection application failed 
- * (exit status is set in shell).
- */
 static int	s_perform_builtin_io_and_exec(t_shell *shell, builtin_func func)
 {
 	int	builtin_exit_status;
@@ -67,18 +51,12 @@ static int	s_perform_builtin_io_and_exec(t_shell *shell, builtin_func func)
 	return (1);
 }
 
-/*
- * @brief Executes a built-in command with proper I/O redirection.
- * @param shell The shell context.
- * @return 1 if a built-in was found and executed
- * (regardless of its success/failure),
- * 0 if no built-in was found or if initial setup failed. */
 int	exec_builtin(t_shell *shell)
 {
 	builtin_func	func;
 	char			*cmd;
-	int				origin_stdin;
-	int				origin_stdout;
+	int				orig_stdin;
+	int				orig_stdout;
 	int				exec_result;
 
 	if (!shell || !shell->current_cmd || !shell->current_cmd->args

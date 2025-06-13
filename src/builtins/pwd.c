@@ -6,15 +6,13 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 16:22:13 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/12 21:43:51 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/13 17:17:18 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "builtins.h"
 
-/* 
-* @brief updates the OLDPWD and PWD environment variables.
-*/
 void	update_pwd_vars(t_shell *shell, char *oldpwd)
 {
 	char	cwd[PATH_MAX];
@@ -31,12 +29,6 @@ void	update_pwd_vars(t_shell *shell, char *oldpwd)
 		free(pwd_var);
 	}
 }
-
-/*
-* @brief prints the current working directory
-* @params shows shell context structure & ignored args if not informed
-* @note doesn't change the current directory, only displays the path
-*/
 
 int	builtin_pwd(t_shell *shell, char **args)
 {

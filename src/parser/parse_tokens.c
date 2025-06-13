@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_tokens.h                                     :+:      :+:    :+:   */
+/*   parse_tokens.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 15:36:16 by mmariano          #+#    #+#             */
-/*   Updated: 2025/06/13 15:36:59 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/13 17:08:12 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,8 @@
 
 static int	build_and_add_redir(t_command *cmd, t_token *redir_op, int source_fd)
 {
-	t_redir_type	type;
+	t_redir_data	data;
 	t_token			*filename;
-	int				expand;
 
 	filename = redir_op->next;
 	if (!filename || !is_token_cmd(filename))
@@ -25,19 +24,19 @@ static int	build_and_add_redir(t_command *cmd, t_token *redir_op, int source_fd)
 		syntax_error("newline");
 		return (0);
 	}
-	type = get_redir_type(redir_op);
+	data.type = get_redir_type(redir_op);
+	data.fname = filename->value;
 	if (source_fd == -1)
 	{
-		if (type == REDIR_IN || type == REDIR_HEREDOC)
-			source_fd = STDIN_FILENO;
+		if (data.type == REDIR_IN || data.type == REDIR_HEREDOC)
+			data.source_fd = STDIN_FILENO;
 		else
-			source_fd = STDOUT_FILENO;
+			data.source_fd = STDOUT_FILENO;
 	}
-	if (filename->type != TOKEN_SINGLE_QUOTED)
-		expand = 1;
 	else
-		expand = 0;
-	if (!add_redir(cmd, source_fd, type, filename->value, expand))
+		data.source_fd = source_fd;
+	data.expand = (filename->type != TOKEN_SINGLE_QUOTED);
+	if (!add_redir(cmd, &data))
 		return (0);
 	return (1);
 }
@@ -75,7 +74,7 @@ t_command	*handle_separator(t_command *cmd, t_token **tok_ptr)
 
 int	process_token(t_command **current_cmd, t_token **tok, t_shell *shell)
 {
-	if (is_redir_token_group(*tok))
+	if (is_token_redir(*tok))
 	{
 		if (!handle_redirection(*current_cmd, tok))
 			return (1);

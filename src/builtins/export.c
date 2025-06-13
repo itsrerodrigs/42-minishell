@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 15:56:49 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/12 22:57:23 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/13 17:17:11 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "builtins.h"
 
-/* @brief Sorts an array of strings in place using bubble sort.
- */
 static void	sort_env_array(char **envp, int len)
 {
 	int		i;
@@ -38,8 +37,7 @@ static void	sort_env_array(char **envp, int len)
 	}
 }
 
-/* @brief Prints the sorted environment variables in 'declare -x' format.
- */
+
 static void	print_exported_env(char **envp)
 {
 	int	i;
