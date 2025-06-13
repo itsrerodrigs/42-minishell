@@ -12,12 +12,9 @@
 
 #include "minishell.h"
 
-/**
- * @brief Frees all tokens in a linked list.
- */
 void	free_tokens(t_token *head)
 {
-	t_token *tmp;
+	t_token	*tmp;
 
 	while (head)
 	{
@@ -29,12 +26,9 @@ void	free_tokens(t_token *head)
 	}
 }
 
-/**
- * @brief Creates a new token with the given value and type.
- */
 t_token	*create_token(char *buf, t_token_type type)
 {
-	t_token *new_token;
+	t_token	*new_token;
 
 	if (!buf)
 		return (NULL);
@@ -50,15 +44,11 @@ t_token	*create_token(char *buf, t_token_type type)
 	return (new_token);
 }
 
-/**
-
-	* @brief Extracts tokens from the input string and stores them in a linked list.
- */
 static t_token	*extract_tokens(char **saveptr, t_shell *shell)
 {
-	t_token *head;
-	t_token *current;
-	t_token *new_token;
+	t_token	*head;
+	t_token	*current;
+	t_token	*new_token;
 
 	head = NULL;
 	current = NULL;
@@ -75,12 +65,9 @@ static t_token	*extract_tokens(char **saveptr, t_shell *shell)
 	return (head);
 }
 
-/**
- * @brief Tokenizes the input string and returns a linked list of tokens.
- */
 t_token	*get_tokens(char *input, t_shell *shell)
 {
-	char *saveptr;
+	char	*saveptr;
 
 	if (!input)
 		return (NULL);

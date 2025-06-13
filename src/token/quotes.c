@@ -12,17 +12,11 @@
 
 #include "minishell.h"
 
-/**
- * @brief Checks if a character can be escaped by a backslash in double quotes.
- */
 static int	is_double_quote_escapable(char c)
 {
 	return (c == '$' || c == '"' || c == '\\');
 }
 
-/**
- * @brief Builds a new string from the quoted content, processing escape sequences.
- */
 static char	*build_unescaped_string(const char *start, size_t len, char q_type)
 {
 	char	*new_str;
@@ -52,16 +46,9 @@ static char	*build_unescaped_string(const char *start, size_t len, char q_type)
 	return (new_str);
 }
 
-/**
- * @brief Finds the matching closing quote for a given opening quote.
- *
- * For single quotes, it finds the next single quote without any special
- * character handling. For double quotes, it correctly handles backslash
- * escapes for any character that follows.
- */
-static char *find_closing_quote(char *start, char quote_char)
+static char	*find_closing_quote(char *start, char quote_char)
 {
-	char *ptr;
+	char	*ptr;
 
 	ptr = start;
 	while (*ptr)
@@ -69,28 +56,18 @@ static char *find_closing_quote(char *start, char quote_char)
 		if (quote_char == '"' && *ptr == '\\')
 		{
 			if (*(ptr + 1))
-				ptr += 2; // Skip the backslash and the escaped character
+				ptr += 2;
 			else
-				ptr++; // Dangling backslash at the end of the string
+				ptr++;
 		}
-		// If we find the closing quote, return its position
 		else if (*ptr == quote_char)
-		{
 			return (ptr);
-		}
-		// Move to the next character
 		else
-		{
 			ptr++;
-		}
 	}
-	// Return a pointer to the null terminator if the quote is not closed
 	return (ptr);
 }
 
-/**
- * @brief Extracts and unescapes the content of a quoted string.
- */
 char	*extract_quoted(char **saveptr, char quote_char)
 {
 	char	*start_content;
@@ -119,9 +96,6 @@ char	*extract_quoted(char **saveptr, char quote_char)
 	return (processed_copy);
 }
 
-/**
- * @brief Handles a quote token, creating a WORD or SINGLE_QUOTED token.
- */
 t_token	*handle_quotes(char **saveptr, char quote_char, t_shell *shell)
 {
 	char	*start;
@@ -140,7 +114,7 @@ t_token	*handle_quotes(char **saveptr, char quote_char, t_shell *shell)
 			return (NULL);
 		new_token = create_token(expanded, TOKEN_WORD);
 		free(start);
-		free(expanded); 
+		free(expanded);
 	}
 	else
 	{

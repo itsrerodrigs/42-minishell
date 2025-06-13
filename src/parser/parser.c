@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 16:12:34 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/12 14:33:34 by marieli          ###   ########.fr       */
+/*   Updated: 2025/06/13 16:11:37 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static int	is_all_digits(const char *str)
 	return (1);
 }
 
-static t_redir_type	get_redir_type(t_token *token)
+t_redir_type	get_redir_type(t_token *token)
 {
 	if (token->type == TOKEN_REDIR_IN)
 		return (REDIR_IN);

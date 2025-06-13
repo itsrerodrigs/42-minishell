@@ -10,28 +10,26 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
-
 #include "minishell.h"
 
+int	is_token_operator(char c)
+{
+	if (c == '|' || c == '<' || c == '>')
+		return (1);
+	return (0);
+}
 
-/**
- * @brief Advances the save pointer past any delimiter characters.
- */
 static void	skip_delim(char **saveptr, const char *delim)
 {
 	while (**saveptr && ft_strchr(delim, **saveptr))
 		(*saveptr)++;
 }
 
-/**
- * @brief Gets a word or quoted token, handling special quote syntax.
- */
 static t_token	*get_word_or_quote_token(const char *d, char **s, t_shell *sh)
 {
-	char quote_char;
-	char *token_val;
-	t_token *new_token;
+	char	quote_char;
+	char	*token_val;
+	t_token	*new_token;
 
 	quote_char = **s;
 	if (quote_char == '\'' || quote_char == '"')
@@ -46,14 +44,11 @@ static t_token	*get_word_or_quote_token(const char *d, char **s, t_shell *sh)
 	return (new_token);
 }
 
-/**
- * @brief Retrieves the next complete token from the input string.
- */
 t_token	*ft_get_next_token(char *str, const char *delim, char **saveptr,
 		t_shell *shell)
 {
-	t_token *new_token;
-	const char *ws_delim;
+	t_token		*new_token;
+	const char	*ws_delim;
 
 	ws_delim = " \t\n";
 	if (!saveptr || !delim)

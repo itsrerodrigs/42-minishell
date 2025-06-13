@@ -13,17 +13,11 @@
 #include "minishell.h"
 #include "tokens.h"
 
-/**
- * @brief Checks if a character is a valid character for a variable name.
- */
 static int	is_var_char(char c)
 {
 	return (ft_isalnum(c) || c == '_');
 }
 
-/**
- * @brief Extracts the variable name from the input string.
- */
 static void	extract_var_name(const char *input, size_t *idx, char *var_name)
 {
 	size_t	var_len;
@@ -47,9 +41,6 @@ static void	extract_var_name(const char *input, size_t *idx, char *var_name)
 	var_name[var_len] = '\0';
 }
 
-/**
- * @brief Handles special shell variables like $? and $$.
- */
 static char	*handle_special_var(const char *var_name)
 {
 	pid_t	pid_val;
@@ -64,9 +55,6 @@ static char	*handle_special_var(const char *var_name)
 	return (NULL);
 }
 
-/**
- * @brief Extracts a variable name and retrieves its value from the environment.
- */
 char	*extract_variable(const char *input, size_t *idx, char **envp)
 {
 	char	var_name[BUFFER_SIZE];
@@ -90,4 +78,32 @@ char	*extract_variable(const char *input, size_t *idx, char **envp)
 	if (!value)
 		return (ft_strdup(""));
 	return (ft_strdup(value));
+}
+
+void	expand_token_list(t_token *tokens, t_shell *shell)
+{
+	char	*temp_val;
+	char	*final_val;
+
+	while (tokens)
+	{
+		if (tokens->type != TOKEN_SINGLE_QUOTED)
+		{
+			temp_val = expand_tilde(tokens->value, shell);
+			if (!temp_val)
+			{
+				tokens = tokens->next;
+				continue ;
+			}
+			final_val = expand_variables(temp_val, shell->envp,
+					shell->exit_status);
+			free(temp_val);
+			if (final_val)
+			{
+				free(tokens->value);
+				tokens->value = final_val;
+			}
+		}
+		tokens = tokens->next;
+	}
 }

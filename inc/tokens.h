@@ -17,8 +17,6 @@
 
 typedef struct s_shell t_shell;
 
-
-
 typedef enum e_token_type
 {
     TOKEN_WORD,
@@ -33,7 +31,6 @@ typedef enum e_token_type
     TOKEN_SEMICOLON
 } t_token_type;
 
-
 typedef struct s_token 
 {
         char            *value;
@@ -42,6 +39,15 @@ typedef struct s_token
         int             fd;
         struct s_token  *next;
 } t_token;
+
+typedef struct s_expansion_state
+{
+	char		*expanded;
+	size_t		new_size;
+	const char	*input;
+	size_t		i;
+	t_shell		*shell;
+}	t_expansion_state;
 
 
 /* input.c */

@@ -1,20 +1,17 @@
 /* ************************************************************************** */
-/* */
-/* :::      ::::::::   */
-/* tokenizer_utils.c                                  :+:      :+:    :+:   */
-/* +:+ +:+         +:+     */
-/* By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
-/* +#+#+#+#+#+   +#+           */
-/* Created: 2025/06/11 10:45:00 by marieli           #+#    #+#             */
-/* Updated: 2025/06/11 10:45:00 by marieli          ###   ########.fr       */
-/* */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tokenizer_utils.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/13 16:25:54 by mmariano          #+#    #+#             */
+/*   Updated: 2025/06/13 16:26:20 by mmariano         ###   ########.fr       */
+/*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/**
- * @brief Appends a segment to the token being built. Frees the segment.
- */
 int	append_to_builder(char **token_builder_ptr, char *segment)
 {
 	size_t	current_len;
@@ -39,9 +36,6 @@ int	append_to_builder(char **token_builder_ptr, char *segment)
 	return (1);
 }
 
-/**
- * @brief Processes a quoted segment, appending its content to the builder.
- */
 int	process_quoted_segment(char **builder, char **pos)
 {
 	char	quote_char;
@@ -59,24 +53,7 @@ int	process_quoted_segment(char **builder, char **pos)
 	return (1);
 }
 
-/**
- * @brief Checks if a character is a shell operator.
- */
-int	is_token_operator(char c)
-{
-	if (c == '|' || c == '<' || c == '>')
-		return (1);
-	return (0);
-}
-
-/**
- * @brief Creates a new string from a segment, correctly handling and
- * removing backslash escape characters.
- * @param start The beginning of the raw string segment.
- * @param len The length of the raw string segment.
- * @return A new, malloc'd string with escapes resolved.
- */
-static char *build_unescaped_word(const char *start, size_t len)
+static	char	*build_unescaped_word(const char *start, size_t len)
 {
 	char	*result;
 	size_t	i;
@@ -103,11 +80,25 @@ static char *build_unescaped_word(const char *start, size_t len)
 	return (result);
 }
 
-/**
- * @brief Processes an unquoted segment, appending it to the builder.
- * This version correctly handles backslash escapes, ensuring that characters
- * like spaces can be included in a token if they are escaped.
- */
+static char	*find_unquoted_end(const char *pos, const char *delim)
+{
+	while (*pos)
+	{
+		if (*pos == '\\' && *(pos + 1))
+		{
+			pos += 2;
+			continue ;
+		}
+		if (ft_strchr(delim, *pos) || *pos == '\'' || *pos == '"'
+			|| is_token_operator(*pos))
+		{
+			break ;
+		}
+		pos++;
+	}
+	return ((char *)pos);
+}
+
 int	process_unquoted_segment(char **builder, char **pos, const char *delim)
 {
 	char	*start;
@@ -115,26 +106,9 @@ int	process_unquoted_segment(char **builder, char **pos, const char *delim)
 	char	*part;
 
 	start = *pos;
-	end = *pos;
-	while (*end)
-	{
-		// If a backslash is found, skip it and the character that follows
-		if (*end == '\\' && *(end + 1))
-		{
-			end += 2;
-			continue ;
-		}
-		// Stop at delimiters, quotes, or operators
-		if (ft_strchr(delim, *end) || *end == '\'' || *end == '"'
-			|| is_token_operator(*end))
-		{
-			break ;
-		}
-		end++;
-	}
+	end = find_unquoted_end(start, delim);
 	if (end > start)
 	{
-		// Create the final part by processing escapes
 		part = build_unescaped_word(start, end - start);
 		if (!part)
 		{
@@ -142,9 +116,11 @@ int	process_unquoted_segment(char **builder, char **pos, const char *delim)
 			return (0);
 		}
 		if (!append_to_builder(builder, part))
+		{
+			free(part);
 			return (0);
+		}
 	}
 	*pos = end;
 	return (1);
 }
-

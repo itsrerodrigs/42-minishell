@@ -13,9 +13,6 @@
 #include "minishell.h"
 #include "tokens.h"
 
-/**
- * @brief Appends a regular (non-variable) character to the expanded string.
- */
 static char	*append_char(char *expanded, char c, size_t *new_size)
 {
 	char	*temp;
@@ -33,38 +30,31 @@ static char	*append_char(char *expanded, char c, size_t *new_size)
 	return (expanded);
 }
 
-/**
- * @brief Expands an encountered variable and appends its value.
- */
-static char	*append_expanded_var(char *expanded, size_t *n_size, const char *in,
-	size_t *idx, t_shell *shell)
+static void	append_expanded_var(t_expansion_state *state)
 {
 	char	*value;
 	char	*temp;
 	char	*old_expanded;
 
-	(*idx)++;
-	value = extract_variable(in, idx, shell->envp);
+	(state->i)++;
+	value = extract_variable(state->input, &state->i, state->shell->envp);
 	if (!value)
-		return (expanded);
-	old_expanded = expanded;
-	*n_size += ft_strlen(value);
-	temp = ft_realloc(expanded, *n_size + 1);
+		return ;
+	old_expanded = state->expanded;
+	state->new_size += ft_strlen(value);
+	temp = ft_realloc(state->expanded, state->new_size + 1);
 	if (!temp)
 	{
 		free(old_expanded);
 		free(value);
-		return (NULL);
+		state->expanded = NULL;
+		return ;
 	}
-	expanded = temp;
-	ft_strlcat(expanded, value, *n_size + 1);
+	state->expanded = temp;
+	ft_strlcat(state->expanded, value, state->new_size + 1);
 	free(value);
-	return (expanded);
 }
 
-/**
- * @brief Checks if the current character signals the start of a variable.
- */
 static int	is_var_start(const char *input, size_t index)
 {
 	char	next_char;
@@ -77,82 +67,45 @@ static int	is_var_start(const char *input, size_t index)
 		return (1);
 	return (0);
 }
-/**
- * @brief main loop of expand_variable.
- */
-static char	*process_expansion_segment(char *expanded, size_t *n_size,
-	const char *in, size_t *i, t_shell *shell)
+
+static void	process_expansion_segment(t_expansion_state *state)
 {
-	if (in[*i] == '\\' && in[*i + 1] == '$')
+	if (state->input[state->i] == '\\' && state->input[state->i + 1] == '$')
 	{
-		expanded = append_char(expanded, '$', n_size);
-		*i += 2;
+		state->expanded = append_char(state->expanded, '$', &state->new_size);
+		state->i += 2;
 	}
-	else if (is_var_start(in, *i))
-		expanded = append_expanded_var(expanded, n_size, in, i, shell);
+	else if (is_var_start(state->input, state->i))
+		append_expanded_var(state);
 	else
-		expanded = append_char(expanded, in[(*i)++], n_size);
-	return (expanded);
+	{
+		state->expanded = append_char(state->expanded,
+				state->input[state->i], &state->new_size);
+		(state->i)++;
+	}
 }
 
-/**
- * @brief Expands all variables in a string (e.g., $VAR or ${VAR}).
- * This version handles the \$ escape sequence specifically and treats
- * other backslashes as literal characters.
- */
 char	*expand_variables(const char *input, char **envp, int exit_status)
 {
-	char	*expanded;
-	size_t	new_size;
-	size_t	i;
-	t_shell	dummy_shell;
+	t_expansion_state	state;
+	t_shell				dummy_shell;
 
 	if (!input)
 		return (NULL);
-	new_size = 0;
-	i = 0;
 	dummy_shell.envp = envp;
 	dummy_shell.exit_status = exit_status;
-	expanded = ft_strdup("");
-	if (!expanded)
+	state.input = input;
+	state.new_size = 0;
+	state.i = 0;
+	state.shell = &dummy_shell;
+	state.expanded = ft_strdup("");
+	if (!state.expanded)
 		return (NULL);
-	while (input[i])
+	while (state.input[state.i])
 	{
-		expanded = process_expansion_segment(expanded, &new_size, input, &i,
-				&dummy_shell);
-		if (!expanded)
+		process_expansion_segment(&state);
+		if (!state.expanded)
 			return (NULL);
 	}
-	return (expanded);
-}
-
-/**
- * @brief Iterates through a token list and expands variables in WORD tokens.
- */
-void	expand_token_list(t_token *tokens, t_shell *shell)
-{
-	char	*temp_val;
-	char	*final_val;
-
-	while (tokens)
-	{
-		if (tokens->type != TOKEN_SINGLE_QUOTED)
-		{
-			temp_val = expand_tilde(tokens->value, shell);
-			if (!temp_val)
-			{
-				tokens = tokens->next;
-				continue ;
-			}
-			final_val = expand_variables(temp_val, shell->envp,
-					shell->exit_status);
-			free(temp_val);
-			if (final_val)
-			{
-				free(tokens->value);
-				tokens->value = final_val;
-			}
-		}
-		tokens = tokens->next;
-	}
+	return (state.expanded);
 }

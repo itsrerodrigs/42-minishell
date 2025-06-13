@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 23:03:48 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/13 13:01:22 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/13 16:12:00 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ int			add_arg(t_command *cmd, char *arg);
 int	add_redir(t_command *cmd, t_redir_data *data);
 int			handle_cmd_or_arg(t_command *cmd, t_token *token);
 t_command	*new_command(t_command *current);
+t_redir_type	get_redir_type(t_token *token);
 
 /* parser_logic.c */
 int			handle_word_token(t_command *cmd, t_token *tok, t_shell *shell);

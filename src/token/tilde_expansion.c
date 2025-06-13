@@ -3,25 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   tilde_expansion.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 11:59:25 by marieli           #+#    #+#             */
-/*   Updated: 2025/06/12 11:59:35 by marieli          ###   ########.fr       */
+/*   Updated: 2025/06/13 15:47:58 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "builtins.h"
 
-/**
- * @brief Expands a tilde (~) at the beginning of a string to the HOME
- * directory path. It handles `~` and `~/...`.
- *
- * @param original_value The string to expand.
- * @param shell The shell context to get the HOME variable.
- * @return A new, allocated string with the tilde expanded, or a copy of the
- * original string if no tilde expansion was needed. Returns NULL on error.
- */
 char	*expand_tilde(const char *original_value, t_shell *shell)
 {
 	char	*home_dir;
