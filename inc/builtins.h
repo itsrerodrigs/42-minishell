@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marieli <marieli@student.42.fr>            +#+  +:+       +#+        */
+/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 19:49:10 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/12 18:01:49 by marieli          ###   ########.fr       */
+/*   Updated: 2025/06/13 11:48:57 by renrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,5 +62,9 @@ int				add_new_env_entry(char ***envp_ptr, const char *var, int i);
 /* CD Builtin Utilities */
 char            *get_cd_path(t_shell *shell, char **args);
 void            update_pwd_vars(t_shell *shell, char *oldpwd);
+
+/* exit utils */
+int  is_valid_exit_arg(const char *str);
+int  handle_non_numeric_exit_arg(const char *arg);
 
 #endif

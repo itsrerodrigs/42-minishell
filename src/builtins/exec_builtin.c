@@ -3,50 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   exec_builtin.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 16:36:07 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/12 22:08:01 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/13 12:07:45 by renrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include "minishell.h"
-
-static t_builtin	*get_builtins(void)
-{
-	static t_builtin	builtins[] = {
-	{"cd", builtin_cd},
-	{"echo", builtin_echo},
-	{"env", builtin_env},
-	{"exit", builtin_exit},
-	{"unset", builtin_unset},
-	{"pwd", builtin_pwd},
-	{"export", builtin_export},
-	{NULL, NULL}
-	};
-
-	return (builtins);
-}
-
-builtin_func	find_builtin(char *cmd)
-{
-	int		i;
-	t_builtin			*builtins;
-
-	builtins = get_builtins();
-	i = 0;
-	while (builtins[i].name)
-	{
-		if (ft_strncmp(cmd, builtins[i].name, ft_strlen
-				(builtins[i].name)) == 0 && ft_strlen(cmd)
-			== ft_strlen(builtins[i].name))
-		{
-			return (builtins[i].func);
-		}
-			i++;
-	}
-	return (NULL);
-}
 
 /* @brief Saves the original STDIN and STDOUT file descriptors.
  * @param orig_stdin Pointer to store original STDIN FD.
@@ -113,11 +75,11 @@ static int	s_perform_builtin_io_and_exec(t_shell *shell, builtin_func func)
  * 0 if no built-in was found or if initial setup failed. */
 int	exec_builtin(t_shell *shell)
 {
-	char	*cmd;
-	int		origin_stdin;
-	int		origin_stdout;
-	int		exec_result;
-	builtin_func			func;
+	builtin_func	func;
+	char			*cmd;
+	int				origin_stdin;
+	int				origin_stdout;
+	int				exec_result;
 
 	if (!shell || !shell->current_cmd || !shell->current_cmd->args
 		|| !shell->current_cmd->args[0])
