@@ -6,7 +6,11 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 23:03:48 by renrodri          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2025/06/13 16:12:00 by mmariano         ###   ########.fr       */
+=======
+/*   Updated: 2025/06/13 16:32:44 by renrodri         ###   ########.fr       */
+>>>>>>> d230d90 (parser done)
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +70,10 @@ typedef struct s_command
 
 /* parser.c */
 t_command	*parse_tokens(t_token *tokens, t_shell *shell);
+
+/* parser handlers */
+t_token *s_handle_redirection_token(t_command *current_cmd, t_token *tok);
+t_token *s_parse_loop_iteration(t_command **current_cmd_ptr, t_token *tok, t_shell *shell, t_command *cmd_list);
 
 /* parser_utils.c */
 t_command	*init_command(void);
