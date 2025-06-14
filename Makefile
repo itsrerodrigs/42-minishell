@@ -23,7 +23,7 @@ OBJS        = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
 all: $(NAME)
 
 valgrind:
-	valgrind --leak-check=full --show-leak-kinds=all --suppressions=readline.supp ./$(NAME) || true
+	valgrind --leak-check=full --show-leak-kinds=all --suppressions=readline.supp ./$(NAME)
 
 # Link the final executable
 $(NAME): $(OBJS) $(LIBFT)

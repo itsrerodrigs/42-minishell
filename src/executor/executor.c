@@ -80,8 +80,6 @@ void	ft_exec(t_shell *shell)
 			exec_pipeline(shell, cmd);
 			while (cmd && cmd->is_pipe)
 				cmd = cmd->next;
-			if (cmd)
-				cmd = cmd->next;
 		}
 		else
 			execute_simple_command(shell, cmd);
