@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: renrodri <renrodri@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 16:04:57 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/13 12:58:43 by renrodri         ###   ########.fr       */
+/*   Updated: 2025/06/13 20:54:21 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,12 @@ int	add_arg(t_command *cmd, char *arg)
 	i = 0;
 	while (i < count)
 	{
-		new_args[i] = cmd->args[i];
+		new_args[i] = ft_strdup(cmd->args[i]);
+		if (!new_args)
+		{
+			while (i > 0)
+				free(new_args[--i]);
+		}
 		i++;
 	}
 	new_args[i] = ft_strdup(arg);

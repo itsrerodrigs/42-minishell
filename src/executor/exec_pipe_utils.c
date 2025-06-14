@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 14:58:47 by mmariano          #+#    #+#             */
-/*   Updated: 2025/06/13 20:07:11 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/13 21:21:22 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,45 @@ void	setup_child_redirections(t_command *cmd, int p_fd, int p[2], int is_p)
 /**
  * @brief The logic executed by a forked child process in a pipeline.
  */
-void	exec_pipe_child(t_shell *shell, t_command *cmd, int p_fd, int p[2])
+// void	exec_pipe_child(t_shell *shell, t_command *cmd, int p_fd, int p[2])
+// {
+// 	char				*cmd_path;
+// 	builtin_func		func;
+
+// 	set_child_signals();
+// 	setup_child_redirections(cmd, p_fd, p, cmd->is_pipe);
+// 	func = find_builtin(cmd->args[0]);
+// 	if (func)
+// 	{
+// 		shell->exit_status = func(shell, cmd->args);
+// 		exit(shell->exit_status);
+// 	}
+// 	else
+// 	{
+// 		cmd_path = find_executable(cmd->cmd, shell);
+// 		if (!cmd_path)
+// 		{
+// 			ft_putstr_fd(cmd->cmd, STDERR_FILENO);
+// 			ft_putendl_fd(": command not found", STDERR_FILENO);
+// 			exit(127);
+// 		}
+// 		execve(cmd_path, cmd->args, shell->envp);
+// 		perror("minishell: execve failed");
+// 		free(cmd_path);
+// 		exit(EXIT_FAILURE);
+// 	}
+// }
+
+/**
+ * @brief The logic executed by a forked child process in a pipeline.
+ * (Updated to not need pgid, as it's handled before the call)
+ */
+void	exec_pipe_child(t_shell *shell, t_command *cmd, int p_fd, int p[2], pid_t pgid)
 {
 	char				*cmd_path;
 	builtin_func		func;
-
+	
+    (void)pgid;
 	set_child_signals();
 	setup_child_redirections(cmd, p_fd, p, cmd->is_pipe);
 	func = find_builtin(cmd->args[0]);
@@ -59,10 +93,10 @@ void	exec_pipe_child(t_shell *shell, t_command *cmd, int p_fd, int p[2])
 	}
 	else
 	{
-		cmd_path = find_executable(cmd->cmd, shell);
+		cmd_path = find_executable(cmd->args[0], shell);
 		if (!cmd_path)
 		{
-			ft_putstr_fd(cmd->cmd, STDERR_FILENO);
+			ft_putstr_fd(cmd->args[0], STDERR_FILENO);
 			ft_putendl_fd(": command not found", STDERR_FILENO);
 			exit(127);
 		}
@@ -72,6 +106,7 @@ void	exec_pipe_child(t_shell *shell, t_command *cmd, int p_fd, int p[2])
 		exit(EXIT_FAILURE);
 	}
 }
+
 
 /**
  * @brief Manages pipe file descriptors in the parent process after a fork.
