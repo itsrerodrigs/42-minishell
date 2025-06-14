@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 11:54:30 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/13 20:07:04 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/13 21:53:56 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,7 @@
 
 static t_builtin	*get_builtins(void)
 {
-	static t_builtin	builtins[] = 
-	{
+	static t_builtin	builtins[] = {
 	{"cd", builtin_cd},
 	{"echo", builtin_echo},
 	{"env", builtin_env},
@@ -30,7 +29,7 @@ static t_builtin	*get_builtins(void)
 	return (builtins);
 }
 
-builtin_func	find_builtin(char *cmd)
+t_builtin_func	find_builtin(char *cmd)
 {
 	t_builtin	*builtins;
 	int			i;

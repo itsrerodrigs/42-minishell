@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 12:18:03 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/13 20:07:14 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/13 21:54:15 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	s_restore_and_close_fds(int saved_stdin, int saved_stdout)
 int	s_execute_and_set_status(t_shell *shell, t_command *cmd)
 {
 	int				exit_code;
-	builtin_func	func;
+	t_builtin_func	func;
 
 	exit_code = 1;
 	if (apply_redirections(cmd) == 0)

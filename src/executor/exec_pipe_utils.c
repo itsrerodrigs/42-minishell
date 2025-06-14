@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 14:58:47 by mmariano          #+#    #+#             */
-/*   Updated: 2025/06/13 20:07:11 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/13 21:54:12 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	setup_child_redirections(t_command *cmd, int p_fd, int p[2], int is_p)
 void	exec_pipe_child(t_shell *shell, t_command *cmd, int p_fd, int p[2])
 {
 	char				*cmd_path;
-	builtin_func		func;
+	t_builtin_func		func;
 
 	set_child_signals();
 	setup_child_redirections(cmd, p_fd, p, cmd->is_pipe);

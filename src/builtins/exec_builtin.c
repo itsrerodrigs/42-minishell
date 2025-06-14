@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 16:36:07 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/13 20:07:54 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/13 21:54:09 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static void	s_restore_fds(int orig_stdin, int orig_stdout)
 	close(orig_stdout);
 }
 
-static int	s_perform_builtin_io_and_exec(t_shell *shell, builtin_func func)
+static int	s_perform_builtin_io_and_exec(t_shell *shell, t_builtin_func func)
 {
 	int	builtin_exit_status;
 
@@ -53,7 +53,7 @@ static int	s_perform_builtin_io_and_exec(t_shell *shell, builtin_func func)
 
 int	exec_builtin(t_shell *shell)
 {
-	builtin_func	func;
+	t_builtin_func	func;
 	char			*cmd;
 	int				orig_stdin;
 	int				orig_stdout;

@@ -6,7 +6,7 @@
 /*   By: mmariano <mmariano@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 19:49:10 by renrodri          #+#    #+#             */
-/*   Updated: 2025/06/13 20:09:22 by mmariano         ###   ########.fr       */
+/*   Updated: 2025/06/13 21:53:51 by mmariano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,12 @@ typedef struct s_shell
 	bool		should_exit;
 }	t_shell;
 
-typedef int(*builtin_func)(t_shell *shell, char **args);
+typedef int(*t_builtin_func)(t_shell *shell, char **args);
 
 typedef struct s_builtin
 {
 	char			*name;
-	builtin_func	func;
+	t_builtin_func	func;
 }	t_builtin;
 
 /* Builtin Command Functions */
@@ -48,7 +48,7 @@ int					builtin_export(t_shell *shell, char **args);
 /* Builtin Execution */
 int					exec_builtin(t_shell *shell);
 bool				is_builtin_parent_executable(t_command *cmd);
-builtin_func		find_builtin(char *cmd);
+t_builtin_func		find_builtin(char *cmd);
 
 /* Environment Variable Utils */
 int					add_or_update_env(char ***envp, const char *var);
